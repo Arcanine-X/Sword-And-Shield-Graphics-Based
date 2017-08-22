@@ -36,6 +36,7 @@ public class TokenPanel extends JPanel implements Observer{
 	boolean animateCreation = false;
 	List<BoardPiece> clickedPieceRotations = new ArrayList<BoardPiece>();
 	String create = "create";
+
 	public TokenPanel(SwordAndShieldGame game, Player player, GameFrame run) {
 		this.game = game;
 		this.player = player;
@@ -55,10 +56,10 @@ public class TokenPanel extends JPanel implements Observer{
 				mouseX = e.getX();
 				mouseY = e.getY();
 				if(clickedPiece==null) {
-					run.createAnimation = false;
+					//run.createAnimation = false;
 					clicked();
-					System.out.println(clickedPiece.getCol());
-					System.out.println(player.getName());
+					//System.out.println(clickedPiece.getCol());
+					//System.out.println(player.getName());
 					if(run.pastCreation) {
 						clickedPiece = null;
 						return;

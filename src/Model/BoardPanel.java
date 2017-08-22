@@ -217,6 +217,17 @@ public class BoardPanel extends JPanel {
 
 		Graphics2D _g = (Graphics2D) g;
 		graphix = _g;
+		drawBoard(_g);
+		//highlightSelectedToken(_g);
+		displayInfo(_g);
+		if (moveAnimation) {
+			applyMoveAnimation(_g);
+		}
+		else {
+			drawBoard(_g);
+			highlightSelectedToken(_g);
+			displayInfo(_g);
+		}
 		//drawBoard(_g);
 		//highlightSelectedToken(_g);
 		//displayInfo(_g);
@@ -245,27 +256,12 @@ public class BoardPanel extends JPanel {
 		if (run.createAnimation == true) {
 			applyCreateAnimation(_g);
 		}*/
-		drawBoard(_g);
-		highlightSelectedToken(_g);
-		displayInfo(_g);
-		if (moveAnimation) {
-			applyMoveAnimation(_g);
-		}
-		else {
-			drawBoard(_g);
-			highlightSelectedToken(_g);
-			displayInfo(_g);
-		}
+
 	}
 
 	public void applyMoveAnimation(Graphics2D _g) {
 		if (moveDir.equals("up") && run.currentPlayer.getName().equals("yellow")) {
-			System.out.println("----");
-			System.out.println(chosenX);
-			System.out.println(chosenY);
-			System.out.println(7 * 60);
-			System.out.println(7 * 60);
-			System.out.println("----");
+
 			if (chosenX == 7 * WIDTH && chosenY == 7 * HEIGHT) {
 				_g.setColor(new Color(255, 250, 205));
 				_g.drawRect(chosenX, chosenY, WIDTH, HEIGHT);
@@ -279,8 +275,6 @@ public class BoardPanel extends JPanel {
 
 			drawToken(_g, chosenToken, moveX, moveY);
 			_g.setStroke(new BasicStroke(0));
-			// System.out.println(chosenY);
-
 			if (moveY > endY) {
 				moveY -= 2;
 			} else {
@@ -315,7 +309,7 @@ public class BoardPanel extends JPanel {
 				alpha += 10;
 			} else {
 				alpha = 0;
-				run.createAnimation = false;
+				//run.createAnimation = false;
 			}
 		}
 	}
@@ -339,6 +333,7 @@ public class BoardPanel extends JPanel {
 					g.fillRect(col * WIDTH, row * HEIGHT, WIDTH, HEIGHT);
 				} else if (row == 2 && col == 2) {
 					if (board[row][col] instanceof BoardPiece) {
+						
 						g.setColor(Color.DARK_GRAY);
 						g.fillRect(col * WIDTH, row * HEIGHT, WIDTH, WIDTH);
 						g.setColor(Color.GREEN);
@@ -353,25 +348,28 @@ public class BoardPanel extends JPanel {
 						g.fillRect(col * WIDTH, row * HEIGHT, WIDTH, HEIGHT);
 					}
 				} else if (row == 7 && col == 7) {
-					if (run.createAnimation == true) {
-					} else {
-						if (board[row][col] instanceof BoardPiece) {
-
-							g.setColor(Color.DARK_GRAY);
-							g.fillRect(col * WIDTH, row * HEIGHT, WIDTH, WIDTH);
-							g.setColor(Color.YELLOW);
-							g.fillOval(col * WIDTH, row * HEIGHT, WIDTH, HEIGHT);
-							g.setColor(Color.red);
-							g.setStroke(new BasicStroke(6));
-							BoardPiece temp = (BoardPiece) board[row][col];
-							drawToken(g, (BoardPiece) board[row][col], col * WIDTH, row * HEIGHT);
-
-							g.setStroke(new BasicStroke(0));
-						} else {
-							g.setColor(new Color(255, 250, 205));
-							g.fillRect(col * WIDTH, row * HEIGHT, WIDTH, HEIGHT);
+					if (board[row][col] instanceof BoardPiece) {
+						if((((BoardPiece)board[row][col]).equals(chosenToken)&&moveAnimation)) {
+							System.out.println("---------===============!!!!!!!!!!!!!!!!!!!!!######################");
+							continue;
 						}
+						System.out.println("row is "  + row);
+						System.out.println("col is " + col);
+						g.setColor(Color.DARK_GRAY);
+						g.fillRect(col * WIDTH, row * HEIGHT, WIDTH, WIDTH);
+						g.setColor(Color.YELLOW);
+						g.fillOval(col * WIDTH, row * HEIGHT, WIDTH, HEIGHT);
+						g.setColor(Color.red);
+						g.setStroke(new BasicStroke(6));
+						BoardPiece temp = (BoardPiece) board[row][col];
+						drawToken(g, (BoardPiece) board[row][col], col * WIDTH, row * HEIGHT);
+
+						g.setStroke(new BasicStroke(0));
+					} else {
+						g.setColor(new Color(255, 250, 205));
+						g.fillRect(col * WIDTH, row * HEIGHT, WIDTH, HEIGHT);
 					}
+
 				} else if (board[row][col] instanceof BoardPiece) {
 					g.setColor(Color.DARK_GRAY);
 					g.fillRect(col * WIDTH, row * HEIGHT, WIDTH, WIDTH);

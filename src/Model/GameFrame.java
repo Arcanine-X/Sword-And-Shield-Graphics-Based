@@ -33,7 +33,7 @@ public class GameFrame extends JFrame implements Observer{
 	boolean yellowTurn = true;
 	boolean greenTurn = false;
 	public boolean pastCreation = false;
-	public boolean createAnimation = false;
+	//public boolean createAnimation = false;
 	public boolean disableBoard = false;
 	public BoardPiece creationPiece = null;
 
