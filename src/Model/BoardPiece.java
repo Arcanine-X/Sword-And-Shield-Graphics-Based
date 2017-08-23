@@ -13,6 +13,9 @@ public class BoardPiece implements Token {
 	private int east;
 	private int south;
 	private int west;
+	int moveX, moveY;
+	boolean needToAnimate = false;
+	int destX, destY;
 
 	// 0 for nothing, 1 for sword, 2 for shield
 	public BoardPiece(String name, int north, int east, int south, int west, String col) {

@@ -22,6 +22,7 @@ public class Player implements Token {
 	private List<BoardPiece> everyMovement = new ArrayList<BoardPiece>(); // contains each moved piece and rotated pieces
 	private List<BoardPiece> listOfTokens = new ArrayList<BoardPiece>(); // list of the players 24 tokens
 	private List<BoardPiece> differences = new ArrayList<BoardPiece>(); // holds the grave yard board pieces
+	public int numMoveAnimations = 0;
 
 	/**
 	 * Constructor which takes the player name, (yellow/green).
@@ -152,6 +153,28 @@ public class Player implements Token {
 		}
 	}
 
+	public int upCounter(BoardPiece token, Board board) {
+		int c = board.getX(token.getName());
+		int r = board.getY(token.getName());
+		int count = 0;
+		if (r - 1 < 0) {
+			return 0;
+		} else if (!(board.getBoard()[r - 1][c] instanceof BoardPiece) && !(r - 1 < 0)) {
+			System.out.println("in player count up");
+			//board.getBoard()[r][c] = null;
+			//r--;
+			//board.getBoard()[r][c] = token;
+		} else { // requires shifting
+			for (int i = r - 1, j = 0; i >= 0; i--, j++) {
+				if (board.getBoard()[i][c] instanceof BoardPiece && count == j) { //calculate number of adjacent tiles going from the the tile being pushed
+					count++;
+				}
+			}
+
+		}
+		return count;
+	}
+
 	/**
 	 * This method moves the token up. If there is a token where it is trying to move to,
 	 * it will push it up. It finds the number of adjacent tiles of the tile that is being pushed,
@@ -179,6 +202,7 @@ public class Player implements Token {
 				}
 			}
 			if (count != 0) {
+				numMoveAnimations = count;
 				for (int i = r - count; i <= r; i++) {// go back the number the of adjacent of tiles, and shift everything up 1 working backwards
 					if (i - 1 < 0) {
 						board.getBoard()[i][c] = null;
