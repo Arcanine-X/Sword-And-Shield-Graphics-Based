@@ -18,6 +18,8 @@ import java.util.Random;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -104,7 +106,7 @@ public class GameFrame extends JFrame implements Observer{
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JDialog dialog = new JDialog();
+				GameFrame.this.surrender();
 
 				//MenuFrame menu = new MenuFrame();
 				//GameFrame.this.dispatchEvent(new WindowEvent(GameFrame.this, WindowEvent.WINDOW_CLOSING));
@@ -143,6 +145,27 @@ public class GameFrame extends JFrame implements Observer{
 		this.pack();
 		this.setVisible(true);
 		mainGame();
+	}
+
+	public void surrender() {
+		String surrenderMsg = "";
+		if(currentPlayer.getName().equals("yellow")) {
+			surrenderMsg = "Green Wins, would you like to go back to the menu?";
+		}
+		else {
+			surrenderMsg = "Yellow Wins, would you like to go back to the menu?";
+		}
+		int r = JOptionPane.showConfirmDialog(this, new JLabel(surrenderMsg), "Surrender", JOptionPane.YES_NO_OPTION);
+        if(r == JOptionPane.YES_OPTION) {
+        	MenuFrame menu = new MenuFrame();
+			GameFrame.this.dispatchEvent(new WindowEvent(GameFrame.this, WindowEvent.WINDOW_CLOSING));
+        }
+        else if(r == JOptionPane.NO_OPTION) {
+        	System.exit(1);
+        }
+        else {
+        	System.exit(1);
+        }
 	}
 
 	public void mainGame() {

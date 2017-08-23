@@ -1,6 +1,5 @@
 package Model;
 
-import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -8,15 +7,12 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
-import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.security.AllPermission;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import javax.swing.JPanel;
 
@@ -26,27 +22,19 @@ public class BoardPanel extends JPanel {
 	private static final int STROKE = 3;
 	private int mouseX;
 	private int mouseY;
-	SwordAndShieldGame game;
-	BoardPiece chosenToken;
 	private int chosenX;
 	private int chosenY;
-	Token[][] board;
-	Graphics2D graphix;
-	GameFrame run;
-	int alpha = 0;
-	boolean moveAnimation = false;
-	String moveDir = "";
-	int endY;
-	int moveY;
-	int moveX;
-	int currentMoveX, currentMoveY, finalDestY, finalDestX;
-	boolean done = false;
-	boolean skip = false;
-	List<BoardPiece> everyBpToAnimate = new ArrayList<BoardPiece>();
-	String letter = "";
-	//int yellowCreateX = 7 * WIDTH + (3 * WIDTH);
-	//int yellowCreateY = 7 * HEIGHT;
-
+	private int moveY;
+	private int moveX;
+	private SwordAndShieldGame game;
+	private BoardPiece chosenToken;
+	private Token[][] board;
+	private GameFrame run;
+	private boolean moveAnimation = false;
+	private String moveDir = "";
+	private boolean skip = false;
+	private List<BoardPiece> everyBpToAnimate = new ArrayList<BoardPiece>();
+	private String letter = "";
 	public BoardPanel(SwordAndShieldGame game, GameFrame run) {
 		this.game = game;
 		this.run = run;
@@ -98,12 +86,8 @@ public class BoardPanel extends JPanel {
 					if (chosenToken != null) {
 						String letter = chosenToken.getName();
 						System.out.println("move " + letter + " up");
-						// game.moveToken(run.currentPlayer, "move " + letter + " up");
-
 						moveAnimation = true;
-						endY = chosenY - HEIGHT;
 						moveDir = "up";
-						// chosenToken = null;
 					}
 				} else if (key == KeyEvent.VK_RIGHT) {
 					if (chosenToken != null) {
@@ -169,11 +153,8 @@ public class BoardPanel extends JPanel {
 	}
 
 	public void highlightSelectedToken(Graphics2D g) {
-		// System.out.println("in highlighted");
-
 		if (chosenToken != null) {
 			g.setColor(Color.BLUE.darker());
-			// System.out.println("Stroke is: " + STROKE);
 			g.setStroke(new BasicStroke(6));
 			g.drawRect(chosenX - STROKE, chosenY - STROKE, WIDTH + STROKE + 3, HEIGHT + STROKE + 3);
 			g.setColor(Color.CYAN);
@@ -221,9 +202,7 @@ public class BoardPanel extends JPanel {
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-
 		Graphics2D _g = (Graphics2D) g;
-		graphix = _g;
 		drawBoard(_g);
 		//highlightSelectedToken(_g);
 		displayInfo(_g);
@@ -235,35 +214,6 @@ public class BoardPanel extends JPanel {
 			highlightSelectedToken(_g);
 			displayInfo(_g);
 		}
-		//drawBoard(_g);
-		//highlightSelectedToken(_g);
-		//displayInfo(_g);
-		/*if(run.createAnimation) {
-			_g.setColor(Color.BLACK);
-			_g.fillRect(yellowCreateX, yellowCreateY, WIDTH, WIDTH);
-			_g.setColor(Color.YELLOW);
-			_g.fillOval(yellowCreateX, yellowCreateY, WIDTH, HEIGHT);
-			_g.setColor(Color.red);
-			_g.setStroke(new BasicStroke(6));
-			drawToken(_g, run.creationPiece, yellowCreateX, yellowCreateY);
-			if(yellowCreateX > 420) {
-				yellowCreateX-=4;
-			}
-			else {
-				run.createAnimation = false;
-				yellowCreateX = 7 * WIDTH + (3 * WIDTH);
-				yellowCreateY = 7 * HEIGHT;
-			}
-		}*/
-
-		/*
-		drawBoard(_g);
-		highlightSelectedToken(_g);
-		displayInfo(_g);
-		if (run.createAnimation == true) {
-			applyCreateAnimation(_g);
-		}*/
-
 	}
 
 	public int getRow(int value) {
@@ -274,52 +224,29 @@ public class BoardPanel extends JPanel {
 		return value/HEIGHT;
 	}
 
-	/*public void applyMoveAnimation(Graphics2D _g) {
-		if (moveDir.equals("up") && run.currentPlayer.getName().equals("yellow")) {
-
-			if (chosenX == 7 * WIDTH && chosenY == 7 * HEIGHT) {
-				_g.setColor(new Color(255, 250, 205));
-				_g.drawRect(chosenX, chosenY, WIDTH, HEIGHT);
-			}
-			_g.setColor(Color.DARK_GRAY);
-			_g.fillRect(chosenX, moveY, WIDTH, WIDTH);
-			_g.setColor(Color.YELLOW);
-			_g.fillOval(chosenX, moveY, WIDTH, HEIGHT);
-			_g.setColor(Color.red);
-			_g.setStroke(new BasicStroke(6));
-
-			drawToken(_g, chosenToken, moveX, moveY);
-			_g.setStroke(new BasicStroke(0));
-			if (moveY > endY) {
-				moveY -= 2;
-			} else {
-				moveAnimation = false;
-				String letter = chosenToken.getName();
-				game.moveToken(run.currentPlayer, "move " + letter + " up");
-				chosenToken = null;
-			}
-		}
-	}*/
-
 	public void applyMoveAnimation(Graphics2D g) {
-
+		/*
+		 * Moving up works by counting number of tiles above it that need to be pushed aswell
+		 * From create a list containing all the those board pieces by doing some maths and finding the the rows and columns
+		 * Update those tokens x and y, and their destanations (ie how much they need to be moved)
+		 * Keep animating untill theyve arrived to their destination
+		 * Once they have arrived set of boolean to turn of move animation, and actually move the piece to create the illusion
+		 */
 		if (moveDir.equals("up") && run.currentPlayer.getName().equals("yellow")) {
 			if(skip == false) {
 				everyBpToAnimate.clear();
-				int piecesToAnimate = run.currentPlayer.upCounter(chosenToken, game.getBoard()); // need to do this else where...
+				int piecesToAnimate = run.currentPlayer.upCounter(chosenToken, game.getBoard());
 				chosenToken.moveX = moveX;
 				chosenToken.moveY = moveY;
 				chosenToken.destY = chosenY - 60;
 				everyBpToAnimate.add(chosenToken);
 				for(int i = piecesToAnimate; i > 0; i--) {
-					System.out.println("in for loop=====================");
 					int row = getRow(chosenY - (piecesToAnimate*HEIGHT));
 					int col = getCol(chosenX);
 					BoardPiece bp = ((BoardPiece)game.getBoard().getBoard()[row][col]);
 					bp.moveX = chosenX;
 					bp.moveY = chosenY - ((piecesToAnimate)*HEIGHT);
 					bp.destY = chosenY - ((piecesToAnimate + 1)*HEIGHT);  // #### Added this in the lab, moves both tokens up now issue was dest y was fucked.... but gives null pointers now
-					//bp.destY = moveY-60;
 					everyBpToAnimate.add(bp);
 				}
 				System.out.println("skip is " + skip);
@@ -335,10 +262,8 @@ public class BoardPanel extends JPanel {
 	}
 
 	public void hope(Graphics2D g, List<BoardPiece> toAnimate) {
-		System.out.println("in hope");
 		for(BoardPiece bp : toAnimate) {
 			if(bp == null) {
-				System.out.println("in null...");
 				continue;
 			}
 			if(bp!=null) {
@@ -350,31 +275,19 @@ public class BoardPanel extends JPanel {
 			g.fillOval(moveX, bp.moveY, WIDTH, HEIGHT);
 			g.setColor(Color.red);
 			g.setStroke(new BasicStroke(6));
-			//drawToken(g, chosenToken, moveX, bp.moveY);
-			drawToken(g, bp, bp.moveX, bp.moveY); //################# <--- added this in the lab aswell draws correct token but still null pointers
+			drawToken(g, bp, bp.moveX, bp.moveY);
 			g.setStroke(new BasicStroke(0));
 			if (bp.moveY > bp.destY) {
 				bp.moveY -= 2;
 			}
 			else {
-				for(BoardPiece bpp : toAnimate) {
-					System.out.println("move y for " + bpp.getName() + " " + bp.moveY);
-					System.out.println("dest y for " + bpp.getName() + " " + bp.destY);
-				}
-
-				System.out.println("in else statement");
 				moveAnimation = false;
 				skip = false;
-				//everyBpToAnimate.clear();
 				if(chosenToken!=null) {
 					letter = chosenToken.getName();
 					game.moveToken(run.currentPlayer, "move " + letter + " up");
-
 				}
-
-				//String letter = bp.getName();
 				chosenToken = null;
-
 			}
 		}
 		if(skip == false) {
@@ -382,102 +295,6 @@ public class BoardPanel extends JPanel {
 		}
 	}
 
-	public void applyAnimation(Graphics2D g, BoardPiece bp) {
-		g.setColor(Color.DARK_GRAY);
-		g.fillRect(currentMoveX, currentMoveY, WIDTH, WIDTH);
-		g.setColor(Color.YELLOW);
-		g.fillOval(currentMoveX, currentMoveY, WIDTH, HEIGHT);
-		g.setColor(Color.red);
-		g.setStroke(new BasicStroke(6));
-		drawToken(g, chosenToken, currentMoveX, currentMoveY);
-		g.setStroke(new BasicStroke(0));
-		if (currentMoveY > finalDestY) {
-			currentMoveY -= 2;
-		}
-
-
-		/*g.fillRect(chosenX, moveY, WIDTH, WIDTH);
-		g.setColor(Color.YELLOW);
-		g.fillOval(chosenX, moveY, WIDTH, HEIGHT);
-		g.setColor(Color.red);
-		g.setStroke(new BasicStroke(6));
-		drawToken(g, chosenToken, moveX, moveY);
-		g.setStroke(new BasicStroke(0));
-		if (moveY > endY) {
-			moveY -= 2;
-		} else {
-			moveAnimation = false;
-			String letter = chosenToken.getName();
-			game.moveToken(run.currentPlayer, "move " + letter + " up");
-			chosenToken = null;
-		}*/
-
-	}
-
-	/*public void applyMoveAnimation(Graphics2D _g) {
-		if (moveDir.equals("up") && run.currentPlayer.getName().equals("yellow")) {
-			int piecesToAnimate = run.currentPlayer.upCounter(chosenToken, game.getBoard());
-			System.out.println(piecesToAnimate);
-			int startTokenY = chosenY - (piecesToAnimate*HEIGHT);
-			int row = getRow(chosenY - (piecesToAnimate*HEIGHT));
-			int col = getCol(chosenX);
-			System.out.println(row);
-			System.out.println(col);
-
-			//System.out.println(chosenX);
-			//BoardPiece one = game.getBoard().getBoard()[getRow()]
-			if (chosenX == 7 * WIDTH && chosenY == 7 * HEIGHT) {
-				_g.setColor(new Color(255, 250, 205));
-				_g.drawRect(chosenX, chosenY, WIDTH, HEIGHT);
-			}
-			_g.setColor(Color.DARK_GRAY);
-			_g.fillRect(chosenX, moveY, WIDTH, WIDTH);
-			_g.setColor(Color.YELLOW);
-			_g.fillOval(chosenX, moveY, WIDTH, HEIGHT);
-			_g.setColor(Color.red);
-			_g.setStroke(new BasicStroke(6));
-			drawToken(_g, chosenToken, moveX, moveY);
-			_g.setStroke(new BasicStroke(0));
-			if (moveY > endY) {
-				moveY -= 2;
-			} else {
-				moveAnimation = false;
-				String letter = chosenToken.getName();
-				game.moveToken(run.currentPlayer, "move " + letter + " up");
-				chosenToken = null;
-			}
-		}
-	}*/
-
-
-
-	public void createAnimation(Graphics2D g) {
-		if(run.currentPlayer.getName().equals("yellow")) {
-
-		}
-	}
-
-	public void applyCreateAnimation(Graphics2D g) {
-		// System.out.println("in animation");
-		if (run.currentPlayer.getName().equals("yellow")) {
-			int drawX = 7 * WIDTH;
-			int drawY = 7 * HEIGHT;
-			int red = 255;
-			int green = 255;
-			int blue = 0;
-			// System.out.println(alpha);
-			g.setColor(Color.DARK_GRAY);
-			g.fillRect(drawX, drawY, WIDTH, WIDTH);
-			g.setColor(new Color(red, green, blue, alpha));
-			g.fillOval(drawX, drawY, WIDTH, HEIGHT);
-			if (alpha < 250) {
-				alpha += 10;
-			} else {
-				alpha = 0;
-				//run.createAnimation = false;
-			}
-		}
-	}
 
 	public void displayInfo(Graphics2D g) {
 		g.setColor(Color.BLACK);
@@ -530,7 +347,6 @@ public class BoardPanel extends JPanel {
 						g.setColor(new Color(255, 250, 205));
 						g.fillRect(col * WIDTH, row * HEIGHT, WIDTH, HEIGHT);
 					}
-
 				} else if (board[row][col] instanceof BoardPiece) {
 					g.setColor(Color.DARK_GRAY);
 					g.fillRect(col * WIDTH, row * HEIGHT, WIDTH, WIDTH);
@@ -584,7 +400,6 @@ public class BoardPanel extends JPanel {
 				}
 			}
 		}
-
 	}
 
 	private void drawToken(Graphics2D g, BoardPiece piece, int x, int y) {
