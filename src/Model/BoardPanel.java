@@ -33,6 +33,7 @@ public class BoardPanel extends JPanel {
 	private boolean moveAnimation = false;
 	private String moveDir = "";
 	private boolean skip = false;
+	private int mouseClicks = 0; // ensures that if the tokens been clicked more than once than it can be moved
 	private List<BoardPiece> everyBpToAnimate = new ArrayList<BoardPiece>();
 	private String letter = "";
 	public BoardPanel(SwordAndShieldGame game, GameFrame run) {
@@ -64,8 +65,12 @@ public class BoardPanel extends JPanel {
 				mouseY = e.getY();
 				findClickedToken();
 				if (chosenToken != null) {
+					mouseClicks++;
 					attemptClickMove();
+				}else {
+					mouseClicks = 0;
 				}
+
 
 			}
 		});
@@ -121,7 +126,7 @@ public class BoardPanel extends JPanel {
 	// http://zetcode.com/gfx/java2d/transparency/
 	public void attemptClickMove() {
 		System.out.println("in attempt to click move");
-		if (chosenToken != null) {
+		if (chosenToken != null && mouseClicks>1) {
 			Rectangle moveUp = new Rectangle(chosenX, chosenY, WIDTH, HEIGHT / 4);
 			Rectangle moveLeft = new Rectangle(chosenX, chosenY, WIDTH / 4, HEIGHT);
 			Rectangle moveRight = new Rectangle(chosenX + (WIDTH / 4) * 3, chosenY, WIDTH / 4, HEIGHT);
@@ -131,23 +136,29 @@ public class BoardPanel extends JPanel {
 				System.out.println("move " + letter + " up");
 				game.moveToken(run.currentPlayer, "move " + letter + " up");
 				chosenToken = null;
+				mouseClicks = 0;
 			} else if (moveRight.contains(mouseX, mouseY)) {
 				String letter = chosenToken.getName();
 				System.out.println("move " + letter + " right");
 				game.moveToken(run.currentPlayer, "move " + letter + " right");
 				chosenToken = null;
+				mouseClicks = 0;
+
 			} else if (moveDown.contains(mouseX, mouseY)) {
 				String letter = chosenToken.getName();
 				System.out.println("move " + letter + " down");
 				game.moveToken(run.currentPlayer, "move " + letter + " down");
 				chosenToken = null;
+				mouseClicks = 0;
+
 			} else if (moveLeft.contains(mouseX, mouseY)) {
 				String letter = chosenToken.getName();
 				System.out.println("move " + letter + " left");
 				game.moveToken(run.currentPlayer, "move " + letter + " left");
 				chosenToken = null;
+				mouseClicks = 0;
 			} else {
-
+				mouseClicks = 0;
 			}
 		}
 	}
@@ -155,17 +166,20 @@ public class BoardPanel extends JPanel {
 	public void highlightSelectedToken(Graphics2D g) {
 		if (chosenToken != null) {
 			g.setColor(Color.BLUE.darker());
+			g.setColor(new Color(0,0,255,80));
 			g.setStroke(new BasicStroke(6));
-			g.drawRect(chosenX - STROKE, chosenY - STROKE, WIDTH + STROKE + 3, HEIGHT + STROKE + 3);
-			g.setColor(Color.CYAN);
-			g.drawRect(chosenX, chosenY, WIDTH / 4, HEIGHT);
-			g.setColor(Color.PINK);
-			g.drawRect(chosenX, chosenY, WIDTH, HEIGHT / 4);
-			g.setColor(Color.ORANGE);
-			g.drawRect(chosenX + (WIDTH / 4) * 3, chosenY, WIDTH / 4, HEIGHT);
-			g.setColor(Color.magenta);
-			g.drawRect(chosenX, chosenY + (HEIGHT / 4) * 3, WIDTH, HEIGHT / 4);
-			g.setStroke(new BasicStroke(0));
+			g.fillRect(chosenX, chosenY, WIDTH, HEIGHT);
+			//g.drawRect(chosenX - STROKE, chosenY - STROKE, WIDTH + STROKE + 3, HEIGHT + STROKE + 3);
+			//Draws bounding boxes
+//			g.setColor(Color.CYAN);
+//			g.drawRect(chosenX, chosenY, WIDTH / 4, HEIGHT);
+//			g.setColor(Color.PINK);
+//			g.drawRect(chosenX, chosenY, WIDTH, HEIGHT / 4);
+//			g.setColor(Color.ORANGE);
+//			g.drawRect(chosenX + (WIDTH / 4) * 3, chosenY, WIDTH / 4, HEIGHT);
+//			g.setColor(Color.magenta);
+//			g.drawRect(chosenX, chosenY + (HEIGHT / 4) * 3, WIDTH, HEIGHT / 4);
+//			g.setStroke(new BasicStroke(0));
 		}
 	}
 
@@ -241,12 +255,14 @@ public class BoardPanel extends JPanel {
 				chosenToken.destY = chosenY - 60;
 				everyBpToAnimate.add(chosenToken);
 				for(int i = piecesToAnimate; i > 0; i--) {
-					int row = getRow(chosenY - (piecesToAnimate*HEIGHT));
+					int row = getRow(chosenY - (i*HEIGHT));
 					int col = getCol(chosenX);
 					BoardPiece bp = ((BoardPiece)game.getBoard().getBoard()[row][col]);
+					System.out.println("=====================================adding : ======================================");
+					System.out.println(bp.toString());
 					bp.moveX = chosenX;
-					bp.moveY = chosenY - ((piecesToAnimate)*HEIGHT);
-					bp.destY = chosenY - ((piecesToAnimate + 1)*HEIGHT);  // #### Added this in the lab, moves both tokens up now issue was dest y was fucked.... but gives null pointers now
+					bp.moveY = chosenY - (i * HEIGHT);
+					bp.destY = chosenY -((i+1) * HEIGHT);
 					everyBpToAnimate.add(bp);
 				}
 				System.out.println("skip is " + skip);
@@ -255,6 +271,9 @@ public class BoardPanel extends JPanel {
 				for(BoardPiece bp : everyBpToAnimate) {
 					System.out.println("every piece is : ");
 					System.out.println(bp.toString());
+					System.out.println("deestY is " + bp.destY);
+					System.out.println("moveY is " + bp.moveY);
+
 				}
 				hope(g, everyBpToAnimate);
 			}

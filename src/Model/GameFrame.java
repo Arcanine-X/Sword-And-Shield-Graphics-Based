@@ -35,7 +35,6 @@ public class GameFrame extends JFrame implements Observer{
 	boolean yellowTurn = true;
 	boolean greenTurn = false;
 	public boolean pastCreation = false;
-	//public boolean createAnimation = false;
 	public boolean disableBoard = false;
 	public BoardPiece creationPiece = null;
 
@@ -103,13 +102,9 @@ public class GameFrame extends JFrame implements Observer{
 			}
 		});
 		surrender.addActionListener(new ActionListener() {
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				GameFrame.this.surrender();
-
-				//MenuFrame menu = new MenuFrame();
-				//GameFrame.this.dispatchEvent(new WindowEvent(GameFrame.this, WindowEvent.WINDOW_CLOSING));
 			}
 		});
 		pass.addActionListener(new ActionListener() {
@@ -150,22 +145,14 @@ public class GameFrame extends JFrame implements Observer{
 	public void surrender() {
 		String surrenderMsg = "";
 		if(currentPlayer.getName().equals("yellow")) {
-			surrenderMsg = "Green Wins, would you like to go back to the menu?";
+			surrenderMsg = "Green Wins";
 		}
 		else {
-			surrenderMsg = "Yellow Wins, would you like to go back to the menu?";
+			surrenderMsg = "Yellow Wins";
 		}
-		int r = JOptionPane.showConfirmDialog(this, new JLabel(surrenderMsg), "Surrender", JOptionPane.YES_NO_OPTION);
-        if(r == JOptionPane.YES_OPTION) {
-        	MenuFrame menu = new MenuFrame();
-			GameFrame.this.dispatchEvent(new WindowEvent(GameFrame.this, WindowEvent.WINDOW_CLOSING));
-        }
-        else if(r == JOptionPane.NO_OPTION) {
-        	System.exit(1);
-        }
-        else {
-        	System.exit(1);
-        }
+		JOptionPane.showMessageDialog(this, surrenderMsg);
+		MenuFrame menu = new MenuFrame();
+		GameFrame.this.dispatchEvent(new WindowEvent(GameFrame.this, WindowEvent.WINDOW_CLOSING));
 	}
 
 	public void mainGame() {
@@ -183,30 +170,6 @@ public class GameFrame extends JFrame implements Observer{
 		}
 
 	}
-
-	/*public void mainGame() {
-		//while (!game.isGameEnd()) {// loop until game is ended
-			//System.out.println("\n********************");
-			//System.out.println("***** TURN " + turn + " *******");
-			//System.out.println("********************\n");
-			if (turn % 2 == 0 && greenTurn) {
-				System.out.println("It is greens turn!");
-				tokenPanelY.setEnabled(false);
-				if(game.passed) {
-					game.passed = false;
-					turn++;
-				}
-			} else if(turn % 2 !=0 && yellowTurn) {
-				System.out.println("It is yellows turn!");
-				tokenPanelG.setEnabled(false);
-				if(game.passed) {
-					game.passed = false;
-					turn++;
-				}
-			}
-
-		//}
-	}*/
 
 	@Override
 	public void paintComponents(Graphics g) {
