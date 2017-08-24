@@ -153,6 +153,46 @@ public class Player implements Token {
 		}
 	}
 
+	public int rightCounter(BoardPiece token, Board board) {
+		int c = board.getX(token.getName());
+		int r = board.getY(token.getName());
+		int count = 0;
+		if (c + 1 > 9) {
+			return 0;
+		} else if (!(board.getBoard()[r][c + 1] instanceof BoardPiece) && !(c + 1 > 9)) {
+			//board.getBoard()[r][c] = null;
+			//c++;
+			//board.getBoard()[r][c] = token;
+		} else {
+			for (int i = c + 1, j = 0; i < board.getBoard().length; i++, j++) {
+				if (board.getBoard()[r][i] instanceof BoardPiece && count == j) {// calculate number of adjacent tiles to the tile being pushed
+					count++;
+				}
+			}
+		}
+		return count;
+	}
+
+	public int leftCounter(BoardPiece token, Board board) {
+		int c = board.getX(token.getName());
+		int r = board.getY(token.getName());
+		int count = 0;
+		if (c - 1 < 0) {
+			return 0;
+		} else if (!(board.getBoard()[r][c - 1] instanceof BoardPiece) && !(c - 1 < 0)) {
+//			board.getBoard()[r][c] = null;
+//			c--;
+//			board.getBoard()[r][c] = token;
+		} else {
+			for (int i = c - 1, j = 0; i >= 0; i--, j++) {
+				if (board.getBoard()[r][i] instanceof BoardPiece && count == j) {// calculate number of adjacent tiles to the tile being pushed
+					count++;
+				}
+			}
+		}
+		return count;
+	}
+
 	public int upCounter(BoardPiece token, Board board) {
 		int c = board.getX(token.getName());
 		int r = board.getY(token.getName());
@@ -171,6 +211,27 @@ public class Player implements Token {
 				}
 			}
 
+		}
+		return count;
+	}
+
+
+	public int downCounter(BoardPiece token, Board board) {
+		int c = board.getX(token.getName());
+		int r = board.getY(token.getName());
+		int count = 0;
+		if (r + 1 > 9) {
+			return 0;
+		} else if (!(board.getBoard()[r + 1][c] instanceof BoardPiece) && !(r + 1 > 9)) {
+//			board.getBoard()[r][c] = null;
+//			r++;
+//			board.getBoard()[r][c] = token;
+		} else {
+			for (int i = r + 1, j = 0; i < board.getBoard().length; i++, j++) {
+				if (board.getBoard()[i][c] instanceof BoardPiece && count == j) {// calculate number of adjacent tiles to the tile being pushed
+					count++;
+				}
+			}
 		}
 		return count;
 	}

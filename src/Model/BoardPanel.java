@@ -98,22 +98,29 @@ public class BoardPanel extends JPanel {
 					if (chosenToken != null) {
 						String letter = chosenToken.getName();
 						System.out.println("move " + letter + " right");
-						game.moveToken(run.currentPlayer, "move " + letter + " right");
-						chosenToken = null;
+						//game.moveToken(run.currentPlayer, "move " + letter + " right");
+						//chosenToken = null;
+						moveAnimation = true;
+						moveDir = "right";
 					}
 				} else if (key == KeyEvent.VK_LEFT) {
 					if (chosenToken != null) {
 						String letter = chosenToken.getName();
 						System.out.println("move " + letter + " left");
-						game.moveToken(run.currentPlayer, "move " + letter + " left");
-						chosenToken = null;
+						//game.moveToken(run.currentPlayer, "move " + letter + " left");
+						//chosenToken = null;
+						moveAnimation = true;
+						moveDir = "left";
+
 					}
 				} else if (key == KeyEvent.VK_DOWN) {
 					if (chosenToken != null) {
 						String letter = chosenToken.getName();
 						System.out.println("move " + letter + " down");
-						game.moveToken(run.currentPlayer, "move " + letter + " down");
-						chosenToken = null;
+						//game.moveToken(run.currentPlayer, "move " + letter + " down");
+						//chosenToken = null;
+						moveAnimation = true;
+						moveDir = "down";
 					}
 				} else {
 					System.out.println("invalid key");
@@ -277,6 +284,200 @@ public class BoardPanel extends JPanel {
 				}
 				hope(g, everyBpToAnimate);
 			}
+		}else if(moveDir.equals("down") && run.currentPlayer.getName().equals("yellow")) {
+			if(skip == false) {
+				everyBpToAnimate.clear();
+				int piecesToAnimate = run.currentPlayer.downCounter(chosenToken, game.getBoard());
+				chosenToken.moveX = moveX;
+				chosenToken.moveY = moveY;
+				chosenToken.destY = chosenY + 60;
+				everyBpToAnimate.add(chosenToken);
+				for(int i = piecesToAnimate; i > 0; i--) {
+					int row = getRow(chosenY + (i*HEIGHT));
+					int col = getCol(chosenX);
+					BoardPiece bp = ((BoardPiece)game.getBoard().getBoard()[row][col]);
+					System.out.println("=====================================adding : ======================================");
+					System.out.println(bp.toString());
+					bp.moveX = chosenX;
+					bp.moveY = chosenY + (i * HEIGHT);
+					bp.destY = chosenY +((i+1) * HEIGHT);
+					everyBpToAnimate.add(bp);
+				}
+				System.out.println("skip is " + skip);
+				skip = true;
+			}else {
+				for(BoardPiece bp : everyBpToAnimate) {
+					System.out.println("every piece is : ");
+					System.out.println(bp.toString());
+					System.out.println("deestY is " + bp.destY);
+					System.out.println("moveY is " + bp.moveY);
+				}
+				hope2(g, everyBpToAnimate);
+			}
+		}else if(moveDir.equals("right") && run.currentPlayer.getName().equals("yellow")) {
+			if(skip == false) {
+				everyBpToAnimate.clear();
+				int piecesToAnimate = run.currentPlayer.rightCounter(chosenToken, game.getBoard());
+				chosenToken.moveX = moveX;
+				chosenToken.moveY = moveY;
+				chosenToken.destX = chosenX + 60;
+				everyBpToAnimate.add(chosenToken);
+				for(int i = piecesToAnimate; i > 0; i--) {
+					int row = getRow(chosenY);
+					int col = getCol(chosenX + (i*WIDTH));
+					BoardPiece bp = ((BoardPiece)game.getBoard().getBoard()[row][col]);
+					System.out.println("=====================================adding : ======================================");
+					System.out.println(bp.toString());
+					bp.moveX = chosenX + (i*WIDTH);
+					bp.moveY = chosenY;
+					bp.destX = chosenX +((i+1) * WIDTH);
+					everyBpToAnimate.add(bp);
+				}
+				System.out.println("skip is " + skip);
+				skip = true;
+			}else {
+				for(BoardPiece bp : everyBpToAnimate) {
+					System.out.println("every piece is : ");
+					System.out.println(bp.toString());
+					System.out.println("deestX is " + bp.destX);
+					System.out.println("moveX is " + bp.moveX);
+				}
+				hope3(g, everyBpToAnimate);
+			}
+		}
+		else if(moveDir.equals("left") && run.currentPlayer.getName().equals("yellow")) {
+			if(skip == false) {
+				everyBpToAnimate.clear();
+				int piecesToAnimate = run.currentPlayer.leftCounter(chosenToken, game.getBoard());
+				chosenToken.moveX = moveX;
+				chosenToken.moveY = moveY;
+				chosenToken.destX = chosenX - 60;
+				everyBpToAnimate.add(chosenToken);
+				for(int i = piecesToAnimate; i > 0; i--) {
+					int row = getRow(chosenY);
+					int col = getCol(chosenX - (i*WIDTH));
+					BoardPiece bp = ((BoardPiece)game.getBoard().getBoard()[row][col]);
+					System.out.println("=====================================adding : ======================================");
+					System.out.println(bp.toString());
+					bp.moveX = chosenX - (i*WIDTH);
+					bp.moveY = chosenY;
+					bp.destX = chosenX - ((i+1) * WIDTH);
+					everyBpToAnimate.add(bp);
+				}
+				System.out.println("skip is " + skip);
+				skip = true;
+			}else {
+				for(BoardPiece bp : everyBpToAnimate) {
+					System.out.println("every piece is : ");
+					System.out.println(bp.toString());
+					System.out.println("deestX is " + bp.destX);
+					System.out.println("moveX is " + bp.moveX);
+				}
+				hope4(g, everyBpToAnimate);
+			}
+		}
+
+	}
+
+	public void hope4(Graphics2D g, List<BoardPiece> toAnimate) {
+		for(BoardPiece bp : toAnimate) {
+			if(bp == null) {
+				continue;
+			}
+			if(bp!=null) {
+				System.out.println(bp.getName() + " " + bp.moveX + " " + bp.destX);
+			}
+			g.setColor(Color.DARK_GRAY);
+			g.fillRect(bp.moveX, moveY, WIDTH, WIDTH);
+			g.setColor(Color.YELLOW);
+			g.fillOval(bp.moveX, moveY, WIDTH, HEIGHT);
+			g.setColor(Color.red);
+			g.setStroke(new BasicStroke(6));
+			drawToken(g, bp, bp.moveX, bp.moveY);
+			g.setStroke(new BasicStroke(0));
+			if (bp.moveX > bp.destX) {
+				bp.moveX -= 2;
+			}
+			else {
+				moveAnimation = false;
+				skip = false;
+				if(chosenToken!=null) {
+					letter = chosenToken.getName();
+					game.moveToken(run.currentPlayer, "move " + letter + " left");
+				}
+				chosenToken = null;
+			}
+		}
+		if(skip == false) {
+			everyBpToAnimate.clear();
+		}
+	}
+
+	public void hope3(Graphics2D g, List<BoardPiece> toAnimate) {
+		for(BoardPiece bp : toAnimate) {
+			if(bp == null) {
+				continue;
+			}
+			if(bp!=null) {
+				System.out.println(bp.getName() + " " + bp.moveX + " " + bp.destX);
+			}
+			g.setColor(Color.DARK_GRAY);
+			g.fillRect(bp.moveX, moveY, WIDTH, WIDTH);
+			g.setColor(Color.YELLOW);
+			g.fillOval(bp.moveX, moveY, WIDTH, HEIGHT);
+			g.setColor(Color.red);
+			g.setStroke(new BasicStroke(6));
+			drawToken(g, bp, bp.moveX, bp.moveY);
+			g.setStroke(new BasicStroke(0));
+			if (bp.moveX < bp.destX) {
+				bp.moveX += 2;
+			}
+			else {
+				moveAnimation = false;
+				skip = false;
+				if(chosenToken!=null) {
+					letter = chosenToken.getName();
+					game.moveToken(run.currentPlayer, "move " + letter + " right");
+				}
+				chosenToken = null;
+			}
+		}
+		if(skip == false) {
+			everyBpToAnimate.clear();
+		}
+	}
+
+	public void hope2(Graphics2D g, List<BoardPiece> toAnimate) {
+		for(BoardPiece bp : toAnimate) {
+			if(bp == null) {
+				continue;
+			}
+			if(bp!=null) {
+				System.out.println(bp.getName() + " " + bp.moveY + " " + bp.destY);
+			}
+			g.setColor(Color.DARK_GRAY);
+			g.fillRect(moveX, bp.moveY, WIDTH, WIDTH);
+			g.setColor(Color.YELLOW);
+			g.fillOval(moveX, bp.moveY, WIDTH, HEIGHT);
+			g.setColor(Color.red);
+			g.setStroke(new BasicStroke(6));
+			drawToken(g, bp, bp.moveX, bp.moveY);
+			g.setStroke(new BasicStroke(0));
+			if (bp.moveY < bp.destY) {
+				bp.moveY += 2;
+			}
+			else {
+				moveAnimation = false;
+				skip = false;
+				if(chosenToken!=null) {
+					letter = chosenToken.getName();
+					game.moveToken(run.currentPlayer, "move " + letter + " down");
+				}
+				chosenToken = null;
+			}
+		}
+		if(skip == false) {
+			everyBpToAnimate.clear();
 		}
 	}
 
