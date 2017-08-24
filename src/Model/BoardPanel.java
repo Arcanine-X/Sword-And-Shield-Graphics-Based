@@ -35,6 +35,11 @@ public class BoardPanel extends JPanel {
 	private boolean skip = false;
 	private List<BoardPiece> everyBpToAnimate = new ArrayList<BoardPiece>();
 	private String letter = "";
+	private boolean disappearAnimation = false;
+	private boolean disappearSkip = false;
+	private int disappearCol, disapppearRow;
+	private BoardPiece disappearPiece;
+	private int alpha = 0;
 	public BoardPanel(SwordAndShieldGame game, GameFrame run) {
 		this.game = game;
 		this.run = run;
@@ -217,7 +222,12 @@ public class BoardPanel extends JPanel {
 		//highlightSelectedToken(_g);
 		displayInfo(_g);
 		if (moveAnimation) {
-			applyMoveAnimation(_g);
+			if(disappearAnimation) {
+				applyDisappearAnimation(_g);
+			}
+			else{
+				applyMoveAnimation(_g);
+			}
 		}
 		else {
 			drawBoard(_g);
@@ -234,6 +244,41 @@ public class BoardPanel extends JPanel {
 		return value/HEIGHT;
 	}
 
+	public void applyDisappearAnimation(Graphics2D g) {
+		if(moveDir.equals("up")) {
+			if(disappearSkip == false) {
+				disappearCol = getCol(chosenX);
+				disapppearRow = getRow(chosenY);
+				disappearPiece = (BoardPiece) board[disapppearRow][disappearCol];
+				disappearSkip = true;
+				applyHoudiniEffect(g, disappearPiece);
+			}else {
+				if(disappearPiece!=null) {
+					applyHoudiniEffect(g, disappearPiece);
+				}
+			}
+		}
+	}
+
+	public void applyHoudiniEffect(Graphics2D g, BoardPiece toAnimate){
+		if(toAnimate!=null) {
+			if((disappearCol + disapppearRow) % 2 != 1) {
+				g.setColor(new Color(255,255,255,alpha)); // white
+			}
+			else {
+				g.setColor(new Color(0,0,0,alpha));
+			}
+			g.fillRect(disappearCol*WIDTH, disapppearRow * HEIGHT, WIDTH, HEIGHT);
+			if(alpha < 250) {
+				alpha +=5;
+			}else {
+				alpha = 0;
+				disappearAnimation = false;
+				game.moveToken(run.currentPlayer, "move " + toAnimate.getName() + " up");
+			}
+		}
+	}
+
 	public void applyMoveAnimation(Graphics2D g) {
 		/*
 		 * Moving up works by counting number of tiles above it that need to be pushed aswell
@@ -246,6 +291,10 @@ public class BoardPanel extends JPanel {
 			if(skip == false) {
 				everyBpToAnimate.clear();
 				int piecesToAnimate = run.currentPlayer.upCounter(chosenToken, game.getBoard());
+				if(piecesToAnimate == -1) {
+					disappearAnimation = true;
+					return;
+				}
 				chosenToken.moveX = moveX;
 				chosenToken.moveY = moveY;
 				chosenToken.destY = chosenY - 60;
@@ -254,21 +303,21 @@ public class BoardPanel extends JPanel {
 					int row = getRow(chosenY - (i*HEIGHT));
 					int col = getCol(chosenX);
 					BoardPiece bp = ((BoardPiece)game.getBoard().getBoard()[row][col]);
-					System.out.println("=====================================adding : ======================================");
-					System.out.println(bp.toString());
+					//System.out.println("=====================================adding : ======================================");
+					//System.out.println(bp.toString());
 					bp.moveX = chosenX;
 					bp.moveY = chosenY - (i * HEIGHT);
 					bp.destY = chosenY -((i+1) * HEIGHT);
 					everyBpToAnimate.add(bp);
 				}
-				System.out.println("skip is " + skip);
+				//System.out.println("skip is " + skip);
 				skip = true;
 			}else {
 				for(BoardPiece bp : everyBpToAnimate) {
-					System.out.println("every piece is : ");
-					System.out.println(bp.toString());
-					System.out.println("deestY is " + bp.destY);
-					System.out.println("moveY is " + bp.moveY);
+					//System.out.println("every piece is : ");
+					//System.out.println(bp.toString());
+					//System.out.println("deestY is " + bp.destY);
+					//System.out.println("moveY is " + bp.moveY);
 
 				}
 				hope(g, everyBpToAnimate);
@@ -476,7 +525,7 @@ public class BoardPanel extends JPanel {
 				continue;
 			}
 			if(bp!=null) {
-				System.out.println(bp.getName() + " " + bp.moveY + " " + bp.destY);
+				//System.out.println(bp.getName() + " " + bp.moveY + " " + bp.destY);
 			}
 			g.setColor(Color.DARK_GRAY);
 			g.fillRect(moveX, bp.moveY, WIDTH, WIDTH);

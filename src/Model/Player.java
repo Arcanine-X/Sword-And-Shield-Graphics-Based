@@ -198,7 +198,7 @@ public class Player implements Token {
 		int r = board.getY(token.getName());
 		int count = 0;
 		if (r - 1 < 0) {
-			return 0;
+			return -1;
 		} else if (!(board.getBoard()[r - 1][c] instanceof BoardPiece) && !(r - 1 < 0)) {
 			System.out.println("in player count up");
 			//board.getBoard()[r][c] = null;
@@ -250,13 +250,16 @@ public class Player implements Token {
 		int c = board.getX(token.getName());
 		int r = board.getY(token.getName());
 		int count = 0;
-		if (r - 1 < 0) {
+		if (r - 1 < 0) { // of the board
+			System.out.println("in if statement");
 			board.getBoard()[r][c] = null;
-		} else if (!(board.getBoard()[r - 1][c] instanceof BoardPiece) && !(r - 1 < 0)) {
+		} else if (!(board.getBoard()[r - 1][c] instanceof BoardPiece) && !(r - 1 < 0)) { // movin by its self
+			System.out.println("in else if statement");
 			board.getBoard()[r][c] = null;
 			r--;
 			board.getBoard()[r][c] = token;
 		} else { // requires shifting
+			System.out.println("in else statement");
 			for (int i = r - 1, j = 0; i >= 0; i--, j++) {
 				if (board.getBoard()[i][c] instanceof BoardPiece && count == j) { //calculate number of adjacent tiles going from the the tile being pushed
 					count++;
