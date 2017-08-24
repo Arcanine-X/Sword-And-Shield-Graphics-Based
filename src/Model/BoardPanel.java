@@ -40,6 +40,7 @@ public class BoardPanel extends JPanel {
 	private int disappearCol, disapppearRow;
 	private BoardPiece disappearPiece;
 	private int alpha = 0;
+	int piecesToAnimate;
 	public BoardPanel(SwordAndShieldGame game, GameFrame run) {
 		this.game = game;
 		this.run = run;
@@ -221,13 +222,11 @@ public class BoardPanel extends JPanel {
 		drawBoard(_g);
 		//highlightSelectedToken(_g);
 		displayInfo(_g);
-		if (moveAnimation) {
-			if(disappearAnimation) {
-				applyDisappearAnimation(_g);
-			}
-			else{
-				applyMoveAnimation(_g);
-			}
+		if(disappearAnimation) {
+			applyDisappearAnimation(_g);
+		}
+		else if (moveAnimation) {
+			applyMoveAnimation(_g);
 		}
 		else {
 			drawBoard(_g);
@@ -247,8 +246,15 @@ public class BoardPanel extends JPanel {
 	public void applyDisappearAnimation(Graphics2D g) {
 		if(moveDir.equals("up")) {
 			if(disappearSkip == false) {
-				disappearCol = getCol(chosenX);
-				disapppearRow = getRow(chosenY);
+				if(piecesToAnimate==-1) {
+					disappearCol = getCol(chosenX);
+					disapppearRow = getRow(chosenY);
+				}
+				else {
+					disappearCol = getCol(chosenX);
+					disapppearRow = getRow(chosenY - (piecesToAnimate*HEIGHT));
+				}
+				System.out.println("Col is " + disappearCol + " Row is " + disapppearRow);
 				disappearPiece = (BoardPiece) board[disapppearRow][disappearCol];
 				disappearSkip = true;
 				applyHoudiniEffect(g, disappearPiece);
@@ -274,6 +280,7 @@ public class BoardPanel extends JPanel {
 			}else {
 				alpha = 0;
 				disappearAnimation = false;
+				disappearSkip = false;
 				game.moveToken(run.currentPlayer, "move " + toAnimate.getName() + " up");
 			}
 		}
@@ -290,9 +297,12 @@ public class BoardPanel extends JPanel {
 		if (moveDir.equals("up") && run.currentPlayer.getName().equals("yellow")) {
 			if(skip == false) {
 				everyBpToAnimate.clear();
-				int piecesToAnimate = run.currentPlayer.upCounter(chosenToken, game.getBoard());
+				piecesToAnimate = run.currentPlayer.upCounter(chosenToken, game.getBoard());
 				if(piecesToAnimate == -1) {
 					disappearAnimation = true;
+					moveAnimation = false;
+					skip = false;
+					chosenToken = null;
 					return;
 				}
 				chosenToken.moveX = moveX;
@@ -303,15 +313,22 @@ public class BoardPanel extends JPanel {
 					int row = getRow(chosenY - (i*HEIGHT));
 					int col = getCol(chosenX);
 					BoardPiece bp = ((BoardPiece)game.getBoard().getBoard()[row][col]);
-					//System.out.println("=====================================adding : ======================================");
-					//System.out.println(bp.toString());
 					bp.moveX = chosenX;
 					bp.moveY = chosenY - (i * HEIGHT);
 					bp.destY = chosenY -((i+1) * HEIGHT);
 					everyBpToAnimate.add(bp);
 				}
-				//System.out.println("skip is " + skip);
 				skip = true;
+				BoardPiece temp;
+				if(piecesToAnimate > 0) {
+					temp = everyBpToAnimate.get(1);
+					if(temp.destY < 0) {
+						disappearPiece = temp;
+						everyBpToAnimate.remove(temp);
+						disappearAnimation = true;
+						return;
+					}
+				}
 			}else {
 				for(BoardPiece bp : everyBpToAnimate) {
 					//System.out.println("every piece is : ");

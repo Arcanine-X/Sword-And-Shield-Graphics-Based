@@ -204,6 +204,7 @@ public class Player implements Token {
 			//board.getBoard()[r][c] = null;
 			//r--;
 			//board.getBoard()[r][c] = token;
+			return 0;
 		} else { // requires shifting
 			for (int i = r - 1, j = 0; i >= 0; i--, j++) {
 				if (board.getBoard()[i][c] instanceof BoardPiece && count == j) { //calculate number of adjacent tiles going from the the tile being pushed
