@@ -158,11 +158,9 @@ public class Player implements Token {
 		int r = board.getY(token.getName());
 		int count = 0;
 		if (c + 1 > 9) {
-			return 0;
+			return -1;
 		} else if (!(board.getBoard()[r][c + 1] instanceof BoardPiece) && !(c + 1 > 9)) {
-			//board.getBoard()[r][c] = null;
-			//c++;
-			//board.getBoard()[r][c] = token;
+			return 0;
 		} else {
 			for (int i = c + 1, j = 0; i < board.getBoard().length; i++, j++) {
 				if (board.getBoard()[r][i] instanceof BoardPiece && count == j) {// calculate number of adjacent tiles to the tile being pushed
@@ -178,11 +176,9 @@ public class Player implements Token {
 		int r = board.getY(token.getName());
 		int count = 0;
 		if (c - 1 < 0) {
-			return 0;
+			return -1;
 		} else if (!(board.getBoard()[r][c - 1] instanceof BoardPiece) && !(c - 1 < 0)) {
-//			board.getBoard()[r][c] = null;
-//			c--;
-//			board.getBoard()[r][c] = token;
+			return 0;
 		} else {
 			for (int i = c - 1, j = 0; i >= 0; i--, j++) {
 				if (board.getBoard()[r][i] instanceof BoardPiece && count == j) {// calculate number of adjacent tiles to the tile being pushed
@@ -200,10 +196,6 @@ public class Player implements Token {
 		if (r - 1 < 0) {
 			return -1;
 		} else if (!(board.getBoard()[r - 1][c] instanceof BoardPiece) && !(r - 1 < 0)) {
-			System.out.println("in player count up");
-			//board.getBoard()[r][c] = null;
-			//r--;
-			//board.getBoard()[r][c] = token;
 			return 0;
 		} else { // requires shifting
 			for (int i = r - 1, j = 0; i >= 0; i--, j++) {
@@ -222,11 +214,9 @@ public class Player implements Token {
 		int r = board.getY(token.getName());
 		int count = 0;
 		if (r + 1 > 9) {
-			return 0;
+			return -1;
 		} else if (!(board.getBoard()[r + 1][c] instanceof BoardPiece) && !(r + 1 > 9)) {
-//			board.getBoard()[r][c] = null;
-//			r++;
-//			board.getBoard()[r][c] = token;
+			return 0;
 		} else {
 			for (int i = r + 1, j = 0; i < board.getBoard().length; i++, j++) {
 				if (board.getBoard()[i][c] instanceof BoardPiece && count == j) {// calculate number of adjacent tiles to the tile being pushed
