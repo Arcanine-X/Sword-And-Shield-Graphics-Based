@@ -29,7 +29,6 @@ public class GraveyardPanel extends JPanel {
 		super.paintComponent(g);
 		Graphics2D _g = (Graphics2D) g;
 		drawGrave(_g);
-		System.out.println("===============================");
 	}
 
 	public void drawGrave(Graphics2D g) {
@@ -89,7 +88,7 @@ public class GraveyardPanel extends JPanel {
 		}
 
 	}
-	
+
 	@Override
 	public Dimension getPreferredSize() {
 		return new Dimension(400,400);

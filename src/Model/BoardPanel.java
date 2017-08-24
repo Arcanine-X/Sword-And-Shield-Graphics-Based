@@ -33,7 +33,6 @@ public class BoardPanel extends JPanel {
 	private boolean moveAnimation = false;
 	private String moveDir = "";
 	private boolean skip = false;
-	private int mouseClicks = 0; // ensures that if the tokens been clicked more than once than it can be moved
 	private List<BoardPiece> everyBpToAnimate = new ArrayList<BoardPiece>();
 	private String letter = "";
 	public BoardPanel(SwordAndShieldGame game, GameFrame run) {
@@ -45,7 +44,6 @@ public class BoardPanel extends JPanel {
 			public void mouseReleased(MouseEvent e) {
 				BoardPanel.this.repaint();
 			}
-
 			@Override
 			public void mousePressed(MouseEvent e) {
 			}
@@ -65,10 +63,8 @@ public class BoardPanel extends JPanel {
 				mouseY = e.getY();
 				findClickedToken();
 				if (chosenToken != null) {
-					mouseClicks++;
 					attemptClickMove();
 				}else {
-					mouseClicks = 0;
 				}
 
 
@@ -87,6 +83,9 @@ public class BoardPanel extends JPanel {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				int key = e.getKeyCode();
+				if(run.currentPlayer.getMovesSoFar().contains(chosenToken.getName())){
+					return;
+				}
 				if (key == KeyEvent.VK_UP) {
 					if (chosenToken != null) {
 						String letter = chosenToken.getName();
@@ -98,8 +97,6 @@ public class BoardPanel extends JPanel {
 					if (chosenToken != null) {
 						String letter = chosenToken.getName();
 						System.out.println("move " + letter + " right");
-						//game.moveToken(run.currentPlayer, "move " + letter + " right");
-						//chosenToken = null;
 						moveAnimation = true;
 						moveDir = "right";
 					}
@@ -107,8 +104,6 @@ public class BoardPanel extends JPanel {
 					if (chosenToken != null) {
 						String letter = chosenToken.getName();
 						System.out.println("move " + letter + " left");
-						//game.moveToken(run.currentPlayer, "move " + letter + " left");
-						//chosenToken = null;
 						moveAnimation = true;
 						moveDir = "left";
 
@@ -117,8 +112,6 @@ public class BoardPanel extends JPanel {
 					if (chosenToken != null) {
 						String letter = chosenToken.getName();
 						System.out.println("move " + letter + " down");
-						//game.moveToken(run.currentPlayer, "move " + letter + " down");
-						//chosenToken = null;
 						moveAnimation = true;
 						moveDir = "down";
 					}
@@ -133,7 +126,10 @@ public class BoardPanel extends JPanel {
 	// http://zetcode.com/gfx/java2d/transparency/
 	public void attemptClickMove() {
 		System.out.println("in attempt to click move");
-		if (chosenToken != null && mouseClicks>1) {
+		if (chosenToken != null) {
+			if(run.currentPlayer.getMovesSoFar().contains(chosenToken.getName())){
+				return;
+			}
 			Rectangle moveUp = new Rectangle(chosenX, chosenY, WIDTH, HEIGHT / 4);
 			Rectangle moveLeft = new Rectangle(chosenX, chosenY, WIDTH / 4, HEIGHT);
 			Rectangle moveRight = new Rectangle(chosenX + (WIDTH / 4) * 3, chosenY, WIDTH / 4, HEIGHT);
@@ -141,31 +137,24 @@ public class BoardPanel extends JPanel {
 			if (moveUp.contains(mouseX, mouseY)) {
 				String letter = chosenToken.getName();
 				System.out.println("move " + letter + " up");
-				game.moveToken(run.currentPlayer, "move " + letter + " up");
-				chosenToken = null;
-				mouseClicks = 0;
+				moveAnimation = true;
+				moveDir = "up";
 			} else if (moveRight.contains(mouseX, mouseY)) {
 				String letter = chosenToken.getName();
 				System.out.println("move " + letter + " right");
-				game.moveToken(run.currentPlayer, "move " + letter + " right");
-				chosenToken = null;
-				mouseClicks = 0;
-
+				moveAnimation = true;
+				moveDir = "right";
 			} else if (moveDown.contains(mouseX, mouseY)) {
 				String letter = chosenToken.getName();
 				System.out.println("move " + letter + " down");
-				game.moveToken(run.currentPlayer, "move " + letter + " down");
-				chosenToken = null;
-				mouseClicks = 0;
-
+				moveAnimation = true;
+				moveDir = "down";
 			} else if (moveLeft.contains(mouseX, mouseY)) {
 				String letter = chosenToken.getName();
 				System.out.println("move " + letter + " left");
-				game.moveToken(run.currentPlayer, "move " + letter + " left");
-				chosenToken = null;
-				mouseClicks = 0;
+				moveAnimation = true;
+				moveDir = "left";
 			} else {
-				mouseClicks = 0;
 			}
 		}
 	}
@@ -650,7 +639,7 @@ public class BoardPanel extends JPanel {
 
 	@Override
 	public Dimension getPreferredSize() {
-		return new Dimension(600, 640);
+		return new Dimension(1000, 640);
 	}
 
 }

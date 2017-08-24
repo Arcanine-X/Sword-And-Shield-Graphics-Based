@@ -26,8 +26,6 @@ public class TokenPanel extends JPanel implements Observer{
 	private int y = GAP;
 	private int mouseX;
 	private int mouseY;
-	private int createX;
-	private int createY;
 	SwordAndShieldGame game;
 	Player player;
 	BoardPiece clickedPiece = null;
@@ -36,6 +34,8 @@ public class TokenPanel extends JPanel implements Observer{
 	boolean animateCreation = false;
 	List<BoardPiece> clickedPieceRotations = new ArrayList<BoardPiece>();
 	String create = "create";
+	private int alpha = 0;
+	Color currentPlayerColor;
 
 	public TokenPanel(SwordAndShieldGame game, Player player, GameFrame run) {
 		this.game = game;
@@ -56,23 +56,14 @@ public class TokenPanel extends JPanel implements Observer{
 				mouseX = e.getX();
 				mouseY = e.getY();
 				if(clickedPiece==null) {
-					//run.createAnimation = false;
 					clicked();
-					//System.out.println(clickedPiece.getCol());
-					//System.out.println(player.getName());
-					if(run.pastCreation) {
-						clickedPiece = null;
-						return;
-					}
 					if(!clickedPiece.getCol().equals(run.currentPlayer.getName())) {
 						clickedPiece = null;
 						return;
 					}
 					getRotations();
-					TokenPanel.this.repaint();
 				}else {
 					playToken();
-					TokenPanel.this.repaint();
 				}
 			}
 		});
@@ -86,13 +77,9 @@ public class TokenPanel extends JPanel implements Observer{
 				String letter = pieceToPlay.getName();
 				int rotation = i*90;
 				create = "create " + letter + " " + rotation;
-				//run.createAnimation = true;
 				System.out.println(pieceToPlay.toString());
 				clickedPieceRotations.clear();
 				game.createToken(player, create);
-				//clickedPieceRotations.add(pieceToPlay); //<---------added this TODO ##################################################################
-				//createX = i * WIDTH + GAP;
-				//createY = GAP;
 				clickedPiece = null;
 				break;
 			}
@@ -101,13 +88,6 @@ public class TokenPanel extends JPanel implements Observer{
 		}
 		x = GAP;
 		if(pieceToPlay!=null) {
-			//place piece on board
-			String let = pieceToPlay.getName();
-			//game.createToken(player, create);
-			////////===========
-			//animateCreation = true; //<--------------------------------------------- ###################################################################
-
-			////////===========
 			System.out.println("create is : ");
 			System.out.println(create);
 			create = "";
@@ -133,6 +113,7 @@ public class TokenPanel extends JPanel implements Observer{
 			x += WIDTH;
 		}
 		x = GAP;
+
 	}
 
 	public void getRotations() {
@@ -152,6 +133,7 @@ public class TokenPanel extends JPanel implements Observer{
 			BoardPiece four = new BoardPiece(clickedPiece.getName(), clickedPiece.getNorth(), clickedPiece.getEast(), clickedPiece.getSouth(), clickedPiece.getWest(), clickedPiece.getCol());
 			game.rotator(clickedPiece); // back to original
 			clickedPieceRotations.addAll(Arrays.asList(one,two,three,four));
+			animateCreation = true;
 		}
 	}
 
@@ -169,7 +151,6 @@ public class TokenPanel extends JPanel implements Observer{
 					if(mouseX >=x && mouseX <= x+WIDTH && mouseY >= y && mouseY <= y+HEIGHT) {
 						clickedPiece = (BoardPiece)tokens[row][col];
 						System.out.println("Found " + clickedPiece.getName());
-
 					} // TODO - else null and set put break in and reset x and y
 				}
 				x += GAP;
@@ -186,44 +167,43 @@ public class TokenPanel extends JPanel implements Observer{
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D _g = (Graphics2D) g;
-		/*if(!clickedPieceRotations.isEmpty() && !animateCreation) {
-			displayClickedRotations(_g);
-		}
-		else if(animateCreation) {
-			_g.setColor(Color.BLACK);
-			_g.fillRect(createX, createY, WIDTH, WIDTH);
-			if (player.getName().equals("yellow")) {
-				_g.setColor(Color.YELLOW);
-			} else {
-				_g.setColor(Color.GREEN);
-			}
-			_g.fillOval(createX, createY, WIDTH, HEIGHT);
-			_g.setColor(Color.red);
-			_g.setStroke(new BasicStroke(6));
-			drawSpecificToken(_g, pieceToPlay, createX, createY);
-			if(createY < 420) {
-				createY += 4;
-			}
-			else {
-				if(createX > 0-WIDTH - GAP) {
-					createX-=4;
-				}
-				else {
-					animateCreation = false;
-					clickedPieceRotations.clear();
-					run.creationPiece = pieceToPlay;
-					run.createAnimation = true;
-				}
-			}
-		}
-		else {
-			drawBoard(_g);
-		}*/
 		if(!clickedPieceRotations.isEmpty()) {
-			displayClickedRotations(_g);
+			if(animateCreation) {
+				applyAnimation(_g);
+			}else {
+				displayClickedRotations(_g);
+			}
 		}else {
 			drawBoard(_g);
 
+		}
+	}
+
+	public void applyAnimation(Graphics2D g) {
+		for(int i = 0; i < clickedPieceRotations.size(); i++) {
+			g.setColor(new Color(0,0,0,alpha));
+			g.fillRect(x, y, WIDTH, WIDTH);
+			if (player.getName().equals("yellow")) {
+				currentPlayerColor = new Color(255,255,0,alpha);
+			} else {
+				currentPlayerColor = new Color(0,255,0,alpha);
+			}
+			g.setColor(currentPlayerColor);
+			g.fillOval(x, y, WIDTH, HEIGHT);
+			g.setColor(new Color(255,0,0,alpha));
+			g.setStroke(new BasicStroke(6));
+			drawToken(g,clickedPieceRotations.get(i));
+			x += GAP;
+			x += WIDTH;
+		}
+		if(alpha < 255) {
+			alpha+=5;
+			x = GAP;
+		}
+		else {
+			animateCreation = false;
+			alpha = 0;
+			x = GAP;
 		}
 	}
 
@@ -283,31 +263,7 @@ public class TokenPanel extends JPanel implements Observer{
 		}
 	}
 
-	private void drawSpecificToken(Graphics2D g, BoardPiece piece, int x, int y) {
-		if (piece.getNorth() == 1) {
-			g.drawLine(x + WIDTH / 2, y + STROKE, x + WIDTH / 2, y + HEIGHT / 2);
-		} else if (piece.getNorth() == 2) {
-			g.drawLine(x + STROKE, y + STROKE, x + WIDTH - STROKE, y + STROKE);
-		}
 
-		if (piece.getEast() == 1) {
-			g.drawLine(x + WIDTH / 2 + STROKE, y + HEIGHT / 2, x + WIDTH - STROKE, y + HEIGHT / 2);
-		} else if (piece.getEast() == 2) {
-			g.drawLine(x + WIDTH - STROKE, y + STROKE, x + WIDTH - STROKE, y + HEIGHT - STROKE);
-		}
-
-		if (piece.getSouth() == 1) {
-			g.drawLine(x + WIDTH / 2, y + HEIGHT / 2, x + WIDTH / 2, y + HEIGHT - STROKE);
-		} else if (piece.getSouth() == 2) {
-			g.drawLine(x + STROKE, y + HEIGHT - STROKE, x + WIDTH - STROKE, y + HEIGHT - STROKE);
-		}
-
-		if (piece.getWest() == 1) {
-			g.drawLine(x + STROKE, y + HEIGHT / 2, x + WIDTH / 2 - STROKE, y + HEIGHT / 2);
-		} else if (piece.getWest() == 2) {
-			g.drawLine(x + STROKE, y + STROKE, x + STROKE, y + HEIGHT - STROKE);
-		}
-	}
 
 	@Override
 	public Dimension getPreferredSize() {

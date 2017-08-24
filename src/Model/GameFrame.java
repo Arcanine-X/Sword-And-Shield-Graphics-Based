@@ -22,6 +22,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+import javax.swing.border.Border;
 
 public class GameFrame extends JFrame implements Observer{
 	SwordAndShieldGame game;
@@ -61,10 +62,15 @@ public class GameFrame extends JFrame implements Observer{
 		tokenPanelY.setForeground(Color.YELLOW);
 		panelContainer.add(tokenPanelY, BorderLayout.EAST);
 		buttonPanel = new JPanel();
-
-		//graveyardY = new GraveyardPanel(game, game.getYellow());
+		graveyardY = new GraveyardPanel(game, game.getYellow());
 		//panelContainer.add(graveyardY, BorderLayout.SOUTH);
-		//graveyardG = new GraveyardPanel(game, game.getGreen());
+		graveyardG = new GraveyardPanel(game, game.getGreen());
+		JPanel graveHolder = new JPanel();
+		graveHolder.add(graveyardG);
+		graveHolder.add(graveyardY);
+		//panelContainer.add(graveHolder, BorderLayout.SOUTH);
+
+		
 
 
 
