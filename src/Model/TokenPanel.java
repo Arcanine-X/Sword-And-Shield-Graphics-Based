@@ -36,6 +36,8 @@ public class TokenPanel extends JPanel implements Observer{
 	String create = "create";
 	private int alpha = 0;
 	Color currentPlayerColor;
+	int scaleToken;
+	int tokenSize;
 
 	public TokenPanel(SwordAndShieldGame game, Player player, GameFrame run) {
 		this.game = game;
@@ -79,7 +81,8 @@ public class TokenPanel extends JPanel implements Observer{
 				create = "create " + letter + " " + rotation;
 				System.out.println(pieceToPlay.toString());
 				clickedPieceRotations.clear();
-				game.createToken(player, create);
+				run.addClearPanel();
+				game.createToken(player, create);         //<-------------Creates token
 				clickedPiece = null;
 				break;
 			}

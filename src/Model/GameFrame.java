@@ -11,10 +11,19 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Random;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -69,7 +78,7 @@ public class GameFrame extends JFrame implements Observer{
 		graveHolder.add(graveyardG);
 		graveHolder.add(graveyardY);*/
 		panelContainer = new JPanel();
-		
+
 		boardPanel = new BoardPanel(game, this);
 		boardPanel.setFocusable(true);
 		boardPanel.requestFocusInWindow();
@@ -91,8 +100,6 @@ public class GameFrame extends JFrame implements Observer{
 		surrender.setFocusable(false);
 		pass.setFocusable(false);
 		quit.setFocusable(false);
-
-
 		JSplitPane firstSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, tokenPanelG,boardPanel); // green tokens - board
 		firstSplit.setResizeWeight(1);
 		JSplitPane secondSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, firstSplit, tokenPanelY); // first split and yellow otkens
@@ -104,6 +111,8 @@ public class GameFrame extends JFrame implements Observer{
 		JSplitPane fifthSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT, thirdSplit, fourthSplit);
 		fifthSplit.setResizeWeight(0.75);
 		this.add(fifthSplit);
+		//addClearPanel();
+		
 		new Timer(50,
                 (e)->{
                     repaint();
@@ -168,6 +177,7 @@ public class GameFrame extends JFrame implements Observer{
 		JOptionPane.showMessageDialog(this, surrenderMsg);
 		MenuFrame menu = new MenuFrame();
 		GameFrame.this.dispatchEvent(new WindowEvent(GameFrame.this, WindowEvent.WINDOW_CLOSING));
+
 	}
 
 	public void mainGame() {
@@ -198,6 +208,15 @@ public class GameFrame extends JFrame implements Observer{
 	public Dimension getPreferredSize() {
 		Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
 		return new Dimension((int) dimension.getWidth(), 1000);
+	}
+
+	public void addClearPanel() {
+		ClearPanel glass = new ClearPanel(game, this);
+		glass.setBackground(new Color(0,200,0,0));
+		glass.setLocation(0, 0);
+		System.out.println("added glass panel");
+		this.add(glass);
+		
 	}
 
 	@Override
