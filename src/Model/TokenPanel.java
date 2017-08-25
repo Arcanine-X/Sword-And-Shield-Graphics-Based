@@ -226,6 +226,10 @@ public class TokenPanel extends JPanel implements Observer{
 					BoardPiece piece = (BoardPiece) tokens[row][col];
 					drawToken(g, piece);
 				}
+				else {
+					g.setColor(Color.GRAY);
+					g.fillOval(x, y, WIDTH, HEIGHT);
+				}
 
 				x += GAP;
 				x += WIDTH;
@@ -267,7 +271,7 @@ public class TokenPanel extends JPanel implements Observer{
 
 	@Override
 	public Dimension getPreferredSize() {
-		return new Dimension(290, 480);
+		return new Dimension(400, 480);
 	}
 
 	@Override

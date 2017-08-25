@@ -47,6 +47,7 @@ public class GraveyardPanel extends JPanel {
 					g.setColor(Color.red);
 					g.setStroke(new BasicStroke(6));
 					drawToken(g, piece);
+					g.setStroke(new BasicStroke(0));
 				}
 				else {
 					g.setColor(Color.BLACK);

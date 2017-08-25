@@ -1,5 +1,6 @@
 package Model;
 
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -10,6 +11,11 @@ public class ButtonPanel extends JPanel{
 	public ButtonPanel(SwordAndShieldGame game) {
 		this.game = game;
 
+	}
+	
+	@Override
+	public Dimension getPreferredSize() {
+		return new Dimension(700,100);
 	}
 
 

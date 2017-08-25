@@ -57,9 +57,11 @@ public class SwordAndShieldGame {
 		board.addInvalidSquares();
 		board.redraw();
 		BoardPiece one = yellow.find("s");
-		board.getBoard()[7][8] = one;
+		board.getBoard()[1][2] = one;
+		//board.getBoard()[8][7] = one;
 		BoardPiece two = yellow.find("c");
-		board.getBoard()[9][7] = two;
+		//board.getBoard()[8][6] = two;
+		board.getBoard()[1][3] = two;
 		//BoardPiece three = yellow.find("e");
 		//board.getBoard()[2][2] = three;
 	}

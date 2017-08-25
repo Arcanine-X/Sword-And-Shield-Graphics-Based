@@ -21,6 +21,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JSplitPane;
 import javax.swing.Timer;
 import javax.swing.border.Border;
 
@@ -45,7 +46,7 @@ public class GameFrame extends JFrame implements Observer{
 	public GameFrame() {
 		game = new SwordAndShieldGame();
 		this.setTitle("~~Sword And Shiled Game~~");
-		panelContainer = new JPanel();
+		/*panelContainer = new JPanel();
 		panelContainer.setLayout(new BorderLayout(0, 0));
 
 		tokenPanelG = new TokenPanel(game, game.getGreen(), this);
@@ -63,17 +64,21 @@ public class GameFrame extends JFrame implements Observer{
 		panelContainer.add(tokenPanelY, BorderLayout.EAST);
 		buttonPanel = new JPanel();
 		graveyardY = new GraveyardPanel(game, game.getYellow());
-		//panelContainer.add(graveyardY, BorderLayout.SOUTH);
 		graveyardG = new GraveyardPanel(game, game.getGreen());
 		JPanel graveHolder = new JPanel();
 		graveHolder.add(graveyardG);
-		graveHolder.add(graveyardY);
-		//panelContainer.add(graveHolder, BorderLayout.SOUTH);
-
+		graveHolder.add(graveyardY);*/
+		panelContainer = new JPanel();
 		
-
-
-
+		boardPanel = new BoardPanel(game, this);
+		boardPanel.setFocusable(true);
+		boardPanel.requestFocusInWindow();
+		tokenPanelY = new TokenPanel(game, game.getYellow(), this);
+		tokenPanelG = new TokenPanel(game, game.getGreen(), this);
+		buttonPanel = new JPanel();
+		graveyardY = new GraveyardPanel(game, game.getYellow());
+		graveyardG = new GraveyardPanel(game, game.getGreen());
+		buttonPanel = new ButtonPanel(game);
 		JButton undo = new JButton("Undo");
 		JButton pass = new JButton("Pass");
 		JButton surrender = new JButton("Surrender");
@@ -86,9 +91,19 @@ public class GameFrame extends JFrame implements Observer{
 		surrender.setFocusable(false);
 		pass.setFocusable(false);
 		quit.setFocusable(false);
-		panelContainer.add(buttonPanel, BorderLayout.NORTH);
-		this.add(panelContainer);
 
+
+		JSplitPane firstSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, tokenPanelG,boardPanel); // green tokens - board
+		firstSplit.setResizeWeight(1);
+		JSplitPane secondSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, firstSplit, tokenPanelY); // first split and yellow otkens
+		secondSplit.setResizeWeight(0.1);
+		JSplitPane thirdSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT, buttonPanel, secondSplit);
+		thirdSplit.setResizeWeight(0);
+		JSplitPane fourthSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, graveyardG, graveyardY);
+		fourthSplit.setResizeWeight(0.5);
+		JSplitPane fifthSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT, thirdSplit, fourthSplit);
+		fifthSplit.setResizeWeight(0.75);
+		this.add(fifthSplit);
 		new Timer(50,
                 (e)->{
                     repaint();
@@ -137,12 +152,6 @@ public class GameFrame extends JFrame implements Observer{
 				System.exit(1);
 			}
 		});
-		ActionListener action = new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				GameFrame.this.repaint();
-			}
-		};
 		this.pack();
 		this.setVisible(true);
 		mainGame();
@@ -164,14 +173,14 @@ public class GameFrame extends JFrame implements Observer{
 	public void mainGame() {
 		if (turn % 2 == 0) {
 			System.out.println("It is greens turn!");
-			tokenPanelY.setEnabled(false);
-			tokenPanelG.setEnabled(true);
+			//tokenPanelY.setEnabled(false);
+			//tokenPanelG.setEnabled(true);
 			currentPlayer = game.getGreen();
 		}
 		else {
 			System.out.println("It is yellows turn!");
-			tokenPanelG.setEnabled(false);
-			tokenPanelY.setEnabled(true);
+			//tokenPanelG.setEnabled(false);
+			//tokenPanelY.setEnabled(true);
 			currentPlayer = game.getYellow();
 		}
 
@@ -188,7 +197,7 @@ public class GameFrame extends JFrame implements Observer{
 
 	public Dimension getPreferredSize() {
 		Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
-		return new Dimension(1200, 1000);
+		return new Dimension((int) dimension.getWidth(), 1000);
 	}
 
 	@Override

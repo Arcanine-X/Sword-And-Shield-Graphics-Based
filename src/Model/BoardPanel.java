@@ -611,8 +611,6 @@ public class BoardPanel extends JPanel {
 						everyBpToAnimate.remove(bp);
 						disappearPiece = bp;
 						disappearAnimation = true;
-						moveAnimation = false;
-
 						return;
 					}
 				}
