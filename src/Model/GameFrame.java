@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Toolkit;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -28,10 +29,12 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.Timer;
+import javax.swing.WindowConstants;
 import javax.swing.border.Border;
 
 public class GameFrame extends JFrame implements Observer{
@@ -111,8 +114,6 @@ public class GameFrame extends JFrame implements Observer{
 		JSplitPane fifthSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT, thirdSplit, fourthSplit);
 		fifthSplit.setResizeWeight(0.75);
 		this.add(fifthSplit);
-		//addClearPanel();
-		
 		new Timer(50,
                 (e)->{
                     repaint();
@@ -124,9 +125,10 @@ public class GameFrame extends JFrame implements Observer{
 			public void actionPerformed(ActionEvent e) {
 				//GameFrame.this.game.undo(currentPlayer);
 				//game.undo(game.getYellow());
-				GameFrame.this.game.undo(currentPlayer);
-				tokenPanelY.repaint();
-				boardPanel.repaint();
+				if(game.getBoard().getUndoStack().size() != 1) {
+					GameFrame.this.game.undo(currentPlayer);
+				}
+
 
 				//game.undo(game.getGreen());
 			}
@@ -163,6 +165,7 @@ public class GameFrame extends JFrame implements Observer{
 		});
 		this.pack();
 		this.setVisible(true);
+		this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		mainGame();
 	}
 
@@ -216,7 +219,7 @@ public class GameFrame extends JFrame implements Observer{
 		glass.setLocation(0, 0);
 		System.out.println("added glass panel");
 		this.add(glass);
-		
+
 	}
 
 	@Override

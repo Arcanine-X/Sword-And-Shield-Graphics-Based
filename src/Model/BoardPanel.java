@@ -20,8 +20,8 @@ import javax.sound.sampled.Clip;
 import javax.swing.JPanel;
 
 public class BoardPanel extends JPanel {
-	private static final int WIDTH = 60;
-	private static final int HEIGHT = 60;
+	private int WIDTH = 60;
+	private int HEIGHT = 60;
 	private static final int STROKE = 3;
 	private int mouseX;
 	private int mouseY;
@@ -44,6 +44,7 @@ public class BoardPanel extends JPanel {
 	private BoardPiece disappearPiece;
 	private int alpha = 0;
 	int piecesToAnimate;
+	int mouseClicks;
 	public BoardPanel(SwordAndShieldGame game, GameFrame run) {
 		this.game = game;
 		this.run = run;
@@ -71,7 +72,8 @@ public class BoardPanel extends JPanel {
 				mouseX = e.getX();
 				mouseY = e.getY();
 				findClickedToken();
-				if (chosenToken != null) {
+				System.out.println(mouseClicks);
+				if (chosenToken != null && mouseClicks >=2) {
 					attemptClickMove();
 				}else {
 				}
@@ -92,6 +94,9 @@ public class BoardPanel extends JPanel {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				int key = e.getKeyCode();
+				if(chosenToken == null) {
+					return;
+				}
 				if(run.currentPlayer.getMovesSoFar().contains(chosenToken.getName())){
 					return;
 				}
@@ -139,6 +144,7 @@ public class BoardPanel extends JPanel {
 			if(run.currentPlayer.getMovesSoFar().contains(chosenToken.getName())){
 				return;
 			}
+			mouseClicks = 0;
 			Rectangle moveUp = new Rectangle(chosenX, chosenY, WIDTH, HEIGHT / 4);
 			Rectangle moveLeft = new Rectangle(chosenX, chosenY, WIDTH / 4, HEIGHT);
 			Rectangle moveRight = new Rectangle(chosenX + (WIDTH / 4) * 3, chosenY, WIDTH / 4, HEIGHT);
@@ -169,7 +175,7 @@ public class BoardPanel extends JPanel {
 	}
 
 	public void playDisappearSound() {
-		File sound = new File("scream.wav");
+		File sound = new File("editedFalling.wav");
 		try {
 			Clip clip = AudioSystem.getClip();
 			clip.open(AudioSystem.getAudioInputStream(sound));
@@ -201,26 +207,37 @@ public class BoardPanel extends JPanel {
 		System.out.println("In here");
 		for (int row = 0; row < board.length; row++) {
 			for (int col = 0; col < board[0].length; col++) {
-				if (board[row][col] instanceof BoardPiece && board[row][col] != null) {
+				if (board[row][col] instanceof BoardPiece && board[row][col] != null && game.getBoard().getUndoStack().size() != 1) {
 					if ((mouseX >= col * WIDTH) && (mouseX <= col * WIDTH + WIDTH) && (mouseY >= row * HEIGHT)
 							&& (mouseY <= row * HEIGHT + WIDTH)) {
 						System.out.println("Found Tokens");
+						BoardPiece temp = (BoardPiece) board[row][col];
+						if(chosenToken!=null && temp.getName().equals(chosenToken.getName())) {
+							mouseClicks++;
+						}else {
+							mouseClicks = 0;
+						}
 						chosenToken = (BoardPiece) board[row][col];
 						chosenX = moveX = col * WIDTH;
 						chosenY = moveY = row * HEIGHT;
 						System.out.println("Setting chosen token");
+
+
 						System.out.println(chosenToken.toString());
 						if (run.currentPlayer.getName().equals("yellow") && chosenToken.getCol().equals("yellow")) {
+							mouseClicks++;
 							return;
 						}
 						if (run.currentPlayer.getName().equals("green") && chosenToken.getCol().equals("green")) {
+							mouseClicks++;
 							return;
 						}
+						System.out.println("uhm oka");
 						chosenToken = null;
 						continue;
 					} else {
 						System.out.println("in setting null");
-						chosenToken = null;
+						//chosenToken = null;
 					}
 				}
 			}
@@ -233,6 +250,10 @@ public class BoardPanel extends JPanel {
 		Graphics2D _g = (Graphics2D) g;
 		drawBoard(_g);
 		displayInfo(_g);
+		if(game.getBoard().getUndoStack().size() == 1) {
+			System.out.println("setting it to nul'");
+			chosenToken = null;
+		}
 		if(disappearAnimation) {
 			applyDisappearAnimation(_g);
 		}
@@ -380,7 +401,7 @@ public class BoardPanel extends JPanel {
 		 * Keep animating untill theyve arrived to their destination
 		 * Once they have arrived set of boolean to turn of move animation, and actually move the piece to create the illusion
 		 */
-		if (moveDir.equals("up") && run.currentPlayer.getName().equals("yellow")) {
+		if (moveDir.equals("up")) {
 			if(skip == false) {
 				everyBpToAnimate.clear();
 				piecesToAnimate = run.currentPlayer.upCounter(chosenToken, game.getBoard());
@@ -393,7 +414,7 @@ public class BoardPanel extends JPanel {
 				}
 				chosenToken.moveX = moveX;
 				chosenToken.moveY = moveY;
-				chosenToken.destY = chosenY - 60;
+				chosenToken.destY = chosenY - HEIGHT;
 				everyBpToAnimate.add(chosenToken);
 				for(int i = piecesToAnimate; i > 0; i--) {
 					int row = getRow(chosenY - (i*HEIGHT));
@@ -435,7 +456,7 @@ public class BoardPanel extends JPanel {
 			}else {
 				hope(g, everyBpToAnimate);
 			}
-		}else if(moveDir.equals("down") && run.currentPlayer.getName().equals("yellow")) {
+		}else if(moveDir.equals("down")) {
 			if(skip == false) {
 				everyBpToAnimate.clear();
 				piecesToAnimate = run.currentPlayer.downCounter(chosenToken, game.getBoard());
@@ -448,7 +469,7 @@ public class BoardPanel extends JPanel {
 				}
 				chosenToken.moveX = moveX;
 				chosenToken.moveY = moveY;
-				chosenToken.destY = chosenY + 60;
+				chosenToken.destY = chosenY + HEIGHT;
 				everyBpToAnimate.add(chosenToken);
 				for(int i = piecesToAnimate; i > 0; i--) {
 					int row = getRow(chosenY + (i*HEIGHT));
@@ -475,13 +496,10 @@ public class BoardPanel extends JPanel {
 						return;
 					}
 				}
-				System.out.println("skip is " + skip);
 				skip = true;
 				BoardPiece temp;
 				if(piecesToAnimate > 0) {
 					temp = everyBpToAnimate.get(1);
-					System.out.println("temp name is " + temp.getName());
-					System.out.println("temp dest y is "+ temp.destY);
 					if(temp.destY > 540) {
 						disappearPiece = temp;
 						everyBpToAnimate.remove(temp);
@@ -498,7 +516,7 @@ public class BoardPanel extends JPanel {
 				}
 				hope2(g, everyBpToAnimate);
 			}
-		}else if(moveDir.equals("right") && run.currentPlayer.getName().equals("yellow")) {
+		}else if(moveDir.equals("right")) {
 			if(skip == false) {
 				everyBpToAnimate.clear();
 				piecesToAnimate = run.currentPlayer.rightCounter(chosenToken, game.getBoard());
@@ -511,14 +529,13 @@ public class BoardPanel extends JPanel {
 				}
 				chosenToken.moveX = moveX;
 				chosenToken.moveY = moveY;
-				chosenToken.destX = chosenX + 60;
+				chosenToken.destX = chosenX + WIDTH;
 				everyBpToAnimate.add(chosenToken);
 				for(int i = piecesToAnimate; i > 0; i--) {
 					int row = getRow(chosenY);
 					int col = getCol(chosenX + (i*WIDTH));
 					BoardPiece bp = ((BoardPiece)game.getBoard().getBoard()[row][col]);
-					System.out.println("=====================================adding : ======================================");
-					System.out.println(bp.toString());
+
 					bp.moveX = chosenX + (i*WIDTH);
 					bp.moveY = chosenY;
 					bp.destX = chosenX +((i+1) * WIDTH);
@@ -540,13 +557,10 @@ public class BoardPanel extends JPanel {
 						return;
 					}
 				}
-				System.out.println("skip is " + skip);
 				skip = true;
 				BoardPiece temp;
 				if(piecesToAnimate > 0) {
 					temp = everyBpToAnimate.get(1);
-					System.out.println("temp name is " + temp.getName());
-					System.out.println("temp dest y is "+ temp.destX);
 					if(temp.destX > 540) {
 						disappearPiece = temp;
 						everyBpToAnimate.remove(temp);
@@ -558,7 +572,7 @@ public class BoardPanel extends JPanel {
 				hope3(g, everyBpToAnimate);
 			}
 		}
-		else if(moveDir.equals("left") && run.currentPlayer.getName().equals("yellow")) {
+		else if(moveDir.equals("left")) {
 			if(skip == false) {
 				everyBpToAnimate.clear();
 				piecesToAnimate = run.currentPlayer.leftCounter(chosenToken, game.getBoard());
@@ -571,14 +585,12 @@ public class BoardPanel extends JPanel {
 				}
 				chosenToken.moveX = moveX;
 				chosenToken.moveY = moveY;
-				chosenToken.destX = chosenX - 60;
+				chosenToken.destX = chosenX - WIDTH;
 				everyBpToAnimate.add(chosenToken);
 				for(int i = piecesToAnimate; i > 0; i--) {
 					int row = getRow(chosenY);
 					int col = getCol(chosenX - (i*WIDTH));
 					BoardPiece bp = ((BoardPiece)game.getBoard().getBoard()[row][col]);
-					System.out.println("=====================================adding : ======================================");
-					System.out.println(bp.toString());
 					bp.moveX = chosenX - (i*WIDTH);
 					bp.moveY = chosenY;
 					bp.destX = chosenX - ((i+1) * WIDTH);
@@ -605,8 +617,6 @@ public class BoardPanel extends JPanel {
 				BoardPiece temp;
 				if(piecesToAnimate > 0) {
 					temp = everyBpToAnimate.get(1);
-					System.out.println("temp name is " + temp.getName());
-					System.out.println("temp dest y is "+ temp.destX);
 					if(temp.destX < 0) {
 						disappearPiece = temp;
 						everyBpToAnimate.remove(temp);
@@ -615,12 +625,6 @@ public class BoardPanel extends JPanel {
 					}
 				}
 			}else {
-				for(BoardPiece bp : everyBpToAnimate) {
-					System.out.println("every piece is : ");
-					System.out.println(bp.toString());
-					System.out.println("deestX is " + bp.destX);
-					System.out.println("moveX is " + bp.moveX);
-				}
 				hope4(g, everyBpToAnimate);
 			}
 		}
@@ -778,6 +782,8 @@ public class BoardPanel extends JPanel {
 	}
 
 	public void drawBoard(Graphics2D g) {
+		WIDTH = Math.min(getWidth(), getHeight())/10 - Math.min(getWidth(), getHeight())/60;
+		HEIGHT = Math.min(getWidth(), getHeight())/10 - Math.min(getWidth(), getHeight())/60;
 		for (int row = 0; row < board.length; row++) {
 			for (int col = 0; col < board.length; col++) {
 				if (board[row][col] instanceof InvalidSquare) {

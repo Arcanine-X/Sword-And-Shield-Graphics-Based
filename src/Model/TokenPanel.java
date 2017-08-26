@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -17,8 +18,8 @@ import java.util.Observer;
 import javax.swing.JPanel;
 
 public class TokenPanel extends JPanel implements Observer{
-	private static final int WIDTH = 60;
-	private static final int HEIGHT = 60;
+	private int WIDTH = 60;
+	private int HEIGHT = 60;
 	private static final int GAP = 8;
 	private static final int STROKE = 3;// stroke width /2
 	BoardPiece[][] tokens;
@@ -44,6 +45,7 @@ public class TokenPanel extends JPanel implements Observer{
 		this.player = player;
 		this.tokens = player.getTokens();
 		this.run = run;
+		this.setMinimumSize(new Dimension(100,220));
 		this.addMouseListener(new MouseListener() {
 			@Override
 			public void mouseReleased(MouseEvent e) {}
@@ -81,7 +83,7 @@ public class TokenPanel extends JPanel implements Observer{
 				create = "create " + letter + " " + rotation;
 				System.out.println(pieceToPlay.toString());
 				clickedPieceRotations.clear();
-				run.addClearPanel();
+				//run.addClearPanel();
 				game.createToken(player, create);         //<-------------Creates token
 				clickedPiece = null;
 				break;
@@ -170,6 +172,7 @@ public class TokenPanel extends JPanel implements Observer{
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D _g = (Graphics2D) g;
+
 		if(!clickedPieceRotations.isEmpty()) {
 			if(animateCreation) {
 				applyAnimation(_g);
@@ -177,6 +180,8 @@ public class TokenPanel extends JPanel implements Observer{
 				displayClickedRotations(_g);
 			}
 		}else {
+			//double ratio = (double) this.getWidth()/ this.getHeight();
+			//_g.scale(ratio, ratio);
 			drawBoard(_g);
 
 		}
@@ -210,7 +215,16 @@ public class TokenPanel extends JPanel implements Observer{
 		}
 	}
 
+	double RoundTo2Decimals(double val) {
+        DecimalFormat df2 = new DecimalFormat("###.##");
+    return Double.valueOf(df2.format(val));
+}
+
 	public void drawBoard(Graphics2D g) {
+
+		WIDTH = Math.min(getWidth(), getHeight())/7 - Math.min(getWidth(), getHeight())/60;
+		HEIGHT = Math.min(getWidth(), getHeight())/7 - Math.min(getWidth(), getHeight())/60;
+
 		if (player.getName().equals("yellow")) {}
 		if (player.getName().equals("green")) {}
 		for (int row = 0; row < tokens.length; row++) {
@@ -233,10 +247,10 @@ public class TokenPanel extends JPanel implements Observer{
 					g.setColor(Color.GRAY);
 					g.fillOval(x, y, WIDTH, HEIGHT);
 				}
-
 				x += GAP;
 				x += WIDTH;
 			}
+			x = 0;
 			x = GAP;
 			y += GAP;
 			y += HEIGHT;

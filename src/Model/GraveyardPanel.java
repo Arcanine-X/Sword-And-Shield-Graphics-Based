@@ -10,11 +10,11 @@ import javax.swing.JPanel;
 
 public class GraveyardPanel extends JPanel {
 
-	private static final int WIDTH = 60;
-	private static final int HEIGHT = 60;
+	private int WIDTH = 60;
+	private int HEIGHT = 60;
 	private static final int GAP = 8;
 	private static final int STROKE = 3;// stroke width /2
-	int x = GAP;
+	int x = (this.getWidth()/2)-(8*60);
 	int y = GAP;
 	SwordAndShieldGame game;
 	Player player;
@@ -28,10 +28,19 @@ public class GraveyardPanel extends JPanel {
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D _g = (Graphics2D) g;
+		double max = Math.max(this.getWidth(), this.getHeight());
+		double min = Math.min(this.getWidth(), this.getHeight());
+		double ratio = min/max;
+//		double ratio = (double) this.getHeight()/ this.getWidth();
+		//System.out.println(ratio);
+		//_g.scale(ratio*4, ratio*4);
+		//System.out.println(WIDTH);
 		drawGrave(_g);
 	}
 
 	public void drawGrave(Graphics2D g) {
+		WIDTH = Math.min(getWidth(), getHeight())/4 - Math.min(getWidth(), getHeight())/60;
+		HEIGHT = Math.min(getWidth(), getHeight())/4 - Math.min(getWidth(), getHeight())/60;
 		BoardPiece[][] graveYard = player.getGraveYard();
 		for (int row = 0; row < graveYard.length; row++) {
 			for (int col = 0; col < graveYard[0].length; col++) {
