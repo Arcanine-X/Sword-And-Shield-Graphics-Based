@@ -13,6 +13,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.sound.sampled.AudioSystem;
@@ -34,6 +35,7 @@ public class BoardPanel extends JPanel {
 	private Token[][] board;
 	private GameFrame run;
 	private boolean moveAnimation = false;
+	private boolean rotationAnimation = false;
 	private String moveDir = "";
 	private boolean skip = false;
 	private List<BoardPiece> everyBpToAnimate = new ArrayList<BoardPiece>();
@@ -45,6 +47,9 @@ public class BoardPanel extends JPanel {
 	private int alpha = 0;
 	int piecesToAnimate;
 	int mouseClicks;
+	int rotationCount = 0;
+	BoardPiece hugeToken;
+	List<BoardPiece> hugeTokenRotations = new ArrayList<BoardPiece>();
 	public BoardPanel(SwordAndShieldGame game, GameFrame run) {
 		this.game = game;
 		this.run = run;
@@ -73,8 +78,10 @@ public class BoardPanel extends JPanel {
 				mouseY = e.getY();
 				findClickedToken();
 				System.out.println(mouseClicks);
-				if (chosenToken != null && mouseClicks >=2) {
+				if (chosenToken != null && mouseClicks >=2 && !rotationAnimation) {
+					attemptRotation();
 					attemptClickMove();
+
 				}else {
 				}
 
@@ -137,6 +144,21 @@ public class BoardPanel extends JPanel {
 		});
 	}
 
+	public void attemptRotation() {
+		System.out.println("in attempt rotation");
+		if(chosenToken != null) {
+			Rectangle boundingBox = new Rectangle(moveX+ WIDTH / 4, moveY + HEIGHT / 4,WIDTH / 2, HEIGHT / 2);
+			if(boundingBox.contains(mouseX, mouseY)) {
+				System.out.println("in bounding box");
+				rotationAnimation = true;
+				hugeToken = chosenToken;
+				mouseX = 0;
+				mouseY = 0;
+			}
+
+		}
+	}
+
 	// http://zetcode.com/gfx/java2d/transparency/
 	public void attemptClickMove() {
 		System.out.println("in attempt to click move");
@@ -189,6 +211,9 @@ public class BoardPanel extends JPanel {
 			g.setColor(new Color(0,0,255,80));
 			g.setStroke(new BasicStroke(6));
 			g.fillRect(chosenX, chosenY, WIDTH, HEIGHT);
+			Rectangle boundingBox = new Rectangle(WIDTH / 4, HEIGHT / 4, WIDTH / 2, HEIGHT / 2);
+			g.setColor(Color.PINK);
+			g.drawRect(moveX+ WIDTH / 4, moveY + HEIGHT / 4,WIDTH / 2, HEIGHT / 2);
 			//g.drawRect(chosenX - STROKE, chosenY - STROKE, WIDTH + STROKE + 3, HEIGHT + STROKE + 3);
 			//Draws bounding boxes
 //			g.setColor(Color.CYAN);
@@ -220,10 +245,11 @@ public class BoardPanel extends JPanel {
 						chosenToken = (BoardPiece) board[row][col];
 						chosenX = moveX = col * WIDTH;
 						chosenY = moveY = row * HEIGHT;
-						System.out.println("Setting chosen token");
-
-
 						System.out.println(chosenToken.toString());
+						if(run.currentPlayer.getEveryMovement().contains(chosenToken) || run.currentPlayer.getMovesSoFar().contains(chosenToken.getName())) {
+							chosenToken = null;
+							continue;
+						}
 						if (run.currentPlayer.getName().equals("yellow") && chosenToken.getCol().equals("yellow")) {
 							mouseClicks++;
 							return;
@@ -232,7 +258,6 @@ public class BoardPanel extends JPanel {
 							mouseClicks++;
 							return;
 						}
-						System.out.println("uhm oka");
 						chosenToken = null;
 						continue;
 					} else {
@@ -251,7 +276,6 @@ public class BoardPanel extends JPanel {
 		drawBoard(_g);
 		displayInfo(_g);
 		if(game.getBoard().getUndoStack().size() == 1) {
-			System.out.println("setting it to nul'");
 			chosenToken = null;
 		}
 		if(disappearAnimation) {
@@ -260,11 +284,57 @@ public class BoardPanel extends JPanel {
 		else if (moveAnimation) {
 			applyMoveAnimation(_g);
 		}
+		else if(rotationAnimation) {
+			applyRotationAnimation(_g);
+		}
 		else {
 			drawBoard(_g);
 			highlightSelectedToken(_g);
 			displayInfo(_g);
 		}
+	}
+
+	public void applyRotationAnimation(Graphics2D g) {
+		g.setColor(new Color(175,179,177,150));
+		g.fillRect(0, 0, (WIDTH * 10), (HEIGHT * 10));
+		drawHugeToken(hugeToken, g);
+	}
+
+	public void drawHugeToken(BoardPiece bp, Graphics2D g) {
+		g.setColor(Color.BLACK);
+		g.fillRect(WIDTH * 2, HEIGHT * 2, WIDTH*6, HEIGHT*6);
+		if(run.currentPlayer.getName().equals("yellow")) {
+			g.setColor(Color.yellow);
+		}
+		else {
+			g.setColor(Color.green);
+		}
+		g.fillOval(WIDTH * 2, HEIGHT * 2, WIDTH*6, HEIGHT*6);
+		g.setColor(Color.RED);
+		g.setStroke(new BasicStroke(10));
+		drawHugeTokenParts(g, hugeToken, WIDTH * 2, HEIGHT * 2);
+		if(mouseX > WIDTH * 2 && mouseX < WIDTH * 2 + WIDTH*6 && mouseY > HEIGHT * 2 && mouseY < HEIGHT * 2 + HEIGHT*6) {
+			switchRotationImages();
+			rotationCount++;
+			if(rotationCount > 3) {
+				rotationCount = 0;
+			}
+		}else if(!(mouseX > WIDTH * 2 && mouseX < WIDTH * 2 + WIDTH*6 && mouseY > HEIGHT * 2 && mouseY < HEIGHT * 2 + HEIGHT*6) && mouseX > 0 && mouseY > 0) {
+			System.out.println("rotate count is " + rotationCount);
+			//hugeToken = chosenToken;
+			System.out.println("rotate " + hugeToken.getName() + " " + rotationCount*90);
+			game.rotateToken(run.currentPlayer, "rotate " + hugeToken.getName() + " " + 0);//rotationCount*90);
+			rotationCount = 0;
+			rotationAnimation = false;
+			chosenToken = null;
+		}
+		
+	}
+	
+	public void switchRotationImages(){
+		game.rotator(hugeToken);
+		mouseX = -500;
+		mouseY = -500;
 	}
 
 	public int getRow(int value) {
@@ -849,6 +919,13 @@ public class BoardPanel extends JPanel {
 					if (game.getGreen().getMovesSoFar().contains(temp.getName())) {
 						g.drawString("M", col * WIDTH, row * HEIGHT + 10);
 					}
+					if (game.getYellow().getEveryMovement().contains(temp)) {
+						g.drawString("R", col * WIDTH, row * HEIGHT + 10);
+					}
+					if (game.getGreen().getEveryMovement().contains(temp)) {
+						g.drawString("R", col * WIDTH, row * HEIGHT + 10);
+					}
+
 				}
 
 				else if (board[row][col] instanceof Player) {
@@ -905,6 +982,36 @@ public class BoardPanel extends JPanel {
 			g.drawLine(x + STROKE, y + HEIGHT / 2, x + WIDTH / 2 - STROKE, y + HEIGHT / 2);
 		} else if (piece.getWest() == 2) {
 			g.drawLine(x + STROKE, y + STROKE, x + STROKE, y + HEIGHT - STROKE);
+		}
+	}
+
+	private void drawHugeTokenParts(Graphics2D g, BoardPiece piece, int x, int y) {
+
+		//g.fillOval(WIDTH * 2, HEIGHT * 2, WIDTH*6, HEIGHT*6);
+
+
+		if (piece.getNorth() == 1) {
+			g.drawLine(x + WIDTH*6 / 2, y + STROKE, x + WIDTH*6 / 2, y + HEIGHT*6 / 2);
+		} else if (piece.getNorth() == 2) {
+			g.drawLine(x + STROKE, y + STROKE, x + WIDTH*6 - STROKE, y + STROKE);
+		}
+
+		if (piece.getEast() == 1) {
+			g.drawLine(x + WIDTH*6 / 2 + STROKE, y + HEIGHT*6 / 2, x + WIDTH*6 - STROKE, y + HEIGHT*6 / 2);
+		} else if (piece.getEast() == 2) {
+			g.drawLine(x + WIDTH*6 - STROKE, y + STROKE, x + WIDTH*6 - STROKE, y + HEIGHT*6 - STROKE);
+		}
+
+		if (piece.getSouth() == 1) {
+			g.drawLine(x + WIDTH*6 / 2, y + HEIGHT*6 / 2, x + WIDTH*6 / 2, y + HEIGHT*6 - STROKE);
+		} else if (piece.getSouth() == 2) {
+			g.drawLine(x + STROKE, y + HEIGHT*6 - STROKE, x + WIDTH*6 - STROKE, y + HEIGHT*6 - STROKE);
+		}
+
+		if (piece.getWest() == 1) {
+			g.drawLine(x + STROKE, y + HEIGHT*6 / 2, x + WIDTH*6 / 2 - STROKE, y + HEIGHT*6 / 2);
+		} else if (piece.getWest() == 2) {
+			g.drawLine(x + STROKE, y + STROKE, x + STROKE, y + HEIGHT*6 - STROKE);
 		}
 	}
 
