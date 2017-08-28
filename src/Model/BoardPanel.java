@@ -45,6 +45,7 @@ public class BoardPanel extends JPanel {
 	private int disappearCol, disapppearRow;
 	private BoardPiece disappearPiece;
 	private int alpha = 0;
+	private boolean singleMove = false;
 	int piecesToAnimate;
 	int mouseClicks;
 	int rotationCount = 0;
@@ -430,6 +431,7 @@ public class BoardPanel extends JPanel {
 				if(piecesToAnimate==-1) {
 					disappearCol = getCol(chosenX);
 					disapppearRow = getRow(chosenY);
+					singleMove = true;
 				}
 				else {
 					disappearCol = getCol(chosenX);
@@ -452,6 +454,8 @@ public class BoardPanel extends JPanel {
 				if(piecesToAnimate==-1) {
 					disappearCol = getCol(chosenX);
 					disapppearRow = getRow(chosenY);
+					singleMove = true;
+
 				}
 				else {
 					disappearCol = getCol(chosenX);
@@ -472,6 +476,8 @@ public class BoardPanel extends JPanel {
 				if(piecesToAnimate==-1) {
 					disappearCol = getCol(chosenX);
 					disapppearRow = getRow(chosenY);
+					singleMove = true;
+
 				}
 				else {
 					disappearCol = getCol(chosenX+ (piecesToAnimate*WIDTH));
@@ -492,6 +498,7 @@ public class BoardPanel extends JPanel {
 				if(piecesToAnimate==-1) {
 					disappearCol = getCol(chosenX);
 					disapppearRow = getRow(chosenY);
+					singleMove = true;
 				}
 				else {
 					disappearCol = getCol(chosenX - (piecesToAnimate*WIDTH));
@@ -522,21 +529,28 @@ public class BoardPanel extends JPanel {
 			if(alpha < 250) {
 				alpha +=5;
 			}else {
-				//Changed from toAnimate.getName to chosenToken.getName 
+				//Changed from toAnimate.getName to chosenToken.getName
 				alpha = 0;
 				disappearAnimation = false;
 				disappearSkip = false;
+				BoardPiece toMove;
+				if(singleMove) {
+					toMove = toAnimate;
+				}else {
+					toMove = chosenToken;
+				}
+				singleMove = false;
 				if(moveDir.equals("up")) {
-					game.moveToken(run.currentPlayer, "move " + toAnimate.getName() + " up");
+					game.moveToken(run.currentPlayer, "move " + toMove.getName() + " up");
 
 				}else if(moveDir.equals("down")) {
-					game.moveToken(run.currentPlayer, "move " + toAnimate.getName() + " down");
+					game.moveToken(run.currentPlayer, "move " + toMove.getName() + " down");
 				}
 				else if(moveDir.equals("right")) {
-					game.moveToken(run.currentPlayer, "move " + toAnimate.getName() + " right");
+					game.moveToken(run.currentPlayer, "move " + toMove.getName() + " right");
 				}
 				else if(moveDir.equals("left")) {
-					game.moveToken(run.currentPlayer, "move " + toAnimate.getName() + " left");
+					game.moveToken(run.currentPlayer, "move " + toMove.getName() + " left");
 				}
 
 			}
