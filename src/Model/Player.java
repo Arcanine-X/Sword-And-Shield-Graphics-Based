@@ -475,6 +475,8 @@ public class Player implements Token {
 			}
 		}
 	}
+	
+	
 
 	/**
 	 * Clears the grave yards by setting everything in it to null.

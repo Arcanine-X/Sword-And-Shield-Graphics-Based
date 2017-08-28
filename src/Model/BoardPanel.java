@@ -152,18 +152,32 @@ public class BoardPanel extends JPanel {
 		});
 	}
 
-	public Pair findPair(BoardPiece one, BoardPiece two) {
+	public Pair findPair(BoardPiece one, BoardPiece two, Player player) {
 		for(Pair p : game.getBoard().getReactions()) {
-			if(p.getOne().equals(one) && p.getTwo().equals(two)) {
-				return p;
+			if(player!=null) {
+				if(p.getOne().equals(one) && p.getPlayer().getName().equals(player.getName())) {
+					return p;
+				}
+			}else if(two!=null) {
+				if(p.getOne().equals(one) && p.getTwo().equals(two)) {
+					return p;
+				}
+			}else {
+
 			}
+
 		}
 		return null;
 	}
 
 	public void findChosenReaction() {
 		for(Reaction r : reactionOptions) {
-			Pair p = findPair(r.one, r.two);
+			Pair p;
+			if(r.player!=null) {
+				p = findPair(r.one, null, r.player);
+			}else {
+				p = findPair(r.one, r.two, null);
+			}
 			if(r.rect.contains(mouseX, mouseY)) {
 				doReaction(p);
 				break;
@@ -350,13 +364,33 @@ public class BoardPanel extends JPanel {
 	public void drawReactions(Graphics2D g) {
 		reactionOptions.clear();
 		List<Pair> reactions = game.getBoard().getReactions();
-		System.out.println("reactions size is " + reactions.size());
 		for(Pair p : reactions) {
 			if(p.getOne() instanceof BoardPiece && p.getTwo() instanceof BoardPiece) { // Check for boardpiece reactions
 				if(p.getDir().equals("vert")) {
 					g.setColor(new Color(108,50,180,250));
 					Rectangle rect = new Rectangle(p.getOne().xLoc + WIDTH/6, p.getOne().yLoc + HEIGHT - HEIGHT/6, WIDTH - WIDTH /6* 2, (HEIGHT/6)*2);
-					Reaction reaction = new Reaction(p.getOne().xLoc + WIDTH/6, p.getOne().yLoc + HEIGHT - HEIGHT/6, WIDTH - WIDTH /6* 2, (HEIGHT/6)*2, p.getOne(), p.getTwo(), p.getDir(), rect);
+					Reaction reaction = new Reaction(p.getOne().xLoc + WIDTH/6, p.getOne().yLoc + HEIGHT - HEIGHT/6, WIDTH - WIDTH /6* 2, (HEIGHT/6)*2, p.getOne(), p.getTwo(), p.getDir(), rect, null);
+					if(!reactionOptions.contains(reaction)) {
+						reactionOptions.add(reaction);
+					}
+					g.fill(rect);
+				}
+				if(p.getDir().equals("hori")) {
+					g.setColor(new Color(108,50,180,250));
+					System.out.println(p.getOne().xLoc);
+					System.out.println(p.getOne().yLoc);
+					Rectangle rect = new Rectangle(p.getOne().xLoc + WIDTH - WIDTH/6, p.getOne().yLoc + HEIGHT/6, (WIDTH/6)*2, HEIGHT- HEIGHT/6 * 2);
+					Reaction reaction = new Reaction(p.getOne().xLoc + WIDTH - WIDTH/6, p.getOne().yLoc + HEIGHT/6, (WIDTH/6)*2, HEIGHT- HEIGHT/6 * 2, p.getOne(), p.getTwo(), p.getDir(), rect, null);
+					if(!reactionOptions.contains(reaction)) {
+						reactionOptions.add(reaction);
+					}
+					g.fill(rect);
+				}
+			}else if(p.getOne() instanceof BoardPiece && p.getPlayer()!=null) { //reaction with player
+				if(p.getDir().equals("vert")) {
+					g.setColor(new Color(108,50,180,250));
+					Rectangle rect = new Rectangle(p.getOne().xLoc + WIDTH/6, p.getOne().yLoc + HEIGHT - HEIGHT/6, WIDTH - WIDTH /6* 2, (HEIGHT/6)*2);
+					Reaction reaction = new Reaction(p.getOne().xLoc + WIDTH/6, p.getOne().yLoc + HEIGHT - HEIGHT/6, WIDTH - WIDTH /6* 2, (HEIGHT/6)*2, p.getOne(), null, p.getDir(), rect, p.getPlayer());
 					if(!reactionOptions.contains(reaction)) {
 						reactionOptions.add(reaction);
 					}
@@ -365,17 +399,12 @@ public class BoardPanel extends JPanel {
 				if(p.getDir().equals("hori")) {
 					g.setColor(new Color(108,50,180,250));
 					Rectangle rect = new Rectangle(p.getOne().xLoc + WIDTH - WIDTH/6, p.getOne().yLoc + HEIGHT/6, (WIDTH/6)*2, HEIGHT- HEIGHT/6 * 2);
-					Reaction reaction = new Reaction(p.getOne().xLoc + WIDTH - WIDTH/6, p.getOne().yLoc + HEIGHT/6, (WIDTH/6)*2, HEIGHT- HEIGHT/6 * 2, p.getOne(), p.getTwo(), p.getDir(), rect);
+					Reaction reaction = new Reaction(p.getOne().xLoc + WIDTH - WIDTH/6, p.getOne().yLoc + HEIGHT/6, (WIDTH/6)*2, HEIGHT- HEIGHT/6 * 2, p.getOne(), null, p.getDir(), rect, p.getPlayer());
 					if(!reactionOptions.contains(reaction)) {
 						reactionOptions.add(reaction);
 					}
 					g.fill(rect);
 				}
-			}else if(p.getOne() instanceof BoardPiece && p.getPlayer()!=null) { //reaction with player
-				if(p.getDir().equals("vert")) {
-
-				}
-
 			}
 		}
 	}
@@ -910,9 +939,7 @@ public class BoardPanel extends JPanel {
 			if(bp == null) {
 				continue;
 			}
-			if(bp!=null) {
-				//System.out.println(bp.getName() + " " + bp.moveY + " " + bp.destY);
-			}
+
 			g.setColor(Color.DARK_GRAY);
 			g.fillRect(moveX, bp.moveY, WIDTH, WIDTH);
 			g.setColor(Color.YELLOW);
@@ -968,6 +995,8 @@ public class BoardPanel extends JPanel {
 						g.setColor(Color.red);
 						g.setStroke(new BasicStroke(6));
 						BoardPiece temp = (BoardPiece) board[row][col];
+						temp.xLoc = col*WIDTH;
+						temp.yLoc = row*HEIGHT;
 						drawToken(g, (BoardPiece) board[row][col], col * WIDTH, row * HEIGHT);
 						g.setStroke(new BasicStroke(0));
 					} else {
@@ -986,6 +1015,8 @@ public class BoardPanel extends JPanel {
 						g.setColor(Color.red);
 						g.setStroke(new BasicStroke(6));
 						BoardPiece temp = (BoardPiece) board[row][col];
+						temp.xLoc = col*WIDTH;
+						temp.yLoc = row*HEIGHT;
 						drawToken(g, (BoardPiece) board[row][col], col * WIDTH, row * HEIGHT);
 
 						g.setStroke(new BasicStroke(0));

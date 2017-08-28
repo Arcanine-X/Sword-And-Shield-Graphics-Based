@@ -8,8 +8,8 @@ public class Reaction extends Rectangle{
 	public BoardPiece one, two;
 	public String dir = "";
 	public Rectangle rect;
-
-	public Reaction(int x, int y, int width, int height, BoardPiece one, BoardPiece two, String dir, Rectangle rect) {
+	public Player player;
+	public Reaction(int x, int y, int width, int height, BoardPiece one, BoardPiece two, String dir, Rectangle rect, Player player) {
 		this.x = x;
 		this.y = y;
 		this.width = width;
@@ -18,6 +18,7 @@ public class Reaction extends Rectangle{
 		this.two = two;
 		this.dir = dir;
 		this.rect = rect;
+		this.player = player;
 	}
 
 	@Override
@@ -27,6 +28,7 @@ public class Reaction extends Rectangle{
 		result = prime * result + ((dir == null) ? 0 : dir.hashCode());
 		result = prime * result + height;
 		result = prime * result + ((one == null) ? 0 : one.hashCode());
+		result = prime * result + ((player == null) ? 0 : player.hashCode());
 		result = prime * result + ((rect == null) ? 0 : rect.hashCode());
 		result = prime * result + ((two == null) ? 0 : two.hashCode());
 		result = prime * result + width;
@@ -34,7 +36,6 @@ public class Reaction extends Rectangle{
 		result = prime * result + y;
 		return result;
 	}
-
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -56,6 +57,11 @@ public class Reaction extends Rectangle{
 				return false;
 		} else if (!one.equals(other.one))
 			return false;
+		if (player == null) {
+			if (other.player != null)
+				return false;
+		} else if (!player.equals(other.player))
+			return false;
 		if (rect == null) {
 			if (other.rect != null)
 				return false;
@@ -74,6 +80,10 @@ public class Reaction extends Rectangle{
 			return false;
 		return true;
 	}
-	
-	
+
+
+
+
+
+
 }

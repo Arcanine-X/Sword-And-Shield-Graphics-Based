@@ -59,9 +59,9 @@ public class SwordAndShieldGame {
 		//For reactions
 		/*BoardPiece one = yellow.find("s");
 		board.getBoard()[0][3] = one;
-		BoardPiece two = yellow.find("c");
+		BoardPiece two = yellow.find("g");
 		board.getBoard()[6][7] = two;
-		BoardPiece three = yellow.find("g");
+		BoardPiece three = yellow.find("c");
 		board.getBoard()[7][6] = three;
 		BoardPiece four = yellow.find("k");
 		board.getBoard()[9][7] = four;*/
@@ -70,15 +70,20 @@ public class SwordAndShieldGame {
 		/*BoardPiece one = yellow.find("s");
 		board.getBoard()[0][3] = one;
 		BoardPiece two = yellow.find("e");
-		board.getBoard()[1][] = two;
+		board.getBoard()[1][3] = two;
 		BoardPiece three = yellow.find("g");
-		board.getBoard()[7][6] = three;
-*/
+		board.getBoard()[7][6] = three;*/
+
 
 		//For player reactions
-		BoardPiece one = yellow.find("g");
-		board.getBoard()[7][8] = one;
-
+		/*BoardPiece one = yellow.find("g");
+		board.getBoard()[7][8] = one;*/
+		
+		//For off the board reactions
+		/*BoardPiece one = yellow.find("g");
+		board.getBoard()[7][9] = one;
+		BoardPiece three = yellow.find("c");
+		board.getBoard()[7][8] = three;*/
 
 
 	}
