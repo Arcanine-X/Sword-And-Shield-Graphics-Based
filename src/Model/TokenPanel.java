@@ -83,9 +83,13 @@ public class TokenPanel extends JPanel implements Observer{
 				create = "create " + letter + " " + rotation;
 				System.out.println(pieceToPlay.toString());
 				clickedPieceRotations.clear();
-				//run.addClearPanel();
 				game.createToken(player, create);         //<-------------Creates token
 				clickedPiece = null;
+				if(game.getBoard().checkForReaction()) {
+					run.setBoardReactionsTrue();
+				}else {
+					run.setBoardReactionsFalse();
+				}
 				break;
 			}
 			x += GAP;

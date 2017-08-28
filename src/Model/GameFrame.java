@@ -51,6 +51,7 @@ public class GameFrame extends JFrame implements Observer{
 	public boolean pastCreation = false;
 	public boolean disableBoard = false;
 	public BoardPiece creationPiece = null;
+	//public boolean reactions = false;
 
 	Player currentPlayer;
 	int turn = 1;
@@ -179,8 +180,17 @@ public class GameFrame extends JFrame implements Observer{
 		}
 		JOptionPane.showMessageDialog(this, surrenderMsg);
 		MenuFrame menu = new MenuFrame();
-		GameFrame.this.dispatchEvent(new WindowEvent(GameFrame.this, WindowEvent.WINDOW_CLOSING));
+		this.dispose();
+		//GameFrame.this.dispatchEvent(new WindowEvent(GameFrame.this, WindowEvent.WINDOW_CLOSING));
 
+	}
+
+	public void setBoardReactionsTrue() {
+		boardPanel.reactions = true;
+	}
+
+	public void setBoardReactionsFalse() {
+		boardPanel.reactions = false;
 	}
 
 	public void mainGame() {
@@ -199,6 +209,29 @@ public class GameFrame extends JFrame implements Observer{
 
 	}
 
+
+	public void fight(Player player) {
+		while(!game.getBoard().getReactions().isEmpty()) {
+			if(game.isGameEnd()) { // check if game has finished
+				return;
+			}
+			//// <----- display animations
+			//might do this in one actually
+			for(Pair p : game.getBoard().getReactions()) {
+				if(p.getPlayer()!=null) {
+					// display player and token reaction
+				}else {
+					// display two board piece reactions
+				}
+			}
+			if(game.getBoard().getReactions().size() > 1) {
+				//user now has to pick the reactions
+				//#### let them undo
+
+			}
+		}
+	}
+
 	@Override
 	public void paintComponents(Graphics g) {
 		super.paintComponents(g);
@@ -210,7 +243,8 @@ public class GameFrame extends JFrame implements Observer{
 
 	public Dimension getPreferredSize() {
 		Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
-		return new Dimension((int) dimension.getWidth(), 1000);
+		//return new Dimension((int) dimension.getWidth(), 1000);
+		return new Dimension(1500,700);
 	}
 
 	public void addClearPanel() {

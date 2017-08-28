@@ -49,6 +49,9 @@ public class BoardPanel extends JPanel {
 	int mouseClicks;
 	int rotationCount = 0;
 	BoardPiece hugeToken;
+	public boolean reactions = false;
+	List<Reaction> reactionOptions = new ArrayList<Reaction>();
+	List<Rectangle> reactionBoundingBoxes = new ArrayList<Rectangle>();
 	List<BoardPiece> hugeTokenRotations = new ArrayList<BoardPiece>();
 	public BoardPanel(SwordAndShieldGame game, GameFrame run) {
 		this.game = game;
@@ -78,11 +81,14 @@ public class BoardPanel extends JPanel {
 				mouseY = e.getY();
 				findClickedToken();
 				System.out.println(mouseClicks);
-				if (chosenToken != null && mouseClicks >=2 && !rotationAnimation) {
+				if (chosenToken != null && mouseClicks >=2 && !rotationAnimation){ //&& !reactions) {
 					attemptRotation();
 					attemptClickMove();
 
+				}else if(reactions){
+					findChosenReaction();
 				}else {
+
 				}
 
 
@@ -142,6 +148,43 @@ public class BoardPanel extends JPanel {
 				repaint();
 			}
 		});
+	}
+
+	public Pair findPair(BoardPiece one, BoardPiece two) {
+		for(Pair p : game.getBoard().getReactions()) {
+			if(p.getOne().equals(one) && p.getTwo().equals(two)) {
+				return p;
+			}
+		}
+		return null;
+	}
+
+	public void findChosenReaction() {
+		for(Reaction r : reactionOptions) {
+			Pair p = findPair(r.one, r.two);
+			if(r.rect.contains(mouseX, mouseY)) {
+				doReaction(p);
+				break;
+			}
+		}
+	}
+
+	public void doReaction(Pair p) {
+		if(p.getDir().equals("hori")) {
+			game.horizontalReaction(run.currentPlayer, p);
+		}
+		else {
+			game.verticalReaction(run.currentPlayer, p);
+		}
+		if(game.getBoard().checkForReaction()) {
+			run.setBoardReactionsTrue();
+		}else {
+			run.setBoardReactionsFalse();
+		}
+		p = null;
+		chosenToken = null;
+
+
 	}
 
 	public void attemptRotation() {
@@ -278,6 +321,9 @@ public class BoardPanel extends JPanel {
 		if(game.getBoard().getUndoStack().size() == 1) {
 			chosenToken = null;
 		}
+		if(reactions) {
+			drawReactions(_g);
+		}
 		if(disappearAnimation) {
 			applyDisappearAnimation(_g);
 		}
@@ -288,9 +334,42 @@ public class BoardPanel extends JPanel {
 			applyRotationAnimation(_g);
 		}
 		else {
-			drawBoard(_g);
+			if(!reactions) {
+				drawBoard(_g);
+
+			}
+			//drawBoard(_g);
 			highlightSelectedToken(_g);
 			displayInfo(_g);
+		}
+	}
+
+
+
+	public void drawReactions(Graphics2D g) {
+		reactionOptions.clear();
+		List<Pair> reactions = game.getBoard().getReactions();
+		for(Pair p : reactions) {
+			if(p.getOne() instanceof BoardPiece && p.getTwo() instanceof BoardPiece) {
+				if(p.getDir().equals("vert")) {
+					g.setColor(new Color(108,50,180,250));
+					Rectangle rect = new Rectangle(p.getOne().xLoc + WIDTH/6, p.getOne().yLoc + HEIGHT - HEIGHT/6, WIDTH - WIDTH /6* 2, (HEIGHT/6)*2);
+					Reaction reaction = new Reaction(p.getOne().xLoc + WIDTH/6, p.getOne().yLoc + HEIGHT - HEIGHT/6, WIDTH - WIDTH /6* 2, (HEIGHT/6)*2, p.getOne(), p.getTwo(), p.getDir(), rect);
+					if(!reactionOptions.contains(reaction)) {
+						reactionOptions.add(reaction);
+					}
+					g.fill(rect);
+				}
+				if(p.getDir().equals("hori")) {
+					g.setColor(new Color(108,50,180,250));
+					Rectangle rect = new Rectangle(p.getOne().xLoc + WIDTH - WIDTH/6, p.getOne().yLoc + HEIGHT/6, (WIDTH/6)*2, HEIGHT- HEIGHT/6 * 2);
+					Reaction reaction = new Reaction(p.getOne().xLoc + WIDTH - WIDTH/6, p.getOne().yLoc + HEIGHT/6, (WIDTH/6)*2, HEIGHT- HEIGHT/6 * 2, p.getOne(), p.getTwo(), p.getDir(), rect);
+					if(!reactionOptions.contains(reaction)) {
+						reactionOptions.add(reaction);
+					}
+					g.fill(rect);
+				}
+			}
 		}
 	}
 
@@ -328,9 +407,9 @@ public class BoardPanel extends JPanel {
 			rotationAnimation = false;
 			chosenToken = null;
 		}
-		
+
 	}
-	
+
 	public void switchRotationImages(){
 		game.rotator(hugeToken);
 		mouseX = -500;
@@ -443,6 +522,7 @@ public class BoardPanel extends JPanel {
 			if(alpha < 250) {
 				alpha +=5;
 			}else {
+				//Changed from toAnimate.getName to chosenToken.getName 
 				alpha = 0;
 				disappearAnimation = false;
 				disappearSkip = false;
@@ -897,6 +977,8 @@ public class BoardPanel extends JPanel {
 					g.setColor(Color.DARK_GRAY);
 					g.fillRect(col * WIDTH, row * HEIGHT, WIDTH, WIDTH);
 					BoardPiece temp = (BoardPiece) board[row][col];
+					temp.xLoc = col*WIDTH;
+					temp.yLoc = row*HEIGHT;
 					if(temp.needToAnimate == true) {
 						temp.needToAnimate = false;
 						continue;
@@ -911,18 +993,18 @@ public class BoardPanel extends JPanel {
 					g.setStroke(new BasicStroke(6));
 					drawToken(g, (BoardPiece) board[row][col], col * WIDTH, row * HEIGHT);
 					g.setStroke(new BasicStroke(0));
-					g.setColor(Color.ORANGE);
+					g.setColor(Color.PINK);
 					g.setFont(new Font("Serif", Font.BOLD, 12));
 					if (game.getYellow().getMovesSoFar().contains(temp.getName())) {
 						g.drawString("M", col * WIDTH, row * HEIGHT + 10);
 					}
+					else if (game.getYellow().getEveryMovement().contains(temp)) {
+						g.drawString("R", col * WIDTH, row * HEIGHT + 10);
+					}
 					if (game.getGreen().getMovesSoFar().contains(temp.getName())) {
 						g.drawString("M", col * WIDTH, row * HEIGHT + 10);
 					}
-					if (game.getYellow().getEveryMovement().contains(temp)) {
-						g.drawString("R", col * WIDTH, row * HEIGHT + 10);
-					}
-					if (game.getGreen().getEveryMovement().contains(temp)) {
+					else if (game.getGreen().getEveryMovement().contains(temp)) {
 						g.drawString("R", col * WIDTH, row * HEIGHT + 10);
 					}
 

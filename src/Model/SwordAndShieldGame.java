@@ -56,14 +56,27 @@ public class SwordAndShieldGame {
 		board.addPlayers(green, yellow);
 		board.addInvalidSquares();
 		board.redraw();
+		//For reactions
+		/*BoardPiece one = yellow.find("s");
+		board.getBoard()[0][3] = one;
+		BoardPiece two = yellow.find("c");
+		board.getBoard()[6][7] = two;
+		BoardPiece three = yellow.find("g");
+		board.getBoard()[7][6] = three;
+		BoardPiece four = yellow.find("k");
+		board.getBoard()[9][7] = four;*/
+		
+		//For pushing and disappearing
 		BoardPiece one = yellow.find("s");
 		board.getBoard()[0][3] = one;
-		//board.getBoard()[8][7] = one;
-		BoardPiece two = yellow.find("c");
-		//board.getBoard()[8][6] = two;
+		BoardPiece two = yellow.find("e");
 		board.getBoard()[1][3] = two;
-		//BoardPiece three = yellow.find("e");
-		//board.getBoard()[2][2] = three;
+		BoardPiece three = yellow.find("g");
+		board.getBoard()[7][6] = three;
+
+		
+
+
 	}
 
 	/**
@@ -244,7 +257,7 @@ public class SwordAndShieldGame {
 	 * @param player --- player that executed the reaction
 	 * @param p --- pair of reaction that was successful
 	 */
-	/*public void reactionCompleted(Player player, Pair p) {
+	public void reactionCompleted(Player player, Pair p) {
 		if(gameEnd == true) {
 			return;
 		}
@@ -257,7 +270,7 @@ public class SwordAndShieldGame {
 		if (board.checkForReaction()) {
 			return;
 		}
-	}*/
+	}
 
 	/**
 	 * Method that is called after every successful execution where the game state needs to be saved.
@@ -472,7 +485,7 @@ public class SwordAndShieldGame {
 	 * @param player --- player executing the reaction
 	 * @param p --- the pair of which the reaction is occurring between
 	 */
-	/*public void horizontalReaction(Player player, Pair p) {
+	public void horizontalReaction(Player player, Pair p) {
 		BoardPiece one = p.getOne();
 		BoardPiece two = p.getTwo();
 		Player play = p.getPlayer();
@@ -514,7 +527,7 @@ public class SwordAndShieldGame {
 				System.out.println("Invalid Pair");
 			}
 		}
-	}*/
+	}
 
 	/**
 	 * This method deals with all the vertical reactions. There are five situations in which a reaction can occur between two board pieces
@@ -523,7 +536,7 @@ public class SwordAndShieldGame {
 	 * @param player --- player executing the reaction
 	 * @param p --- the pair of which the reaction is occurring between
 	 */
-	/*public void verticalReaction(Player player, Pair p) {
+	public void verticalReaction(Player player, Pair p) {
 		// Five possible reactions, sword - sword, sword - nothing, nothing - sword, shield - sword, sword - shield
 		BoardPiece one = p.getOne();
 		BoardPiece two = p.getTwo();
@@ -566,7 +579,7 @@ public class SwordAndShieldGame {
 				System.out.println("Invalid Pair");
 			}
 		}
-	}*/
+	}
 
 	public Player getGreen() {
 		return green;
