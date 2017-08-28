@@ -80,12 +80,13 @@ public class BoardPanel extends JPanel {
 				BoardPanel.this.repaint();
 				mouseX = e.getX();
 				mouseY = e.getY();
-				findClickedToken();
+				if(!reactions) {
+					findClickedToken();
+				}
 				System.out.println(mouseClicks);
-				if (chosenToken != null && mouseClicks >=2 && !rotationAnimation){ //&& !reactions) {
+				if (chosenToken != null && mouseClicks >=2 && !rotationAnimation && reactions == false) {
 					attemptRotation();
 					attemptClickMove();
-
 				}else if(reactions){
 					findChosenReaction();
 				}else {
@@ -337,7 +338,6 @@ public class BoardPanel extends JPanel {
 		else {
 			if(!reactions) {
 				drawBoard(_g);
-
 			}
 			//drawBoard(_g);
 			highlightSelectedToken(_g);
@@ -350,8 +350,9 @@ public class BoardPanel extends JPanel {
 	public void drawReactions(Graphics2D g) {
 		reactionOptions.clear();
 		List<Pair> reactions = game.getBoard().getReactions();
+		System.out.println("reactions size is " + reactions.size());
 		for(Pair p : reactions) {
-			if(p.getOne() instanceof BoardPiece && p.getTwo() instanceof BoardPiece) {
+			if(p.getOne() instanceof BoardPiece && p.getTwo() instanceof BoardPiece) { // Check for boardpiece reactions
 				if(p.getDir().equals("vert")) {
 					g.setColor(new Color(108,50,180,250));
 					Rectangle rect = new Rectangle(p.getOne().xLoc + WIDTH/6, p.getOne().yLoc + HEIGHT - HEIGHT/6, WIDTH - WIDTH /6* 2, (HEIGHT/6)*2);
@@ -370,6 +371,11 @@ public class BoardPanel extends JPanel {
 					}
 					g.fill(rect);
 				}
+			}else if(p.getOne() instanceof BoardPiece && p.getPlayer()!=null) { //reaction with player
+				if(p.getDir().equals("vert")) {
+
+				}
+
 			}
 		}
 	}

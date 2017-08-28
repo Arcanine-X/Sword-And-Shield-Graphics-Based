@@ -65,16 +65,20 @@ public class SwordAndShieldGame {
 		board.getBoard()[7][6] = three;
 		BoardPiece four = yellow.find("k");
 		board.getBoard()[9][7] = four;*/
-		
+
 		//For pushing and disappearing
-		BoardPiece one = yellow.find("s");
+		/*BoardPiece one = yellow.find("s");
 		board.getBoard()[0][3] = one;
 		BoardPiece two = yellow.find("e");
-		board.getBoard()[1][3] = two;
+		board.getBoard()[1][] = two;
 		BoardPiece three = yellow.find("g");
 		board.getBoard()[7][6] = three;
+*/
 
-		
+		//For player reactions
+		BoardPiece one = yellow.find("g");
+		board.getBoard()[7][8] = one;
+
 
 
 	}
