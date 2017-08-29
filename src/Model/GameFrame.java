@@ -40,7 +40,7 @@ import javax.swing.Timer;
 import javax.swing.WindowConstants;
 import javax.swing.border.Border;
 
-public class GameFrame extends JFrame implements Observer{
+public class GameFrame extends JFrame implements Observer {
 	SwordAndShieldGame game;
 	JPanel buttonPanel;
 	BoardPanel boardPanel;
@@ -60,7 +60,10 @@ public class GameFrame extends JFrame implements Observer{
 	int turn = 1;
 	public CardLayout cardLayout = new CardLayout();
 	GlassPanel glassPanel;
-
+	JButton undo = new JButton("Undo");
+	JButton pass = new JButton("Pass");
+	JButton surrender = new JButton("Surrender");
+	JButton quit = new JButton("Quit");
 	public GameFrame() {
 		game = new SwordAndShieldGame();
 		this.setTitle("~~Sword And Shiled Game~~");
@@ -74,10 +77,7 @@ public class GameFrame extends JFrame implements Observer{
 		graveyardY = new GraveyardPanel(game, game.getYellow());
 		graveyardG = new GraveyardPanel(game, game.getGreen());
 		buttonPanel = new ButtonPanel(game);
-		JButton undo = new JButton("Undo");
-		JButton pass = new JButton("Pass");
-		JButton surrender = new JButton("Surrender");
-		JButton quit = new JButton("Quit");
+
 		buttonPanel.add(undo);
 		buttonPanel.add(surrender);
 		buttonPanel.add(pass);
@@ -86,9 +86,12 @@ public class GameFrame extends JFrame implements Observer{
 		surrender.setFocusable(false);
 		pass.setFocusable(false);
 		quit.setFocusable(false);
-		JSplitPane firstSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, tokenPanelG,boardPanel); // green tokens - board
+		JSplitPane firstSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, tokenPanelG, boardPanel); // green tokens -
+																										// board
 		firstSplit.setResizeWeight(1);
-		JSplitPane secondSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, firstSplit, tokenPanelY); // first split and yellow otkens
+		JSplitPane secondSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, firstSplit, tokenPanelY); // first split
+																										// and yellow
+																										// otkens
 		secondSplit.setResizeWeight(0.1);
 		JSplitPane thirdSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT, buttonPanel, secondSplit);
 		thirdSplit.setResizeWeight(0);
@@ -96,33 +99,31 @@ public class GameFrame extends JFrame implements Observer{
 		fourthSplit.setResizeWeight(0.5);
 		JSplitPane fifthSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT, thirdSplit, fourthSplit);
 		fifthSplit.setResizeWeight(0.75);
-		//this.add(fifthSplit);
+		// this.add(fifthSplit);
 
 		Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
 		layer.add(fifthSplit, new Integer(0), 0);
-		fifthSplit.setBounds(0,0,(int) dimension.getWidth(), 1000);
-		glassPanel = new GlassPanel(game,this, buttonPanel,  boardPanel, tokenPanelY, tokenPanelG);
-        layer.add(glassPanel, new Integer(1), 0);
-        this.add(layer);
+		fifthSplit.setBounds(0, 0, (int) dimension.getWidth(), 1000);
+		glassPanel = new GlassPanel(game, this, buttonPanel, boardPanel, tokenPanelY, tokenPanelG);
+		layer.add(glassPanel, new Integer(1), 0);
+		this.add(layer);
 
-		new Timer(50,
-                (e)->{
-                    repaint();
-                }
-            ).start();
+		new Timer(50, (e) -> {
+			repaint();
+		}).start();
 
 		undo.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(game.getBoard().getUndoStack().size()==1) {
+				if (game.getBoard().getUndoStack().size() == 1) {
 					game.setFirstCreation(true);
 				}
-				if(game.getBoard().getUndoStack().size() > 1) {
+				if (game.getBoard().getUndoStack().size() > 1) {
 					GameFrame.this.game.undo(currentPlayer);
 
-					if(game.getBoard().checkForReaction()) {
+					if (game.getBoard().checkForReaction()) {
 						setBoardReactionsTrue();
-					}else {
+					} else {
 						setBoardReactionsFalse();
 					}
 				}
@@ -137,14 +138,14 @@ public class GameFrame extends JFrame implements Observer{
 		pass.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-					if(game.getBoard().getUndoStack().size()==1) {
-						game.setFirstCreation(true);
-						game.success();
-					}else {
-						GameFrame.this.game.reset(currentPlayer, game.getBoard());
-						GameFrame.this.turn++;
-					}
-					mainGame();
+				if (game.getBoard().getUndoStack().size() == 1) {
+					game.setFirstCreation(true);
+					game.success();
+				} else {
+					GameFrame.this.game.reset(currentPlayer, game.getBoard());
+					GameFrame.this.turn++;
+				}
+				mainGame();
 			}
 		});
 		quit.addActionListener(new ActionListener() {
@@ -158,30 +159,23 @@ public class GameFrame extends JFrame implements Observer{
 		this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		mainGame();
 	}
-	
-	public void playerKilled(Player winner) {
-		//if(deadOnce == false) {
-			//deadOnce = true;
 
-			//this.surrender();
-			String msg = winner.getName() + " wins!";
-			JOptionPane.showMessageDialog(this, msg);
-			MenuFrame menu = new MenuFrame();
-			this.dispose();
-		//}
-		
+	public void playerKilled(Player winner) {
+		String msg = winner.getName() + " wins!";
+		JOptionPane.showMessageDialog(this, msg);
+		MenuFrame menu = new MenuFrame();
+		this.dispose();
 	}
 
 	public void surrender() {
 		String surrenderMsg = "";
-		if(currentPlayer.getName().equals("yellow")) {
+		if (currentPlayer.getName().equals("yellow")) {
 			surrenderMsg = "Green Wins";
-		}
-		else {
+		} else {
 			surrenderMsg = "Yellow Wins";
 		}
 		JOptionPane.showMessageDialog(this, surrenderMsg);
-	
+
 		MenuFrame menu = new MenuFrame();
 		this.dispose();
 	}
@@ -198,15 +192,12 @@ public class GameFrame extends JFrame implements Observer{
 		if (turn % 2 == 0) {
 			System.out.println("It is greens turn!");
 			currentPlayer = game.getGreen();
-		}
-		else {
+		} else {
 			System.out.println("It is yellows turn!");
 			currentPlayer = game.getYellow();
 		}
 
 	}
-	
-	
 
 	@Override
 	public void paintComponents(Graphics g) {

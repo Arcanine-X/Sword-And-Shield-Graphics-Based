@@ -182,6 +182,7 @@ public class BoardPanel extends JPanel {
 	}
 
 	public void findChosenReaction() {
+		
 		for(Reaction r : reactionOptions) {
 			Pair p;
 			if(r.player!=null) {
@@ -208,13 +209,22 @@ public class BoardPanel extends JPanel {
 		}
 		checkForWinner();
 		if(game.getBoard().checkForReaction()) {
+			run.pass.setEnabled(false);
 			run.setBoardReactionsTrue();
 		}else {
 			run.setBoardReactionsFalse();
+			run.pass.setEnabled(true);
 		}
 		p = null;
 		chosenToken = null;
-
+/*
+ * if(!reactionOptions.isEmpty()) {
+				run.pass.setEnabled(false);
+			}
+			else {
+				run.pass.setEnabled(true);
+			}
+ */
 
 	}
 
@@ -399,7 +409,6 @@ public class BoardPanel extends JPanel {
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D _g = (Graphics2D) g;
-
 		drawBoard(_g);
 		displayInfo(_g);
 
@@ -470,6 +479,9 @@ public class BoardPanel extends JPanel {
 	public void drawReactions(Graphics2D g) {
 		reactionOptions.clear();
 		List<Pair> reactions = game.getBoard().getReactions();
+		if(!reactions.isEmpty()) {
+			run.pass.setEnabled(false);
+		}
 		for(Pair p : reactions) {
 			if(p.getOne() instanceof BoardPiece && p.getTwo() instanceof BoardPiece) { // Check for boardpiece reactions
 				if(p.getDir().equals("vert")) {
@@ -512,6 +524,12 @@ public class BoardPanel extends JPanel {
 					g.fill(rect);
 				}
 			}
+			/*if(!reactionOptions.isEmpty()) {
+				run.pass.setEnabled(false);
+			}
+			else {
+				run.pass.setEnabled(true);
+			}*/
 		}
 	}
 
@@ -695,12 +713,20 @@ public class BoardPanel extends JPanel {
 				else if(moveDir.equals("left")) {
 					game.moveToken(run.currentPlayer, "move " + toMove.getName() + " left");
 				}
-
+				
 				if(game.getBoard().checkForReaction()) {
+					run.pass.setEnabled(false);
 					run.setBoardReactionsTrue();
 				}else {
 					run.setBoardReactionsFalse();
+					run.pass.setEnabled(true);
 				}
+
+				/*if(game.getBoard().checkForReaction()) {
+					run.setBoardReactionsTrue();
+				}else {
+					run.setBoardReactionsFalse();
+				}*/
 
 			}
 		}
@@ -969,10 +995,17 @@ public class BoardPanel extends JPanel {
 					letter = chosenToken.getName();
 					game.moveToken(run.currentPlayer, "move " + letter + " left");
 					if(game.getBoard().checkForReaction()) {
+						run.pass.setEnabled(false);
 						run.setBoardReactionsTrue();
 					}else {
 						run.setBoardReactionsFalse();
+						run.pass.setEnabled(true);
 					}
+					/*if(game.getBoard().checkForReaction()) {
+						run.setBoardReactionsTrue();
+					}else {
+						run.setBoardReactionsFalse();
+					}*/
 				}
 				chosenToken = null;
 			}
@@ -1014,10 +1047,17 @@ public class BoardPanel extends JPanel {
 					letter = chosenToken.getName();
 					game.moveToken(run.currentPlayer, "move " + letter + " right");
 					if(game.getBoard().checkForReaction()) {
+						run.pass.setEnabled(false);
 						run.setBoardReactionsTrue();
 					}else {
 						run.setBoardReactionsFalse();
+						run.pass.setEnabled(true);
 					}
+					/*if(game.getBoard().checkForReaction()) {
+						run.setBoardReactionsTrue();
+					}else {
+						run.setBoardReactionsFalse();
+					}*/
 				}
 				chosenToken = null;
 			}
@@ -1058,10 +1098,17 @@ public class BoardPanel extends JPanel {
 					letter = chosenToken.getName();
 					game.moveToken(run.currentPlayer, "move " + letter + " down");
 					if(game.getBoard().checkForReaction()) {
+						run.pass.setEnabled(false);
 						run.setBoardReactionsTrue();
 					}else {
 						run.setBoardReactionsFalse();
+						run.pass.setEnabled(true);
 					}
+					/*if(game.getBoard().checkForReaction()) {
+						run.setBoardReactionsTrue();
+					}else {
+						run.setBoardReactionsFalse();
+					}*/
 				}
 				chosenToken = null;
 			}
@@ -1100,10 +1147,17 @@ public class BoardPanel extends JPanel {
 					letter = chosenToken.getName();
 					game.moveToken(run.currentPlayer, "move " + letter + " up");
 					if(game.getBoard().checkForReaction()) {
+						run.pass.setEnabled(false);
 						run.setBoardReactionsTrue();
 					}else {
 						run.setBoardReactionsFalse();
+						run.pass.setEnabled(true);
 					}
+					/*if(game.getBoard().checkForReaction()) {
+						run.setBoardReactionsTrue();
+					}else {
+						run.setBoardReactionsFalse();
+					}*/
 				}
 				chosenToken = null;
 			}
