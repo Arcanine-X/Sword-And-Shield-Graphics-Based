@@ -17,21 +17,21 @@ import javax.swing.JPanel;
 
 public class MenuFrame extends JFrame {
 	public MenuFrame() {
-		JPanel menuPanel = new JPanel();
+	//	JPanel menuPanel = new JPanel();
 		JPanel buttons = new JPanel();
 		JButton start = new JButton("Start Game");
 		JButton information = new JButton("Information");
 		JButton quit = new JButton("Quit");
-		menuPanel.setBackground(Color.white);
+//		menuPanel.setBackground(Color.white);
 		buttons.setBackground(Color.white);
 		buttons.add(start);
 		buttons.add(information);
 		buttons.add(quit);
 		this.setTitle("Menu");
 		this.setFocusable(true);
-		menuPanel.setLayout(new BorderLayout());
+	//	menuPanel.setLayout(new BorderLayout());
 		this.add(buttons, BorderLayout.NORTH);
-		this.add(menuPanel);
+//		this.add(menuPanel);
 		this.add(new JLabel(new ImageIcon("editied.jpg")));
 		this.pack();
 		this.setVisible(true);

@@ -21,8 +21,8 @@ import javax.sound.sampled.Clip;
 import javax.swing.JPanel;
 
 public class BoardPanel extends JPanel {
-	private int WIDTH = 60;
-	private int HEIGHT = 60;
+	public int WIDTH = 60;
+	public int HEIGHT = 60;
 	private static final int STROKE = 3;
 	private int mouseX;
 	private int mouseY;
@@ -198,13 +198,13 @@ public class BoardPanel extends JPanel {
 
 	public void doReaction(Pair p) {
 		if(p.getDir().equals("hori")) {
+			reactionPiece = p;
 			game.horizontalReaction(run.currentPlayer, p);
 		}
 		else {
 			reactionPiece = p;
-			//reactionMoveAnimation = true;
-			applyReactionMoveAnimation(p);
-			//game.verticalReaction(run.currentPlayer, p);
+			game.verticalReaction(run.currentPlayer, p);
+			//applyReactionMoveAnimation(p);
 		}
 		if(game.getBoard().checkForReaction()) {
 			run.setBoardReactionsTrue();
@@ -396,7 +396,6 @@ public class BoardPanel extends JPanel {
 			drawReactions(_g);
 		}
 
-
 		if(reactionMoveAnimation) {
 			reactionHope(_g, reactionMoves);
 		}
@@ -419,64 +418,6 @@ public class BoardPanel extends JPanel {
 		}
 	}
 
-	/*
-	 * if (moveDir.equals("up")) {
-			if(skip == false) {
-				everyBpToAnimate.clear();
-				piecesToAnimate = run.currentPlayer.upCounter(chosenToken, game.getBoard());
-				if(piecesToAnimate == -1) {
-					disappearAnimation = true;
-					moveAnimation = false;
-					skip = false;
-					chosenToken = null;
-					return;
-				}
-				chosenToken.moveX = moveX;
-				chosenToken.moveY = moveY;
-				chosenToken.destY = chosenY - HEIGHT;
-				everyBpToAnimate.add(chosenToken);
-				for(int i = piecesToAnimate; i > 0; i--) {
-					int row = getRow(chosenY - (i*HEIGHT));
-					int col = getCol(chosenX);
-					BoardPiece bp = ((BoardPiece)game.getBoard().getBoard()[row][col]);
-
-					bp.moveX = chosenX;
-					bp.moveY = chosenY - (i * HEIGHT);
-					bp.destY = chosenY -((i+1) * HEIGHT);
-					everyBpToAnimate.add(bp);
-
-					if(((row-1) == 1 && col == 0 )|| ((row-1)==1 && col ==1)) {
-						everyBpToAnimate.remove(bp);
-						disappearPiece = bp;
-						disappearAnimation = true;
-						return;
-					}
-				}
-				if(piecesToAnimate == 0) {
-					int row = getRow(chosenY);
-					int col = getCol(chosenX);
-					if(((row-1) == 1 && col == 0 )|| ((row-1)==1 && col ==1)) {
-						disappearPiece = chosenToken;
-						disappearAnimation = true;
-						return;
-					}
-				}
-				skip = true;
-				BoardPiece temp;
-				if(piecesToAnimate > 0) {
-					temp = everyBpToAnimate.get(1);
-					if(temp.destY < 0) {
-						disappearPiece = temp;
-						everyBpToAnimate.remove(temp);
-						disappearAnimation = true;
-						return;
-					}
-				}
-			}else {
-				hope(g, everyBpToAnimate);
-			}
-		}
-	 */
 
 	public void reactionHope(Graphics2D g, List<BoardPiece> toAnimate) {
 		for(BoardPiece bp : toAnimate) {
@@ -586,9 +527,6 @@ public class BoardPanel extends JPanel {
 				rotationCount = 0;
 			}
 		}else if(!(mouseX > WIDTH * 2 && mouseX < WIDTH * 2 + WIDTH*6 && mouseY > HEIGHT * 2 && mouseY < HEIGHT * 2 + HEIGHT*6) && mouseX > 0 && mouseY > 0) {
-			System.out.println("rotate count is " + rotationCount);
-			//hugeToken = chosenToken;
-			System.out.println("rotate " + hugeToken.getName() + " " + rotationCount*90);
 			game.rotateToken(run.currentPlayer, "rotate " + hugeToken.getName() + " " + 0);
 			if(game.getBoard().checkForReaction()) {
 				run.setBoardReactionsTrue();
@@ -722,7 +660,6 @@ public class BoardPanel extends JPanel {
 			if(alpha < 250) {
 				alpha +=5;
 			}else {
-				//Changed from toAnimate.getName to chosenToken.getName
 				alpha = 0;
 				disappearAnimation = false;
 				disappearSkip = false;
@@ -816,7 +753,7 @@ public class BoardPanel extends JPanel {
 					}
 				}
 			}else {
-				hope(g, everyBpToAnimate);
+				animateUp(g, everyBpToAnimate);
 			}
 		}else if(moveDir.equals("down")) {
 			if(skip == false) {
@@ -870,13 +807,7 @@ public class BoardPanel extends JPanel {
 					}
 				}
 			}else {
-				for(BoardPiece bp : everyBpToAnimate) {
-				//	System.out.println("every piece is : ");
-				//System.out.println(bp.toString());
-				//	System.out.println("deestY is " + bp.destY);
-				//	System.out.println("moveY is " + bp.moveY);
-				}
-				hope2(g, everyBpToAnimate);
+				animateDown(g, everyBpToAnimate);
 			}
 		}else if(moveDir.equals("right")) {
 			if(skip == false) {
@@ -931,7 +862,7 @@ public class BoardPanel extends JPanel {
 					}
 				}
 			}else {
-				hope3(g, everyBpToAnimate);
+				animateRight(g, everyBpToAnimate);
 			}
 		}
 		else if(moveDir.equals("left")) {
@@ -974,7 +905,6 @@ public class BoardPanel extends JPanel {
 						return;
 					}
 				}
-				System.out.println("skip is " + skip);
 				skip = true;
 				BoardPiece temp;
 				if(piecesToAnimate > 0) {
@@ -987,13 +917,13 @@ public class BoardPanel extends JPanel {
 					}
 				}
 			}else {
-				hope4(g, everyBpToAnimate);
+				animateLeft(g, everyBpToAnimate);
 			}
 		}
 
 	}
 
-	public void hope4(Graphics2D g, List<BoardPiece> toAnimate) {
+	public void animateLeft(Graphics2D g, List<BoardPiece> toAnimate) {
 		for(BoardPiece bp : toAnimate) {
 			if(bp == null) {
 				continue;
@@ -1038,7 +968,7 @@ public class BoardPanel extends JPanel {
 		}
 	}
 
-	public void hope3(Graphics2D g, List<BoardPiece> toAnimate) {
+	public void animateRight(Graphics2D g, List<BoardPiece> toAnimate) {
 		for(BoardPiece bp : toAnimate) {
 			if(bp == null) {
 				continue;
@@ -1083,7 +1013,7 @@ public class BoardPanel extends JPanel {
 		}
 	}
 
-	public void hope2(Graphics2D g, List<BoardPiece> toAnimate) {
+	public void animateDown(Graphics2D g, List<BoardPiece> toAnimate) {
 		for(BoardPiece bp : toAnimate) {
 			if(bp == null) {
 				continue;
@@ -1127,7 +1057,7 @@ public class BoardPanel extends JPanel {
 		}
 	}
 
-	public void hope(Graphics2D g, List<BoardPiece> toAnimate) {
+	public void animateUp(Graphics2D g, List<BoardPiece> toAnimate) {
 		for(BoardPiece bp : toAnimate) {
 			if(bp == null) {
 				continue;
@@ -1180,64 +1110,6 @@ public class BoardPanel extends JPanel {
 		}
 	}
 
-	/*public void hope(Graphics2D g, List<BoardPiece> toAnimate) {
-		for(BoardPiece bp : toAnimate) {
-			System.out.println("in hoperinos");
-			if(bp == null) {
-				continue;
-			}
-
-
-			if(reactions) {
-				g.setColor(Color.DARK_GRAY);
-				g.fillRect(moveX, bp.moveY, WIDTH, WIDTH);
-				g.setColor(Color.YELLOW);
-				g.fillOval(moveX, bp.moveY, WIDTH, HEIGHT);
-				g.setColor(Color.red);
-				g.setStroke(new BasicStroke(6));
-				drawToken(g, bp, bp.moveX, bp.moveY);
-
-			}else {
-				g.setColor(Color.DARK_GRAY);
-				g.fillRect(moveX, bp.moveY, WIDTH, WIDTH);
-				g.setColor(Color.YELLOW);
-				g.fillOval(moveX, bp.moveY, WIDTH, HEIGHT);
-				g.setColor(Color.red);
-				g.setStroke(new BasicStroke(6));
-				drawToken(g, bp, bp.moveX, bp.moveY);
-
-			}
-			g.setStroke(new BasicStroke(0));
-			System.out.println("yloc is " + bp.yLoc);
-			System.out.println(bp.destY);
-			if(reactions) {
-				bp.yLoc-=2;
-			}
-
-			if (bp.moveY > bp.destY) {
-				bp.moveY -= 2;
-
-			}
-			else {
-				moveAnimation = false;
-
-				skip = false;
-				reactionMoveAnimation = false;
-				System.out.println("in else");
-				if(chosenToken!=null && !reactions) {
-					letter = chosenToken.getName();
-					game.moveToken(run.currentPlayer, "move " + letter + " up");
-				}else {
-
-				}
-				chosenToken = null;
-			}
-		}
-		if(skip == false) {
-			everyBpToAnimate.clear();
-		}
-	}*/
-
 
 	public void displayInfo(Graphics2D g) {
 		g.setColor(Color.BLACK);
@@ -1287,6 +1159,7 @@ public class BoardPanel extends JPanel {
 							g.fillRect(col * WIDTH, row * HEIGHT, WIDTH, HEIGHT);
 							continue;
 						}
+						
 						g.setColor(new Color(160,149,130));
 						g.fillRect(col * WIDTH, row * HEIGHT, WIDTH, WIDTH);
 						g.setColor(Color.YELLOW);

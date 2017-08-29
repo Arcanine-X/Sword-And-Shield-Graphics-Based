@@ -345,7 +345,7 @@ public class Board {
 		yellow.updateGraveyard(board);
 		populateGraveyard(green, green.getDifferences());
 		populateGraveyard(yellow, yellow.getDifferences());
-		drawGraveYard();
+		//drawGraveYard();
 	}
 
 	/**

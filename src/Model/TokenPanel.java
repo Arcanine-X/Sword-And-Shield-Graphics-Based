@@ -18,7 +18,7 @@ import java.util.Observer;
 import javax.swing.JPanel;
 
 public class TokenPanel extends JPanel implements Observer{
-	private int WIDTH = 60;
+	public int WIDTH = 60;
 	private int HEIGHT = 60;
 	private static final int GAP = 8;
 	private static final int STROKE = 3;// stroke width /2
@@ -39,6 +39,9 @@ public class TokenPanel extends JPanel implements Observer{
 	Color currentPlayerColor;
 	int scaleToken;
 	int tokenSize;
+	BoardPiece toFly;
+	int toFlyRot;
+	public boolean timeToFly = false;
 
 	public TokenPanel(SwordAndShieldGame game, Player player, GameFrame run) {
 		this.game = game;
@@ -68,7 +71,7 @@ public class TokenPanel extends JPanel implements Observer{
 								return;
 							}
 							getRotations();
-							
+
 						}
 					}else {
 						playToken();
@@ -77,6 +80,21 @@ public class TokenPanel extends JPanel implements Observer{
 			}
 		});
 
+	}
+	
+	public void createToken() {
+		game.createToken(player, create);         //<-------------Creates token
+		clickedPiece = null;
+		if(game.getBoard().checkForReaction()) {
+			run.setBoardReactionsTrue();
+		}else {
+			run.setBoardReactionsFalse();
+		}
+		if(pieceToPlay!=null) {
+			System.out.println("create is : ");
+			System.out.println(create);
+			create = "";
+		}
 	}
 
 	public void playToken() {
@@ -88,13 +106,19 @@ public class TokenPanel extends JPanel implements Observer{
 				create = "create " + letter + " " + rotation;
 				System.out.println(pieceToPlay.toString());
 				clickedPieceRotations.clear();
-				game.createToken(player, create);         //<-------------Creates token
+				pieceToPlay.flyingX = 1 * WIDTH;
+				toFlyRot = rotation;
+				System.out.println("flying x is " + pieceToPlay.flyingX );
+				setPieceToFly(pieceToPlay);
+				timeToFly = true;
+				System.out.println("set to true");
+			/*	game.createToken(player, create);         //<-------------Creates token
 				clickedPiece = null;
 				if(game.getBoard().checkForReaction()) {
 					run.setBoardReactionsTrue();
 				}else {
 					run.setBoardReactionsFalse();
-				}
+				}*/
 				break;
 			}
 			x += GAP;
@@ -103,11 +127,19 @@ public class TokenPanel extends JPanel implements Observer{
 		x = GAP;
 
 
-		if(pieceToPlay!=null) {
+		/*if(pieceToPlay!=null) {
 			System.out.println("create is : ");
 			System.out.println(create);
 			create = "";
-		}
+		}*/
+	}
+
+	public void setPieceToFly(BoardPiece bp) {
+		toFly = bp;
+	}
+
+	public BoardPiece getPieceToFly(BoardPiece bp) {
+		return bp;
 	}
 
 

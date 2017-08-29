@@ -1,6 +1,7 @@
 package Model;
 
 import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -29,6 +30,7 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JLayer;
 import javax.swing.JLayeredPane;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -51,38 +53,16 @@ public class GameFrame extends JFrame implements Observer{
 	public boolean pastCreation = false;
 	public boolean disableBoard = false;
 	public BoardPiece creationPiece = null;
-	//public boolean reactions = false;
-
 	Player currentPlayer;
+	JLayeredPane layer = new JLayeredPane();
 	int turn = 1;
+	public CardLayout cardLayout = new CardLayout();
+	GlassPanel glassPanel;
 
 	public GameFrame() {
 		game = new SwordAndShieldGame();
 		this.setTitle("~~Sword And Shiled Game~~");
-		/*panelContainer = new JPanel();
-		panelContainer.setLayout(new BorderLayout(0, 0));
-
-		tokenPanelG = new TokenPanel(game, game.getGreen(), this);
-		tokenPanelG.setForeground(Color.green);
-		tokenPanelG.setEnabled(false);
-		panelContainer.add(tokenPanelG, BorderLayout.WEST);
-
-		boardPanel = new BoardPanel(game, this);
-		boardPanel.setFocusable(true);
-		boardPanel.requestFocusInWindow();
-		panelContainer.add(boardPanel, BorderLayout.CENTER);
-
-		tokenPanelY = new TokenPanel(game, game.getYellow(), this);
-		tokenPanelY.setForeground(Color.YELLOW);
-		panelContainer.add(tokenPanelY, BorderLayout.EAST);
-		buttonPanel = new JPanel();
-		graveyardY = new GraveyardPanel(game, game.getYellow());
-		graveyardG = new GraveyardPanel(game, game.getGreen());
-		JPanel graveHolder = new JPanel();
-		graveHolder.add(graveyardG);
-		graveHolder.add(graveyardY);*/
 		panelContainer = new JPanel();
-
 		boardPanel = new BoardPanel(game, this);
 		boardPanel.setFocusable(true);
 		boardPanel.requestFocusInWindow();
@@ -114,7 +94,78 @@ public class GameFrame extends JFrame implements Observer{
 		fourthSplit.setResizeWeight(0.5);
 		JSplitPane fifthSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT, thirdSplit, fourthSplit);
 		fifthSplit.setResizeWeight(0.75);
-		this.add(fifthSplit);
+		//this.add(fifthSplit);
+		System.out.println("first split divider is " + firstSplit.getDividerSize());
+		System.out.println("other split divider is " + secondSplit.getDividerSize());
+
+
+		Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
+		layer.add(fifthSplit, new Integer(0), 0);
+		fifthSplit.setBounds(0,0,(int) dimension.getWidth(), 1000);
+		glassPanel = new GlassPanel(game,this, buttonPanel,  boardPanel, tokenPanelY, tokenPanelG);
+
+        layer.add(glassPanel, new Integer(1), 0);
+        this.add(layer);
+
+
+
+
+
+		/*JButton button = new JButton("Button");
+		glass = (JPanel) this.getGlassPane();
+		glass.setSize(new Dimension(GameFrame.this.getWidth(), GameFrame.this.getHeight()));
+
+		button.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				glass.setVisible(true);
+				JButton bloop = new JButton("hello");
+				glass.add(bloop);
+				GameFrame.this.add(glass);
+				//JPanel panel = new JPanel();
+				//panel.setBackground(new Color(255,255,0,100));
+				//GameFrame.this.add(panel);
+
+			}
+		});
+
+		buttonPanel.add(button);*/
+
+
+		////////////
+		/*JPanel cardPanel = new JPanel(cardLayout);
+		cardPanel.add(fifthSplit, "split");
+		JPanel transparentPanel = new JPanel();
+		cardPanel.add(transparentPanel, "trans");
+		JButton card1 = new JButton("card 1");
+		JButton card2 = new JButton("card 2");
+		transparentPanel.setSize(new Dimension(600,600));
+		transparentPanel.setBounds(0, 0, 500, 500);
+		transparentPanel.setBackground(new Color(255,0,0,100));
+
+
+		card1.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				cardLayout.show(cardPanel, "split");
+			}
+		});
+
+		card2.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				cardLayout.show(cardPanel, "trans");
+
+			}
+		});
+
+		buttonPanel.add(card1);
+		buttonPanel.add(card2);
+
+		this.add(cardPanel)*/;
+
+		/////////////
 		new Timer(50,
                 (e)->{
                     repaint();
@@ -124,8 +175,17 @@ public class GameFrame extends JFrame implements Observer{
 		undo.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(game.getBoard().getUndoStack().size() != 1) {
+				if(game.getBoard().getUndoStack().size()==1) {
+					game.setFirstCreation(true);
+				}
+				if(game.getBoard().getUndoStack().size() > 1) {
 					GameFrame.this.game.undo(currentPlayer);
+
+					if(game.getBoard().checkForReaction()) {
+						setBoardReactionsTrue();
+					}else {
+						setBoardReactionsFalse();
+					}
 				}
 			}
 		});
@@ -138,18 +198,13 @@ public class GameFrame extends JFrame implements Observer{
 		pass.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-					GameFrame.this.game.passed = false;
 					if(game.getBoard().getUndoStack().size()==1) {
-						game.setFirstCreation(false);
+						game.setFirstCreation(true);
 						game.success();
-						pastCreation = true;
 					}else {
 						GameFrame.this.game.reset(currentPlayer, game.getBoard());
 						GameFrame.this.turn++;
-						pastCreation = false;
 					}
-
-					System.out.println("##########Switching players#############");
 					mainGame();
 			}
 		});
@@ -198,29 +253,6 @@ public class GameFrame extends JFrame implements Observer{
 
 	}
 
-
-	public void fight(Player player) {
-		while(!game.getBoard().getReactions().isEmpty()) {
-			if(game.isGameEnd()) { // check if game has finished
-				return;
-			}
-			//// <----- display animations
-			//might do this in one actually
-			for(Pair p : game.getBoard().getReactions()) {
-				if(p.getPlayer()!=null) {
-					// display player and token reaction
-				}else {
-					// display two board piece reactions
-				}
-			}
-			if(game.getBoard().getReactions().size() > 1) {
-				//user now has to pick the reactions
-				//#### let them undo
-
-			}
-		}
-	}
-
 	@Override
 	public void paintComponents(Graphics g) {
 		super.paintComponents(g);
@@ -228,21 +260,17 @@ public class GameFrame extends JFrame implements Observer{
 		boardPanel.paintComponent(_g);
 		tokenPanelG.paintComponent(_g);
 		tokenPanelY.paintComponent(_g);
+
 	}
 
 	public Dimension getPreferredSize() {
 		Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
 		return new Dimension((int) dimension.getWidth(), 1000);
-		//return new Dimension(1500,700);
 	}
 
-	public void addClearPanel() {
-		ClearPanel glass = new ClearPanel(game, this);
-		glass.setBackground(new Color(0,200,0,0));
-		glass.setLocation(0, 0);
-		System.out.println("added glass panel");
-		this.add(glass);
-
+	public int returnWidth() {
+		Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
+		return (int) dimension.getWidth();
 	}
 
 	@Override

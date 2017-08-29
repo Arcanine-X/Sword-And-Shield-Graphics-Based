@@ -67,12 +67,12 @@ public class SwordAndShieldGame {
 		board.getBoard()[9][7] = four;*/
 
 		//For pushing and disappearing
-		BoardPiece one = yellow.find("s");
-		board.getBoard()[0][3] = one;
+		/*BoardPiece one = yellow.find("s");
+		board.getBoard()[0][9] = one;
 		BoardPiece two = yellow.find("e");
-		board.getBoard()[1][3] = two;
-		BoardPiece three = yellow.find("g");
-		board.getBoard()[7][6] = three;
+		board.getBoard()[0][8] = two;
+		BoardPiece three = yellow.find("c");
+		board.getBoard()[0][7] = three;*/
 
 
 		//For player reactions
@@ -84,15 +84,15 @@ public class SwordAndShieldGame {
 		board.getBoard()[7][9] = one;
 		BoardPiece three = yellow.find("c");
 		board.getBoard()[7][8] = three;*/
-		
+
 		//For move reaction
 		/*BoardPiece one = yellow.find("g");
 		board.getBoard()[4][4] = one;
 		BoardPiece three = yellow.find("c");
 		board.getBoard()[5][4] = three;*/
-		
+
 		//For move and disappear
-		
+
 		/*BoardPiece one = yellow.find("g");
 		board.getBoard()[1][4] = one;
 		BoardPiece three = yellow.find("c");
@@ -296,6 +296,10 @@ public class SwordAndShieldGame {
 		if (board.checkForReaction()) {
 			return;
 		}
+		//############### Come up with a better fix ##################
+		// ######## may not even work with multiple reactions
+		//player.getEveryMovement().add(null);
+		//player.getMovesSoFar().add("reaction");
 	}
 
 	/**

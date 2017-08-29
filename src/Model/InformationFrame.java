@@ -33,6 +33,7 @@ public class InformationFrame extends JFrame{
 		buttons.add(menu);
 		buttons.add(start);
 		buttons.add(quit);
+		
 		this.add(buttons, BorderLayout.NORTH);
 		this.add(informationPanel, BorderLayout.CENTER);
 		informationPanel.setBackground(Color.WHITE);
@@ -65,6 +66,7 @@ public class InformationFrame extends JFrame{
 		information.setText(sb.toString());
 		information.setWrapStyleWord(true);
 		information.setLineWrap(true);
+		information.setEditable(false);
 		Font font = new Font("Verdana", Font.BOLD, 12);
 		information.setFont(font);
 		informationPanel.add(information, BorderLayout.NORTH);

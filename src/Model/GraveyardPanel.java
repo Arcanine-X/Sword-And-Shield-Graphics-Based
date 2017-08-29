@@ -32,8 +32,6 @@ public class GraveyardPanel extends JPanel {
 	}
 
 	public void drawGrave(Graphics2D g) {
-
-
 		WIDTH = Math.min(getWidth(), getHeight())/10 - Math.min(getWidth(), getHeight())/60;
 		HEIGHT = Math.min(getWidth(), getHeight())/10 - Math.min(getWidth(), getHeight())/60;
 		BoardPiece[][] graveYard = player.getGraveYard();
