@@ -206,6 +206,7 @@ public class BoardPanel extends JPanel {
 			game.verticalReaction(run.currentPlayer, p);
 			//applyReactionMoveAnimation(p);
 		}
+		checkForWinner();
 		if(game.getBoard().checkForReaction()) {
 			run.setBoardReactionsTrue();
 		}else {
@@ -383,12 +384,25 @@ public class BoardPanel extends JPanel {
 		}
 	}
 
+	public void checkForWinner() {
+		if(board[1][1] == null) {
+			//green wins
+			run.playerKilled(game.getYellow());
+		}
+		if(board[8][8] == null) {
+			//yellow wins
+			run.playerKilled(game.getGreen());
+		}
+	}
+
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D _g = (Graphics2D) g;
+
 		drawBoard(_g);
 		displayInfo(_g);
+
 		if(game.getBoard().getUndoStack().size() == 1) {
 			chosenToken = null;
 		}
@@ -1159,7 +1173,7 @@ public class BoardPanel extends JPanel {
 							g.fillRect(col * WIDTH, row * HEIGHT, WIDTH, HEIGHT);
 							continue;
 						}
-						
+
 						g.setColor(new Color(160,149,130));
 						g.fillRect(col * WIDTH, row * HEIGHT, WIDTH, WIDTH);
 						g.setColor(Color.YELLOW);

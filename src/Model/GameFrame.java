@@ -35,6 +35,7 @@ import javax.swing.JLayeredPane;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
+import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.WindowConstants;
 import javax.swing.border.Border;
@@ -53,6 +54,7 @@ public class GameFrame extends JFrame implements Observer{
 	public boolean pastCreation = false;
 	public boolean disableBoard = false;
 	public BoardPiece creationPiece = null;
+	public boolean deadOnce = false;
 	Player currentPlayer;
 	JLayeredPane layer = new JLayeredPane();
 	int turn = 1;
@@ -156,6 +158,19 @@ public class GameFrame extends JFrame implements Observer{
 		this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		mainGame();
 	}
+	
+	public void playerKilled(Player winner) {
+		//if(deadOnce == false) {
+			//deadOnce = true;
+
+			//this.surrender();
+			String msg = winner.getName() + " wins!";
+			JOptionPane.showMessageDialog(this, msg);
+			MenuFrame menu = new MenuFrame();
+			this.dispose();
+		//}
+		
+	}
 
 	public void surrender() {
 		String surrenderMsg = "";
@@ -166,6 +181,7 @@ public class GameFrame extends JFrame implements Observer{
 			surrenderMsg = "Yellow Wins";
 		}
 		JOptionPane.showMessageDialog(this, surrenderMsg);
+	
 		MenuFrame menu = new MenuFrame();
 		this.dispose();
 	}
@@ -189,6 +205,8 @@ public class GameFrame extends JFrame implements Observer{
 		}
 
 	}
+	
+	
 
 	@Override
 	public void paintComponents(Graphics g) {
