@@ -95,77 +95,14 @@ public class GameFrame extends JFrame implements Observer{
 		JSplitPane fifthSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT, thirdSplit, fourthSplit);
 		fifthSplit.setResizeWeight(0.75);
 		//this.add(fifthSplit);
-		System.out.println("first split divider is " + firstSplit.getDividerSize());
-		System.out.println("other split divider is " + secondSplit.getDividerSize());
-
 
 		Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
 		layer.add(fifthSplit, new Integer(0), 0);
 		fifthSplit.setBounds(0,0,(int) dimension.getWidth(), 1000);
 		glassPanel = new GlassPanel(game,this, buttonPanel,  boardPanel, tokenPanelY, tokenPanelG);
-
         layer.add(glassPanel, new Integer(1), 0);
         this.add(layer);
 
-
-
-
-
-		/*JButton button = new JButton("Button");
-		glass = (JPanel) this.getGlassPane();
-		glass.setSize(new Dimension(GameFrame.this.getWidth(), GameFrame.this.getHeight()));
-
-		button.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				glass.setVisible(true);
-				JButton bloop = new JButton("hello");
-				glass.add(bloop);
-				GameFrame.this.add(glass);
-				//JPanel panel = new JPanel();
-				//panel.setBackground(new Color(255,255,0,100));
-				//GameFrame.this.add(panel);
-
-			}
-		});
-
-		buttonPanel.add(button);*/
-
-
-		////////////
-		/*JPanel cardPanel = new JPanel(cardLayout);
-		cardPanel.add(fifthSplit, "split");
-		JPanel transparentPanel = new JPanel();
-		cardPanel.add(transparentPanel, "trans");
-		JButton card1 = new JButton("card 1");
-		JButton card2 = new JButton("card 2");
-		transparentPanel.setSize(new Dimension(600,600));
-		transparentPanel.setBounds(0, 0, 500, 500);
-		transparentPanel.setBackground(new Color(255,0,0,100));
-
-
-		card1.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				cardLayout.show(cardPanel, "split");
-			}
-		});
-
-		card2.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				cardLayout.show(cardPanel, "trans");
-
-			}
-		});
-
-		buttonPanel.add(card1);
-		buttonPanel.add(card2);
-
-		this.add(cardPanel)*/;
-
-		/////////////
 		new Timer(50,
                 (e)->{
                     repaint();
