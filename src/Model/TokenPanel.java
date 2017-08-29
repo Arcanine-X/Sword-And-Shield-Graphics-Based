@@ -59,15 +59,20 @@ public class TokenPanel extends JPanel implements Observer{
 			public void mouseClicked(MouseEvent e) {
 				mouseX = e.getX();
 				mouseY = e.getY();
-				if(clickedPiece==null) {
-					clicked();
-					if(!clickedPiece.getCol().equals(run.currentPlayer.getName())) {
-						clickedPiece = null;
-						return;
+				if(game.getBoard().getUndoStack().size() == 1) {
+					if(clickedPiece==null) {
+						clicked();
+						if(clickedPiece!=null) {
+							if(!clickedPiece.getCol().equals(run.currentPlayer.getName())) {
+								clickedPiece = null;
+								return;
+							}
+							getRotations();
+							
+						}
+					}else {
+						playToken();
 					}
-					getRotations();
-				}else {
-					playToken();
 				}
 			}
 		});
@@ -96,6 +101,8 @@ public class TokenPanel extends JPanel implements Observer{
 			x += WIDTH;
 		}
 		x = GAP;
+
+
 		if(pieceToPlay!=null) {
 			System.out.println("create is : ");
 			System.out.println(create);
@@ -146,13 +153,6 @@ public class TokenPanel extends JPanel implements Observer{
 		}
 	}
 
-	public String translateRotation(BoardPiece bp, int rot) {
-		String letter = bp.getName();
-		String rotation = ""+rot;
-		System.out.println("rotate " + letter + " " + rotation);
-		return "rotate " + letter + " " + rotation;
-	}
-
 	public void clicked() {
 		for (int row = 0; row < tokens.length; row++) {
 			for (int col = 0; col < tokens[0].length; col++) {
@@ -160,7 +160,7 @@ public class TokenPanel extends JPanel implements Observer{
 					if(mouseX >=x && mouseX <= x+WIDTH && mouseY >= y && mouseY <= y+HEIGHT) {
 						clickedPiece = (BoardPiece)tokens[row][col];
 						System.out.println("Found " + clickedPiece.getName());
-					} // TODO - else null and set put break in and reset x and y
+					} // TODO - else null and set put break in and reset x and
 				}
 				x += GAP;
 				x += WIDTH;
@@ -184,8 +184,6 @@ public class TokenPanel extends JPanel implements Observer{
 				displayClickedRotations(_g);
 			}
 		}else {
-			//double ratio = (double) this.getWidth()/ this.getHeight();
-			//_g.scale(ratio, ratio);
 			drawBoard(_g);
 
 		}
@@ -219,10 +217,6 @@ public class TokenPanel extends JPanel implements Observer{
 		}
 	}
 
-	double RoundTo2Decimals(double val) {
-        DecimalFormat df2 = new DecimalFormat("###.##");
-    return Double.valueOf(df2.format(val));
-}
 
 	public void drawBoard(Graphics2D g) {
 
@@ -288,8 +282,6 @@ public class TokenPanel extends JPanel implements Observer{
 		}
 	}
 
-
-
 	@Override
 	public Dimension getPreferredSize() {
 		return new Dimension(400, 480);
@@ -299,7 +291,4 @@ public class TokenPanel extends JPanel implements Observer{
 	public void update(Observable o, Object arg) {
 		repaint();
 	}
-
-
-
 }

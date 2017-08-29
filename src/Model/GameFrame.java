@@ -124,14 +124,9 @@ public class GameFrame extends JFrame implements Observer{
 		undo.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//GameFrame.this.game.undo(currentPlayer);
-				//game.undo(game.getYellow());
 				if(game.getBoard().getUndoStack().size() != 1) {
 					GameFrame.this.game.undo(currentPlayer);
 				}
-
-
-				//game.undo(game.getGreen());
 			}
 		});
 		surrender.addActionListener(new ActionListener() {
@@ -181,8 +176,6 @@ public class GameFrame extends JFrame implements Observer{
 		JOptionPane.showMessageDialog(this, surrenderMsg);
 		MenuFrame menu = new MenuFrame();
 		this.dispose();
-		//GameFrame.this.dispatchEvent(new WindowEvent(GameFrame.this, WindowEvent.WINDOW_CLOSING));
-
 	}
 
 	public void setBoardReactionsTrue() {
@@ -196,14 +189,10 @@ public class GameFrame extends JFrame implements Observer{
 	public void mainGame() {
 		if (turn % 2 == 0) {
 			System.out.println("It is greens turn!");
-			//tokenPanelY.setEnabled(false);
-			//tokenPanelG.setEnabled(true);
 			currentPlayer = game.getGreen();
 		}
 		else {
 			System.out.println("It is yellows turn!");
-			//tokenPanelG.setEnabled(false);
-			//tokenPanelY.setEnabled(true);
 			currentPlayer = game.getYellow();
 		}
 
@@ -243,8 +232,8 @@ public class GameFrame extends JFrame implements Observer{
 
 	public Dimension getPreferredSize() {
 		Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
-		//return new Dimension((int) dimension.getWidth(), 1000);
-		return new Dimension(1500,700);
+		return new Dimension((int) dimension.getWidth(), 1000);
+		//return new Dimension(1500,700);
 	}
 
 	public void addClearPanel() {

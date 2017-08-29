@@ -67,23 +67,40 @@ public class SwordAndShieldGame {
 		board.getBoard()[9][7] = four;*/
 
 		//For pushing and disappearing
-		/*BoardPiece one = yellow.find("s");
+		BoardPiece one = yellow.find("s");
 		board.getBoard()[0][3] = one;
 		BoardPiece two = yellow.find("e");
 		board.getBoard()[1][3] = two;
 		BoardPiece three = yellow.find("g");
-		board.getBoard()[7][6] = three;*/
+		board.getBoard()[7][6] = three;
 
 
 		//For player reactions
 		/*BoardPiece one = yellow.find("g");
 		board.getBoard()[7][8] = one;*/
-		
+
 		//For off the board reactions
 		/*BoardPiece one = yellow.find("g");
 		board.getBoard()[7][9] = one;
 		BoardPiece three = yellow.find("c");
 		board.getBoard()[7][8] = three;*/
+		
+		//For move reaction
+		/*BoardPiece one = yellow.find("g");
+		board.getBoard()[4][4] = one;
+		BoardPiece three = yellow.find("c");
+		board.getBoard()[5][4] = three;*/
+		
+		//For move and disappear
+		
+		/*BoardPiece one = yellow.find("g");
+		board.getBoard()[1][4] = one;
+		BoardPiece three = yellow.find("c");
+		board.getBoard()[2][4] = three;
+		BoardPiece two = yellow.find("e");
+		board.getBoard()[0][4] = two;*/
+
+
 
 
 	}
@@ -587,6 +604,40 @@ public class SwordAndShieldGame {
 			}else {
 				System.out.println("Invalid Pair");
 			}
+		}
+	}
+
+	public int verticalReactionAnimation(Player player, Pair p) {
+		// Five possible reactions, sword - sword, sword - nothing, nothing - sword, shield - sword, sword - shield
+		BoardPiece one = p.getOne();
+		BoardPiece two = p.getTwo();
+		Player play = p.getPlayer();
+		if(two!=null) { // if two doesn't equal null, then the player ins't involved
+			if (one.getSouth() == 1 && two.getNorth() == 2) { // sword - shield
+				return tryPushUpAnimation(two.getName());
+			} else if (one.getSouth() == 2 && two.getNorth() == 1) { // shield - sword
+				tryPushDown(one.getName());
+
+			} else {
+				System.out.println("Invalid Pair");
+			}
+		}
+		return -2;
+	}
+
+	public int tryPushUpAnimation(String pusher) {
+		int c = board.getX(pusher);
+		int r = board.getY(pusher);
+		int count = 0;
+		if (r - 1 < 0) {
+			return -1;
+		} else { // requires shifting
+			for (int i = r - 1, j = 0; i >= 0; i--, j++) {
+				if (board.getBoard()[i][c] instanceof BoardPiece && count == j) { //calculate number of adjacent tiles going from the the tile being push
+					count++;
+				}
+			}
+			return count;
 		}
 	}
 
