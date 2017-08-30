@@ -321,9 +321,11 @@ public class BoardPanel extends JPanel {
 					reactionPair = p;
 					SWEDisappear = true;
 				}else if(number == -13) {
-
+					playDisappearSound();
+					game.verticalReaction(run.currentPlayer, p);
 				}else if(number == -14) {
-
+					playDisappearSound();
+					game.verticalReaction(run.currentPlayer, p);
 				}else if(number == -15) {
 
 				}
@@ -333,8 +335,11 @@ public class BoardPanel extends JPanel {
 			}
 		}
 		if(p.getDir().equals("hori")) {
+			System.out.println("in horizontalllll");
 			animationDir = game.getDirectionOfAnimation(run.currentPlayer, p);
+			System.out.println("the direction is " + animationDir);
 			if(game.getDirectionOfAnimation(run.currentPlayer, p).equals("right")) {
+				System.out.println("sys in hori right");
 				howManyToAnimate = game.horizontalReactionAnimation(run.currentPlayer, p);
 				if(howManyToAnimate == 0) {
 					System.out.println(p.getOne().toString());
@@ -420,13 +425,12 @@ public class BoardPanel extends JPanel {
 					SWEDisappear = true;
 				}else if(horiNumber == -23) {
 					playDisappearSound();
-					reactionPair = p;
-					SWEDisappear = true;
-
+					game.horizontalReaction(run.currentPlayer, p);
 				}else if(horiNumber == -24) {
-
-				}else if(horiNumber == -25) {
-
+					playDisappearSound();
+					game.horizontalReaction(run.currentPlayer, p);
+				}
+			else if(horiNumber == -25) {
 				}
 			}
 			else {
@@ -1037,7 +1041,7 @@ public class BoardPanel extends JPanel {
 				chosenToken = null;
 				activateAnimation = false;
 				SWEDisappear = false;
-				number = -1000;
+				horiNumber = -1000;
 				if(game.getBoard().checkForReaction()) {
 					run.pass.setEnabled(false);
 					run.setBoardReactionsTrue();
@@ -1066,7 +1070,7 @@ public class BoardPanel extends JPanel {
 				chosenToken = null;
 				activateAnimation = false;
 				SWEDisappear = false;
-				number = -1000;
+				horiNumber = -1000;
 				if(game.getBoard().checkForReaction()) {
 					run.pass.setEnabled(false);
 					run.setBoardReactionsTrue();
@@ -1095,7 +1099,7 @@ public class BoardPanel extends JPanel {
 				chosenToken = null;
 				activateAnimation = false;
 				SWEDisappear = false;
-				number = -1000;
+				horiNumber = -1000;
 				if(game.getBoard().checkForReaction()) {
 					run.pass.setEnabled(false);
 					run.setBoardReactionsTrue();
@@ -1949,7 +1953,21 @@ public class BoardPanel extends JPanel {
 					}
 
 				}
+				else if(board[row][col] == null && row == 8 && col == 8) {
+					g.setColor(Color.BLACK);
+					g.setStroke(new BasicStroke(6));
+					g.drawLine(col * WIDTH + STROKE, row * HEIGHT + STROKE, (col+1) * WIDTH - STROKE, (row+1) * HEIGHT - STROKE);
+					g.drawLine(col * WIDTH - STROKE, (row+1) * HEIGHT + STROKE, (col+1) * WIDTH - STROKE, (row) * HEIGHT + STROKE);
+					g.setStroke(new BasicStroke(0));
+				}
+				else if(board[row][col] == null && row == 1 && col == 1) {
+					g.setColor(Color.BLACK);
+					g.setStroke(new BasicStroke(6));
+					g.drawLine(col * WIDTH + STROKE, row * HEIGHT + STROKE, (col+1) * WIDTH - STROKE, (row+1) * HEIGHT - STROKE);
+					g.drawLine(col * WIDTH - STROKE, (row+1) * HEIGHT + STROKE, (col+1) * WIDTH - STROKE, (row) * HEIGHT + STROKE);
+					g.setStroke(new BasicStroke(0));
 
+				}
 				else if (board[row][col] instanceof Player) {
 					Player p = (Player) board[row][col];
 					if (p.getName().equals("yellow")) {
@@ -1961,7 +1979,7 @@ public class BoardPanel extends JPanel {
                     g.setColor(Color.black);
                     g.drawOval(col * WIDTH, row * HEIGHT, WIDTH, HEIGHT);
                     g.setColor(Color.BLACK);
-                    g.fillOval(col * WIDTH +WIDTH/3, row * HEIGHT + HEIGHT/3, WIDTH /10, HEIGHT/10); 
+                    g.fillOval(col * WIDTH +WIDTH/3, row * HEIGHT + HEIGHT/3, WIDTH /10, HEIGHT/10);
                     g.fillOval(col*WIDTH-WIDTH/3 + WIDTH-5, row*HEIGHT+HEIGHT/3, WIDTH/10, WIDTH/10);
                     g.drawArc(col*WIDTH+WIDTH/3, row*HEIGHT+HEIGHT/3, WIDTH/3, HEIGHT/3, 180, 180);
 				} else {

@@ -630,10 +630,11 @@ public class SwordAndShieldGame {
 			}else if (one.getEast() == 2 && two.getWest() == 1 && p.getDir().equals("hori")) { // shield - sword
 				return "right";
 			}else {
-				return "swordVElse";
+				return "error";
+				//return "swordVElse";
 			}
 		}
-		return "error";
+		return "swordVElse";
 	}
 
 	public int horizontalReactionAnimation(Player player, Pair p) {
@@ -781,6 +782,7 @@ public class SwordAndShieldGame {
 			}
 		}else { //do the player vs board piece reactions
 			if(one.getEast() == 1 && play!=null && play.getName().equals("yellow")) { // sword - yellow player
+				System.out.println("returned -23");
 				return -23;
 			}else if(one.getWest() == 1 && play!=null && play.getName().equals("green")){ // sword - green player
 				return -24;
