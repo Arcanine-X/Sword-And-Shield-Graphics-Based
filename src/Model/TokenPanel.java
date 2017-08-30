@@ -88,10 +88,13 @@ public class TokenPanel extends JPanel implements Observer{
 		clickedPiece = null;
 		if(game.getBoard().checkForReaction()) {
 			run.setBoardReactionsTrue();
-			run.pass.setEnabled(false);
+			//run.pass.setEnabled(false);
+			run.buttonPanel.pass.setEnabled(false);
 		}else {
 			run.setBoardReactionsFalse();
-			run.pass.setEnabled(true);
+			//run.pass.setEnabled(true);
+			run.buttonPanel.pass.setEnabled(true);
+
 		}
 		if(pieceToPlay!=null) {
 			System.out.println("create is : ");

@@ -1,6 +1,5 @@
 package Model;
 
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -8,16 +7,15 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 public class ButtonPanel extends JPanel{
-	SwordAndShieldGame game;
-	GameFrame run;
-	JButton undo = new JButton("Undo");
+	private SwordAndShieldGame game;
+	private GameFrame run;
+	private JButton undo = new JButton("Undo");
 	JButton pass = new JButton("Pass");
-	JButton surrender = new JButton("Surrender");
-	JButton quit = new JButton("Quit");
+	private JButton surrender = new JButton("Surrender");
+	private JButton quit = new JButton("Quit");
 	public ButtonPanel(SwordAndShieldGame game, GameFrame run) {
 		this.game = game;
 		this.run = run;
-		/*
 		this.add(undo);
 		this.add(surrender);
 		this.add(pass);
@@ -70,14 +68,6 @@ public class ButtonPanel extends JPanel{
 			public void actionPerformed(ActionEvent e) {
 				System.exit(1);
 			}
-		});*/
+		});
 	}
-
-
-
-
-
-
-
-
 }

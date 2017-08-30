@@ -217,13 +217,25 @@ public class BoardPanel extends JPanel {
 			tryReactionAnimation(p);
 		}
 		checkForWinner();
+
 		if(game.getBoard().checkForReaction()) {
+			run.setBoardReactionsTrue();
+			//run.pass.setEnabled(false);
+			run.buttonPanel.pass.setEnabled(false);
+		}else {
+			run.setBoardReactionsFalse();
+			//run.pass.setEnabled(true);
+			run.buttonPanel.pass.setEnabled(true);
+
+		}
+
+		/*if(game.getBoard().checkForReaction()) {
 			run.pass.setEnabled(false);
 			run.setBoardReactionsTrue();
 		}else {
 			run.setBoardReactionsFalse();
 			run.pass.setEnabled(true);
-		}
+		}*/
 		p = null;
 		chosenToken = null;
 	}
@@ -448,12 +460,22 @@ public class BoardPanel extends JPanel {
 				activateAnimation = false;
 				aList.clear();
 				if(game.getBoard().checkForReaction()) {
+					run.setBoardReactionsTrue();
+					//run.pass.setEnabled(false);
+					run.buttonPanel.pass.setEnabled(false);
+				}else {
+					run.setBoardReactionsFalse();
+					//run.pass.setEnabled(true);
+					run.buttonPanel.pass.setEnabled(true);
+
+				}
+				/*if(game.getBoard().checkForReaction()) {
 					run.pass.setEnabled(false);
 					run.setBoardReactionsTrue();
 				}else {
 					run.setBoardReactionsFalse();
 					run.pass.setEnabled(true);
-				}
+				}*/
 			}
 			for(BoardPiece bp : toAnimate) {
 				if(bp == null) {
@@ -482,12 +504,22 @@ public class BoardPanel extends JPanel {
 			if(activateAnimation == false) {
 				aList.clear();
 				if(game.getBoard().checkForReaction()) {
+					run.setBoardReactionsTrue();
+					//run.pass.setEnabled(false);
+					run.buttonPanel.pass.setEnabled(false);
+				}else {
+					run.setBoardReactionsFalse();
+					//run.pass.setEnabled(true);
+					run.buttonPanel.pass.setEnabled(true);
+
+				}
+				/*if(game.getBoard().checkForReaction()) {
 					run.pass.setEnabled(false);
 					run.setBoardReactionsTrue();
 				}else {
 					run.setBoardReactionsFalse();
 					run.pass.setEnabled(true);
-				}
+				}*/
 
 			}
 			if(skip == false) {
@@ -504,12 +536,22 @@ public class BoardPanel extends JPanel {
 				activateAnimation = false;
 				aList.clear();
 				if(game.getBoard().checkForReaction()) {
+					run.setBoardReactionsTrue();
+					//run.pass.setEnabled(false);
+					run.buttonPanel.pass.setEnabled(false);
+				}else {
+					run.setBoardReactionsFalse();
+					//run.pass.setEnabled(true);
+					run.buttonPanel.pass.setEnabled(true);
+
+				}
+				/*if(game.getBoard().checkForReaction()) {
 					run.pass.setEnabled(false);
 					run.setBoardReactionsTrue();
 				}else {
 					run.setBoardReactionsFalse();
 					run.pass.setEnabled(true);
-				}
+				}*/
 			}
 			///
 			for(BoardPiece bp : toAnimate) {
@@ -541,12 +583,22 @@ public class BoardPanel extends JPanel {
 			if(activateAnimation == false) {
 				aList.clear();
 				if(game.getBoard().checkForReaction()) {
+					run.setBoardReactionsTrue();
+					//run.pass.setEnabled(false);
+					run.buttonPanel.pass.setEnabled(false);
+				}else {
+					run.setBoardReactionsFalse();
+					//run.pass.setEnabled(true);
+					run.buttonPanel.pass.setEnabled(true);
+
+				}
+				/*if(game.getBoard().checkForReaction()) {
 					run.pass.setEnabled(false);
 					run.setBoardReactionsTrue();
 				}else {
 					run.setBoardReactionsFalse();
 					run.pass.setEnabled(true);
-				}
+				}*/
 
 			}
 			if(skip == false) {
@@ -563,12 +615,22 @@ public class BoardPanel extends JPanel {
 				activateAnimation = false;
 				aList.clear();
 				if(game.getBoard().checkForReaction()) {
+					run.setBoardReactionsTrue();
+					//run.pass.setEnabled(false);
+					run.buttonPanel.pass.setEnabled(false);
+				}else {
+					run.setBoardReactionsFalse();
+					//run.pass.setEnabled(true);
+					run.buttonPanel.pass.setEnabled(true);
+
+				}
+				/*if(game.getBoard().checkForReaction()) {
 					run.pass.setEnabled(false);
 					run.setBoardReactionsTrue();
 				}else {
 					run.setBoardReactionsFalse();
 					run.pass.setEnabled(true);
-				}
+				}*/
 			}
 			for(BoardPiece bp : toAnimate) {
 				if(bp == null) {
@@ -599,12 +661,22 @@ public class BoardPanel extends JPanel {
 			if(activateAnimation == false) {
 				aList.clear();
 				if(game.getBoard().checkForReaction()) {
+					run.setBoardReactionsTrue();
+					//run.pass.setEnabled(false);
+					run.buttonPanel.pass.setEnabled(false);
+				}else {
+					run.setBoardReactionsFalse();
+					//run.pass.setEnabled(true);
+					run.buttonPanel.pass.setEnabled(true);
+
+				}
+				/*if(game.getBoard().checkForReaction()) {
 					run.pass.setEnabled(false);
 					run.setBoardReactionsTrue();
 				}else {
 					run.setBoardReactionsFalse();
 					run.pass.setEnabled(true);
-				}
+				}*/
 
 			}
 			if(skip == false) {
@@ -622,12 +694,22 @@ public class BoardPanel extends JPanel {
 				activateAnimation = false;
 				aList.clear();
 				if(game.getBoard().checkForReaction()) {
+					run.setBoardReactionsTrue();
+					//run.pass.setEnabled(false);
+					run.buttonPanel.pass.setEnabled(false);
+				}else {
+					run.setBoardReactionsFalse();
+					//run.pass.setEnabled(true);
+					run.buttonPanel.pass.setEnabled(true);
+
+				}
+				/*if(game.getBoard().checkForReaction()) {
 					run.pass.setEnabled(false);
 					run.setBoardReactionsTrue();
 				}else {
 					run.setBoardReactionsFalse();
 					run.pass.setEnabled(true);
-				}
+				}*/
 			}
 			///
 			for(BoardPiece bp : toAnimate) {
@@ -659,12 +741,22 @@ public class BoardPanel extends JPanel {
 			if(activateAnimation == false) {
 				aList.clear();
 				if(game.getBoard().checkForReaction()) {
+					run.setBoardReactionsTrue();
+					//run.pass.setEnabled(false);
+					run.buttonPanel.pass.setEnabled(false);
+				}else {
+					run.setBoardReactionsFalse();
+					//run.pass.setEnabled(true);
+					run.buttonPanel.pass.setEnabled(true);
+
+				}
+				/*if(game.getBoard().checkForReaction()) {
 					run.pass.setEnabled(false);
 					run.setBoardReactionsTrue();
 				}else {
 					run.setBoardReactionsFalse();
 					run.pass.setEnabled(true);
-				}
+				}*/
 
 			}
 			if(skip == false) {
@@ -911,12 +1003,22 @@ public class BoardPanel extends JPanel {
 				SWEDisappear = false;
 				number = -1000;
 				if(game.getBoard().checkForReaction()) {
+					run.setBoardReactionsTrue();
+					//run.pass.setEnabled(false);
+					run.buttonPanel.pass.setEnabled(false);
+				}else {
+					run.setBoardReactionsFalse();
+					//run.pass.setEnabled(true);
+					run.buttonPanel.pass.setEnabled(true);
+
+				}
+				/*if(game.getBoard().checkForReaction()) {
 					run.pass.setEnabled(false);
 					run.setBoardReactionsTrue();
 				}else {
 					run.setBoardReactionsFalse();
 					run.pass.setEnabled(true);
-				}
+				}*/
 			}
 		}
 		else if(number == -11) {
@@ -941,12 +1043,22 @@ public class BoardPanel extends JPanel {
 				SWEDisappear = false;
 				number = -1000;
 				if(game.getBoard().checkForReaction()) {
+					run.setBoardReactionsTrue();
+					//run.pass.setEnabled(false);
+					run.buttonPanel.pass.setEnabled(false);
+				}else {
+					run.setBoardReactionsFalse();
+					//run.pass.setEnabled(true);
+					run.buttonPanel.pass.setEnabled(true);
+
+				}
+				/*if(game.getBoard().checkForReaction()) {
 					run.pass.setEnabled(false);
 					run.setBoardReactionsTrue();
 				}else {
 					run.setBoardReactionsFalse();
 					run.pass.setEnabled(true);
-				}
+				}*/
 			}
 		}else if (number == -12) {
 			if((getCol(reactionPair.getOne().xLoc) + getRow(reactionPair.getOne().yLoc)) % 2 != 1) {
@@ -970,12 +1082,22 @@ public class BoardPanel extends JPanel {
 				SWEDisappear = false;
 				number = -1000;
 				if(game.getBoard().checkForReaction()) {
+					run.setBoardReactionsTrue();
+					//run.pass.setEnabled(false);
+					run.buttonPanel.pass.setEnabled(false);
+				}else {
+					run.setBoardReactionsFalse();
+					//run.pass.setEnabled(true);
+					run.buttonPanel.pass.setEnabled(true);
+
+				}
+				/*if(game.getBoard().checkForReaction()) {
 					run.pass.setEnabled(false);
 					run.setBoardReactionsTrue();
 				}else {
 					run.setBoardReactionsFalse();
 					run.pass.setEnabled(true);
-				}
+				}*/
 			}
 		}else if (horiNumber == -20) {
 			System.out.println("in -20");
@@ -1008,12 +1130,22 @@ public class BoardPanel extends JPanel {
 				SWEDisappear = false;
 				horiNumber = -1000;
 				if(game.getBoard().checkForReaction()) {
+					run.setBoardReactionsTrue();
+					//run.pass.setEnabled(false);
+					run.buttonPanel.pass.setEnabled(false);
+				}else {
+					run.setBoardReactionsFalse();
+					//run.pass.setEnabled(true);
+					run.buttonPanel.pass.setEnabled(true);
+
+				}
+				/*if(game.getBoard().checkForReaction()) {
 					run.pass.setEnabled(false);
 					run.setBoardReactionsTrue();
 				}else {
 					run.setBoardReactionsFalse();
 					run.pass.setEnabled(true);
-				}
+				}*/
 			}
 		}else if (horiNumber == -21) {
 			if((getCol(reactionPair.getTwo().xLoc) + getRow(reactionPair.getTwo().yLoc)) % 2 != 1) {
@@ -1037,12 +1169,22 @@ public class BoardPanel extends JPanel {
 				SWEDisappear = false;
 				horiNumber = -1000;
 				if(game.getBoard().checkForReaction()) {
+					run.setBoardReactionsTrue();
+					//run.pass.setEnabled(false);
+					run.buttonPanel.pass.setEnabled(false);
+				}else {
+					run.setBoardReactionsFalse();
+					//run.pass.setEnabled(true);
+					run.buttonPanel.pass.setEnabled(true);
+
+				}
+				/*if(game.getBoard().checkForReaction()) {
 					run.pass.setEnabled(false);
 					run.setBoardReactionsTrue();
 				}else {
 					run.setBoardReactionsFalse();
 					run.pass.setEnabled(true);
-				}
+				}*/
 			}
 		}else if (horiNumber == -22) {
 			if((getCol(reactionPair.getOne().xLoc) + getRow(reactionPair.getOne().yLoc)) % 2 != 1) {
@@ -1066,12 +1208,22 @@ public class BoardPanel extends JPanel {
 				SWEDisappear = false;
 				horiNumber = -1000;
 				if(game.getBoard().checkForReaction()) {
+					run.setBoardReactionsTrue();
+					//run.pass.setEnabled(false);
+					run.buttonPanel.pass.setEnabled(false);
+				}else {
+					run.setBoardReactionsFalse();
+					//run.pass.setEnabled(true);
+					run.buttonPanel.pass.setEnabled(true);
+
+				}
+				/*if(game.getBoard().checkForReaction()) {
 					run.pass.setEnabled(false);
 					run.setBoardReactionsTrue();
 				}else {
 					run.setBoardReactionsFalse();
 					run.pass.setEnabled(true);
-				}
+				}*/
 			}
 		}
 
@@ -1108,7 +1260,8 @@ public class BoardPanel extends JPanel {
 		reactionOptions.clear();
 		List<Pair> reactions = game.getBoard().getReactions();
 		if(!reactions.isEmpty()) {
-			run.pass.setEnabled(false);
+			run.buttonPanel.pass.setEnabled(false);
+			//run.pass.setEnabled(false);
 		}
 		for(Pair p : reactions) {
 			if(p.getOne() instanceof BoardPiece && p.getTwo() instanceof BoardPiece) { // Check for boardpiece reactions
@@ -1200,12 +1353,22 @@ public class BoardPanel extends JPanel {
 			}
 		}else if(!(mouseX > WIDTH * 2 && mouseX < WIDTH * 2 + WIDTH*6 && mouseY > HEIGHT * 2 && mouseY < HEIGHT * 2 + HEIGHT*6) && mouseX > 0 && mouseY > 0) {
 			game.rotateToken(run.currentPlayer, "rotate " + hugeToken.getName() + " " + 0);
-			if(game.getBoard().checkForReaction()) {
+			/*if(game.getBoard().checkForReaction()) {
 				run.pass.setEnabled(false);
 				run.setBoardReactionsTrue();
 			}else {
 				run.setBoardReactionsFalse();
 				run.pass.setEnabled(true);
+			}*/
+			if(game.getBoard().checkForReaction()) {
+				run.setBoardReactionsTrue();
+				//run.pass.setEnabled(false);
+				run.buttonPanel.pass.setEnabled(false);
+			}else {
+				run.setBoardReactionsFalse();
+				//run.pass.setEnabled(true);
+				run.buttonPanel.pass.setEnabled(true);
+
 			}
 			rotationCount = 0;
 			rotationAnimation = false;
@@ -1351,14 +1514,23 @@ public class BoardPanel extends JPanel {
 				else if(moveDir.equals("left")) {
 					game.moveToken(run.currentPlayer, "move " + toMove.getName() + " left");
 				}
-
 				if(game.getBoard().checkForReaction()) {
+					run.setBoardReactionsTrue();
+					//run.pass.setEnabled(false);
+					run.buttonPanel.pass.setEnabled(false);
+				}else {
+					run.setBoardReactionsFalse();
+					//run.pass.setEnabled(true);
+					run.buttonPanel.pass.setEnabled(true);
+
+				}
+				/*if(game.getBoard().checkForReaction()) {
 					run.pass.setEnabled(false);
 					run.setBoardReactionsTrue();
 				}else {
 					run.setBoardReactionsFalse();
 					run.pass.setEnabled(true);
-				}
+				}*/
 
 				/*if(game.getBoard().checkForReaction()) {
 					run.setBoardReactionsTrue();
@@ -1632,12 +1804,22 @@ public class BoardPanel extends JPanel {
 					letter = chosenToken.getName();
 					game.moveToken(run.currentPlayer, "move " + letter + " left");
 					if(game.getBoard().checkForReaction()) {
+						run.setBoardReactionsTrue();
+						//run.pass.setEnabled(false);
+						run.buttonPanel.pass.setEnabled(false);
+					}else {
+						run.setBoardReactionsFalse();
+						//run.pass.setEnabled(true);
+						run.buttonPanel.pass.setEnabled(true);
+
+					}
+					/*if(game.getBoard().checkForReaction()) {
 						run.pass.setEnabled(false);
 						run.setBoardReactionsTrue();
 					}else {
 						run.setBoardReactionsFalse();
 						run.pass.setEnabled(true);
-					}
+					}*/
 					/*if(game.getBoard().checkForReaction()) {
 						run.setBoardReactionsTrue();
 					}else {
@@ -1682,12 +1864,22 @@ public class BoardPanel extends JPanel {
 					letter = chosenToken.getName();
 					game.moveToken(run.currentPlayer, "move " + letter + " right");
 					if(game.getBoard().checkForReaction()) {
+						run.setBoardReactionsTrue();
+						//run.pass.setEnabled(false);
+						run.buttonPanel.pass.setEnabled(false);
+					}else {
+						run.setBoardReactionsFalse();
+						//run.pass.setEnabled(true);
+						run.buttonPanel.pass.setEnabled(true);
+
+					}
+					/*if(game.getBoard().checkForReaction()) {
 						run.pass.setEnabled(false);
 						run.setBoardReactionsTrue();
 					}else {
 						run.setBoardReactionsFalse();
 						run.pass.setEnabled(true);
-					}
+					}*/
 					/*if(game.getBoard().checkForReaction()) {
 						run.setBoardReactionsTrue();
 					}else {
@@ -1731,12 +1923,22 @@ public class BoardPanel extends JPanel {
 					letter = chosenToken.getName();
 					game.moveToken(run.currentPlayer, "move " + letter + " down");
 					if(game.getBoard().checkForReaction()) {
+						run.setBoardReactionsTrue();
+						//run.pass.setEnabled(false);
+						run.buttonPanel.pass.setEnabled(false);
+					}else {
+						run.setBoardReactionsFalse();
+						//run.pass.setEnabled(true);
+						run.buttonPanel.pass.setEnabled(true);
+
+					}
+					/*if(game.getBoard().checkForReaction()) {
 						run.pass.setEnabled(false);
 						run.setBoardReactionsTrue();
 					}else {
 						run.setBoardReactionsFalse();
 						run.pass.setEnabled(true);
-					}
+					}*/
 					/*if(game.getBoard().checkForReaction()) {
 						run.setBoardReactionsTrue();
 					}else {
@@ -1780,12 +1982,22 @@ public class BoardPanel extends JPanel {
 					letter = chosenToken.getName();
 					game.moveToken(run.currentPlayer, "move " + letter + " up");
 					if(game.getBoard().checkForReaction()) {
+						run.setBoardReactionsTrue();
+						//run.pass.setEnabled(false);
+						run.buttonPanel.pass.setEnabled(false);
+					}else {
+						run.setBoardReactionsFalse();
+						//run.pass.setEnabled(true);
+						run.buttonPanel.pass.setEnabled(true);
+
+					}
+					/*if(game.getBoard().checkForReaction()) {
 						run.pass.setEnabled(false);
 						run.setBoardReactionsTrue();
 					}else {
 						run.setBoardReactionsFalse();
 						run.pass.setEnabled(true);
-					}
+					}*/
 					/*if(game.getBoard().checkForReaction()) {
 						run.setBoardReactionsTrue();
 					}else {
