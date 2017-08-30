@@ -1167,7 +1167,7 @@ public class BoardPanel extends JPanel {
 					}
 					g.fill(rect);
 				}
-			}else if(p.getOne() instanceof BoardPiece && p.getPlayer()!=null) { //reaction with player
+			}else if(p.getOne() instanceof BoardPiece && p.getPlayer()!=null && p.getPlayer().getName().equals("yellow")) { //reaction with player
 				if(p.getDir().equals("vert")) {
 					g.setColor(new Color(108,50,180,250));
 					Rectangle rect = new Rectangle(p.getOne().xLoc + WIDTH/6, p.getOne().yLoc + HEIGHT - HEIGHT/6, WIDTH - WIDTH /6* 2, (HEIGHT/6)*2);
@@ -1186,13 +1186,27 @@ public class BoardPanel extends JPanel {
 					}
 					g.fill(rect);
 				}
+			}else if(p.getOne() instanceof BoardPiece && p.getPlayer()!=null && p.getPlayer().getName().equals("green")) {
+				if(p.getDir().equals("vert")) {
+					g.setColor(new Color(108,50,180,250));
+					Rectangle rect = new Rectangle(p.getOne().xLoc + WIDTH/6, p.getOne().yLoc - HEIGHT/6, (WIDTH/6)*4, (HEIGHT/6)*2);
+					Reaction reaction = new Reaction(p.getOne().xLoc + WIDTH/6, p.getOne().yLoc - HEIGHT/6, (WIDTH/6)*4, (HEIGHT/6)*2, p.getOne(), null, p.getDir(), rect, p.getPlayer());
+					if(!reactionOptions.contains(reaction)) {
+						reactionOptions.add(reaction);
+					}
+					g.fill(rect);
+				}
+				if(p.getDir().equals("hori")) {
+					g.setColor(new Color(108,50,180,250));
+					Rectangle rect = new Rectangle(p.getOne().xLoc - WIDTH/6, p.getOne().yLoc + HEIGHT/6, (WIDTH/6)*2, (HEIGHT/6)*4);
+					Reaction reaction = new Reaction(p.getOne().xLoc - WIDTH/6, p.getOne().yLoc + HEIGHT/6, (WIDTH/6)*2, (HEIGHT/6)*4, p.getOne(), null, p.getDir(), rect, p.getPlayer());
+					if(!reactionOptions.contains(reaction)) {
+						reactionOptions.add(reaction);
+					}
+					g.fill(rect);
+					
+				}
 			}
-			/*if(!reactionOptions.isEmpty()) {
-				run.pass.setEnabled(false);
-			}
-			else {
-				run.pass.setEnabled(true);
-			}*/
 		}
 	}
 

@@ -100,15 +100,15 @@ public class GlassPanel extends JPanel {
 				if (drawY < destinationY) {
 					drawY += 4;
 				}
-				animateGreen((Graphics2D) g);
+				//animateGreen((Graphics2D) g);
 
-				if (!(drawY >= destinationY) || !(drawX >= destinationX)) {
-					animateGreen((Graphics2D) g);
-				} else {
-					tokenPanelG.timeToFly = false;
-					doOnce = false;
+				//if (!(drawY >= destinationY) || !(drawX >= destinationX)) {
+				//	animateGreen((Graphics2D) g);
+				//} else {
+				//	tokenPanelG.timeToFly = false;
+				//	doOnce = false;
 					tokenPanelG.createToken();
-				}
+				//}
 			}
 		}
 	}
