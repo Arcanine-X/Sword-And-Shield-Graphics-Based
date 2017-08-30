@@ -259,7 +259,7 @@ public class BoardPanel extends JPanel {
 						if(bp.equals(p.getTwo())) {
 							continue;
 						}
-						if(row != 0) {
+						if((row!=0) && !(col == 0 && row == 2) && !(col==1 && row == 2)) {
 							aList.add(bp);
 						}else {
 							reactionDisappear = bp;
@@ -294,7 +294,7 @@ public class BoardPanel extends JPanel {
 						if(bp.equals(p.getOne())) {
 							continue;
 						}
-						if(row != 9) {
+						if((row!=9) && !(col == 8 && row == 7) && !(col==9 && row == 7)) {
 							aList.add(bp);
 						}else {
 							reactionDisappear = bp;
@@ -335,17 +335,13 @@ public class BoardPanel extends JPanel {
 			}
 		}
 		if(p.getDir().equals("hori")) {
-			System.out.println("in horizontalllll");
 			animationDir = game.getDirectionOfAnimation(run.currentPlayer, p);
-			System.out.println("the direction is " + animationDir);
 			if(game.getDirectionOfAnimation(run.currentPlayer, p).equals("right")) {
-				System.out.println("sys in hori right");
 				howManyToAnimate = game.horizontalReactionAnimation(run.currentPlayer, p);
 				if(howManyToAnimate == 0) {
 					System.out.println(p.getOne().toString());
 					System.out.println(p.getTwo().toString());
 				}else if(howManyToAnimate == -1) {
-					//needs to disappear
 				}else if(howManyToAnimate == -2) {
 					game.horizontalReaction(run.currentPlayer, p);
 
@@ -361,7 +357,7 @@ public class BoardPanel extends JPanel {
 						if(bp.equals(p.getOne())) {
 							continue;
 						}
-						if(col != 9) {
+						if((col!=9) && !(col == 7 && row == 8) && !(col==7 && row == 9)) {
 							aList.add(bp);
 						}else {
 							reactionDisappear = bp;
@@ -372,21 +368,16 @@ public class BoardPanel extends JPanel {
 				}
 			}
 			else if(game.getDirectionOfAnimation(run.currentPlayer, p).equals("left")) {
-				System.out.println("in horizontal if");
 				howManyToAnimate = game.horizontalReactionAnimation(run.currentPlayer, p);
 				if(howManyToAnimate == 0) {
-					System.out.println(p.getOne().toString());
-					System.out.println(p.getTwo().toString());
 				}else if(howManyToAnimate == -1) {
 					//needs to disappear
 				}else if(howManyToAnimate == -2) {
 					game.horizontalReaction(run.currentPlayer, p);
 
 				}else {
-					System.out.println("in else?");
 					for(int i = howManyToAnimate; i >= 0; i --) {
 						////////////
-						System.out.println("in for loooooooooooooooooop???");
 						int row = getRow(p.getTwo().yLoc);
 						int col = getCol(p.getTwo().xLoc - (i*WIDTH));
 						BoardPiece bp = ((BoardPiece)game.getBoard().getBoard()[row][col]);
@@ -397,12 +388,20 @@ public class BoardPanel extends JPanel {
 						if(bp.equals(p.getTwo())) {
 							continue;
 						}
-						if(col != 0) {
+						System.out.println("============================<----------------------------------------->=========================");
+
+						if((col!=0) && !(col == 2 && row == 0) && !(col==2 && row == 1)) {
 							aList.add(bp);
 						}else {
 							reactionDisappear = bp;
 							playDisappearSound();
 						}
+						/*if(col != 0) {
+							aList.add(bp);
+						}else {
+							reactionDisappear = bp;
+							playDisappearSound();
+						}*/
 						activateAnimation = true;
 					}
 				}
@@ -443,10 +442,7 @@ public class BoardPanel extends JPanel {
 
 
 	public void reactionHope(Graphics2D g, List<BoardPiece> toAnimate) {
-		System.out.println("in reaction hope");
-		System.out.println(animationDir);
 		if(animationDir.equals("up")) {
-			System.out.println("in up animation");
 			if(toAnimate.isEmpty()) {
 				reactionMoveAnimation = false;
 				reactions = false;
@@ -503,9 +499,7 @@ public class BoardPanel extends JPanel {
 			}
 		}
 		else if(animationDir.equals("down")) {
-			System.out.println("in down animation");
 			if(toAnimate.isEmpty()) {
-				System.out.println("in em,pty");
 				reactionMoveAnimation = false;
 				reactions = false;
 				skip = false;
@@ -522,9 +516,7 @@ public class BoardPanel extends JPanel {
 				}
 			}
 			///
-			System.out.println("maybe entering for loop??");
 			for(BoardPiece bp : toAnimate) {
-				System.out.println("in for loop?");
 				if(bp == null) {
 					continue;
 				}
@@ -536,7 +528,6 @@ public class BoardPanel extends JPanel {
 				g.setStroke(new BasicStroke(6));
 				drawToken(g, bp, bp.moveX, bp.moveY);
 				g.setStroke(new BasicStroke(0));
-				System.out.println("in here aswell");
 				if (bp.moveY < bp.destY) {
 					bp.moveY += 2;
 				}
@@ -567,14 +558,7 @@ public class BoardPanel extends JPanel {
 			}
 		}
 		else if(animationDir.equals("right")) {
-
-
-			System.out.println("in right animation");
 			if(toAnimate.isEmpty()) {
-				System.out.println("its emptyyyyyyyyyyyyy");
-			}
-			if(toAnimate.isEmpty()) {
-				System.out.println("in em,pty");
 				reactionMoveAnimation = false;
 				reactions = false;
 				skip = false;
@@ -590,10 +574,7 @@ public class BoardPanel extends JPanel {
 					run.pass.setEnabled(true);
 				}
 			}
-			///
-			System.out.println("maybe entering for loop??");
 			for(BoardPiece bp : toAnimate) {
-				System.out.println("in for loop?");
 				if(bp == null) {
 					continue;
 				}
@@ -605,7 +586,6 @@ public class BoardPanel extends JPanel {
 				g.setStroke(new BasicStroke(6));
 				drawToken(g, bp, bp.moveX, bp.moveY);
 				g.setStroke(new BasicStroke(0));
-				System.out.println("in here aswell");
 				if (bp.moveX < bp.destX) {
 					bp.moveX += 2;
 				}
@@ -637,12 +617,7 @@ public class BoardPanel extends JPanel {
 		}
 
 		else if(animationDir.equals("left")) {
-			System.out.println("in left animation");
 			if(toAnimate.isEmpty()) {
-				System.out.println("its emptyyyyyyyyyyyyy");
-			}
-			if(toAnimate.isEmpty()) {
-				System.out.println("in em,pty");
 				reactionMoveAnimation = false;
 				reactions = false;
 				skip = false;
@@ -659,9 +634,7 @@ public class BoardPanel extends JPanel {
 				}
 			}
 			///
-			System.out.println("maybe entering for loop??");
 			for(BoardPiece bp : toAnimate) {
-				System.out.println("in for loop?");
 				if(bp == null) {
 					continue;
 				}
@@ -673,7 +646,6 @@ public class BoardPanel extends JPanel {
 				g.setStroke(new BasicStroke(6));
 				drawToken(g, bp, bp.moveX, bp.moveY);
 				g.setStroke(new BasicStroke(0));
-				System.out.println("in here aswell");
 				if (bp.moveX > bp.destX) {
 					bp.moveX -= 2;
 				}
@@ -708,11 +680,9 @@ public class BoardPanel extends JPanel {
 
 
 	public void attemptRotation() {
-		System.out.println("in attempt rotation");
 		if(chosenToken != null) {
 			Rectangle boundingBox = new Rectangle(moveX+ WIDTH / 4, moveY + HEIGHT / 4,WIDTH / 2, HEIGHT / 2);
 			if(boundingBox.contains(mouseX, mouseY)) {
-				System.out.println("in bounding box");
 				rotationAnimation = true;
 				hugeToken = chosenToken;
 				mouseX = 0;
@@ -724,7 +694,6 @@ public class BoardPanel extends JPanel {
 
 	// http://zetcode.com/gfx/java2d/transparency/
 	public void attemptClickMove() {
-		System.out.println("in attempt to click move");
 		if (chosenToken != null) {
 			if(run.currentPlayer.getMovesSoFar().contains(chosenToken.getName())){
 				return;
@@ -1158,8 +1127,6 @@ public class BoardPanel extends JPanel {
 				}
 				if(p.getDir().equals("hori")) {
 					g.setColor(new Color(108,50,180,250));
-					System.out.println(p.getOne().xLoc);
-					System.out.println(p.getOne().yLoc);
 					Rectangle rect = new Rectangle(p.getOne().xLoc + WIDTH - WIDTH/6, p.getOne().yLoc + HEIGHT/6, (WIDTH/6)*2, HEIGHT- HEIGHT/6 * 2);
 					Reaction reaction = new Reaction(p.getOne().xLoc + WIDTH - WIDTH/6, p.getOne().yLoc + HEIGHT/6, (WIDTH/6)*2, HEIGHT- HEIGHT/6 * 2, p.getOne(), p.getTwo(), p.getDir(), rect, null);
 					if(!reactionOptions.contains(reaction)) {
@@ -1204,7 +1171,7 @@ public class BoardPanel extends JPanel {
 						reactionOptions.add(reaction);
 					}
 					g.fill(rect);
-					
+
 				}
 			}
 		}
@@ -1278,7 +1245,6 @@ public class BoardPanel extends JPanel {
 					disapppearRow = getRow(chosenY - (piecesToAnimate*HEIGHT));
 				}
 
-				System.out.println("Col is " + disappearCol + " Row is " + disapppearRow);
 				disappearPiece = (BoardPiece) board[disapppearRow][disappearCol];
 				disappearSkip = true;
 				//https://www.youtube.com/watch?v=QVrxiJyLTqU
@@ -1301,7 +1267,6 @@ public class BoardPanel extends JPanel {
 					disappearCol = getCol(chosenX);
 					disapppearRow = getRow(chosenY + (piecesToAnimate*HEIGHT));
 				}
-				System.out.println("Col is " + disappearCol + " Row is " + disapppearRow);
 				disappearPiece = (BoardPiece) board[disapppearRow][disappearCol];
 				disappearSkip = true;
 				playDisappearSound();
@@ -1323,7 +1288,6 @@ public class BoardPanel extends JPanel {
 					disappearCol = getCol(chosenX+ (piecesToAnimate*WIDTH));
 					disapppearRow = getRow(chosenY );
 				}
-				System.out.println("Col is " + disappearCol + " Row is " + disapppearRow);
 				disappearPiece = (BoardPiece) board[disapppearRow][disappearCol];
 				disappearSkip = true;
 				playDisappearSound();
@@ -1344,7 +1308,6 @@ public class BoardPanel extends JPanel {
 					disappearCol = getCol(chosenX - (piecesToAnimate*WIDTH));
 					disapppearRow = getRow(chosenY );
 				}
-				System.out.println("Col is " + disappearCol + " Row is " + disapppearRow);
 				disappearPiece = (BoardPiece) board[disapppearRow][disappearCol];
 				disappearSkip = true;
 				playDisappearSound();
@@ -1648,7 +1611,6 @@ public class BoardPanel extends JPanel {
 				continue;
 			}
 			if(bp!=null) {
-				System.out.println(bp.getName() + " " + bp.moveX + " " + bp.destX);
 			}
 
 			g.setColor(Color.DARK_GRAY);
@@ -1699,9 +1661,7 @@ public class BoardPanel extends JPanel {
 			if(bp == null) {
 				continue;
 			}
-			if(bp!=null) {
-				System.out.println(bp.getName() + " " + bp.moveX + " " + bp.destX);
-			}
+
 			bp.needToAnimate = true;
 			g.setColor(Color.DARK_GRAY);
 			g.fillRect(bp.moveX, moveY, WIDTH, WIDTH);
@@ -1751,9 +1711,7 @@ public class BoardPanel extends JPanel {
 			if(bp == null) {
 				continue;
 			}
-			if(bp!=null) {
-				//System.out.println(bp.getName() + " " + bp.moveY + " " + bp.destY);
-			}
+
 			g.setColor(Color.DARK_GRAY);
 			g.fillRect(moveX, bp.moveY, WIDTH, WIDTH);
 			if(bp.getCol().equals("yellow")) {
@@ -2069,50 +2027,4 @@ public class BoardPanel extends JPanel {
 	public Dimension getPreferredSize() {
 		return new Dimension(1000, 640);
 	}
-
-	public void verticalReaction(Player player, Pair p) {
-		// Five possible reactions, sword - sword, sword - nothing, nothing - sword, shield - sword, sword - shield
-		BoardPiece one = p.getOne();
-		BoardPiece two = p.getTwo();
-		Player play = p.getPlayer();
-		if(two!=null) { // if two doesn't equal null, then the player ins't involved
-			if (one.getSouth() == 1 && two.getNorth() == 1) { // sword - sword
-				game.getBoard().killToken(one.getName());
-				game.getBoard().killToken(two.getName());
-				System.out.println(one.getName() + " and " + two.getName() + " died, due to Sword vs Sword. ");
-				game.reactionCompleted(player, p);
-			} else if (one.getSouth() == 1 && two.getNorth() == 2) { // sword - shield
-				game.tryPushUp(two.getName());
-				System.out.println(one.getName() + " got pushed back from " + two.getName() + "'s shield");
-				game.reactionCompleted(player, p);
-			} else if (one.getSouth() == 1 && two.getNorth() == 0) { // sword - nothing
-				game.getBoard().killToken(two.getName());
-				System.out.println(two.getName() + " died, due to " + one.getName() + "'s Sword, vs Nothing. ");
-				game.reactionCompleted(player, p);
-			} else if (one.getSouth() == 0 && two.getNorth() == 1) { // nothing - sword
-				game.getBoard().killToken(one.getName());
-				System.out.println(one.getName() + " died, due to Nothing vs Sword. ");
-				game.reactionCompleted(player, p);
-			} else if (one.getSouth() == 2 && two.getNorth() == 1) { // shield - sword
-				game.tryPushDown(one.getName());
-				System.out.println(two.getName() + " got pushed back from " + one.getName() + "'s shield");
-				game.reactionCompleted(player, p);
-			} else {
-				System.out.println("Invalid Pair");
-			}
-		}else { //do the player vs board piece reactions
-			if(one.getSouth()==1 && play!=null && play.getName().equals("yellow")) { // sword - yellow player
-				game.getBoard().killPlayer("yellow");
-				///gameEnd = true;
-				game.reactionCompleted(player, p);
-			}else if(one.getNorth() == 1 && play!=null && play.getName().equals("green")){ // sword - green player
-				game.getBoard().killPlayer("green");
-				///////gameEnd = true;
-				game.reactionCompleted(player, p);
-			}else {
-				System.out.println("Invalid Pair");
-			}
-		}
-	}
-
 }
