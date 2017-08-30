@@ -110,12 +110,12 @@ public class SwordAndShieldGame {
 		board.getBoard()[2][7] = three;*/
 		
 		//reaction tests for invalid zones
-		BoardPiece one = yellow.find("s");
+		/*BoardPiece one = yellow.find("s");
 		board.getBoard()[0][2] = one;
 		BoardPiece two = yellow.find("g");
 		board.getBoard()[1][2] = two;
 		BoardPiece three = yellow.find("c");
-		board.getBoard()[2][2] = three;
+		board.getBoard()[2][2] = three;*/
 	}
 
 	/**

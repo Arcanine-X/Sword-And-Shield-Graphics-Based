@@ -68,13 +68,13 @@ public class GlassPanel extends JPanel {
 				if (drawY < destinationY) {
 					drawY += 4;
 				}
-				//if (!(drawY >= destinationY) || !(drawX <= destinationX)) {
-				//	animateYellow((Graphics2D) g);
-				//} else {
+				if (!(drawY >= destinationY) || !(drawX <= destinationX)) {
+					animateYellow((Graphics2D) g);
+				} else {
 					tokenPanelY.timeToFly = false;
 					doOnce = false;
 					tokenPanelY.createToken();
-				//}
+				}
 			}
 		}
 		if (run.currentPlayer.getName().equals("green")) {
@@ -100,15 +100,13 @@ public class GlassPanel extends JPanel {
 				if (drawY < destinationY) {
 					drawY += 4;
 				}
-				//animateGreen((Graphics2D) g);
-
-				//if (!(drawY >= destinationY) || !(drawX >= destinationX)) {
-				//	animateGreen((Graphics2D) g);
-				//} else {
-				//	tokenPanelG.timeToFly = false;
-				//	doOnce = false;
+				if (!(drawY >= destinationY) || !(drawX >= destinationX)) {
+					animateGreen((Graphics2D) g);
+				} else {
+					tokenPanelG.timeToFly = false;
+					doOnce = false;
 					tokenPanelG.createToken();
-				//}
+				}
 			}
 		}
 	}

@@ -210,14 +210,10 @@ public class BoardPanel extends JPanel {
 	public void doReaction(Pair p) {
 		if(p.getDir().equals("hori")) {
 			reactionPiece = p;
-			//game.horizontalReaction(run.currentPlayer, p);
 			tryReactionAnimation(p);
 		}
 		else {
 			reactionPiece = p;
-			//game.verticalReaction(run.currentPlayer, p);
-			//applyReactionMoveAnimation(p);
-			System.out.println("in do reaction");
 			tryReactionAnimation(p);
 		}
 		checkForWinner();

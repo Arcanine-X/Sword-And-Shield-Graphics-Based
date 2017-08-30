@@ -42,7 +42,7 @@ import javax.swing.border.Border;
 
 public class GameFrame extends JFrame implements Observer {
 	SwordAndShieldGame game;
-	JPanel buttonPanel;
+	ButtonPanel buttonPanel;
 	BoardPanel boardPanel;
 	TokenPanel tokenPanelY;
 	TokenPanel tokenPanelG;
@@ -73,10 +73,10 @@ public class GameFrame extends JFrame implements Observer {
 		boardPanel.requestFocusInWindow();
 		tokenPanelY = new TokenPanel(game, game.getYellow(), this);
 		tokenPanelG = new TokenPanel(game, game.getGreen(), this);
-		buttonPanel = new JPanel();
+		//buttonPanel = new JPanel();
 		graveyardY = new GraveyardPanel(game, game.getYellow());
 		graveyardG = new GraveyardPanel(game, game.getGreen());
-		buttonPanel = new ButtonPanel(game);
+		buttonPanel = new ButtonPanel(game, this);
 
 		buttonPanel.add(undo);
 		buttonPanel.add(surrender);
@@ -86,12 +86,9 @@ public class GameFrame extends JFrame implements Observer {
 		surrender.setFocusable(false);
 		pass.setFocusable(false);
 		quit.setFocusable(false);
-		JSplitPane firstSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, tokenPanelG, boardPanel); // green tokens -
-																										// board
+		JSplitPane firstSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, tokenPanelG, boardPanel);
 		firstSplit.setResizeWeight(1);
-		JSplitPane secondSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, firstSplit, tokenPanelY); // first split
-																										// and yellow
-																										// otkens
+		JSplitPane secondSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, firstSplit, tokenPanelY);
 		secondSplit.setResizeWeight(0.1);
 		JSplitPane thirdSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT, buttonPanel, secondSplit);
 		thirdSplit.setResizeWeight(0);
