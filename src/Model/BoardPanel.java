@@ -72,6 +72,7 @@ public class BoardPanel extends JPanel {
 	public boolean pairDisappear;
 	Pair reactionPair;
 	int number;
+	int horiNumber;
 	public BoardPanel(SwordAndShieldGame game, GameFrame run) {
 		this.game = game;
 		this.run = run;
@@ -307,14 +308,18 @@ public class BoardPanel extends JPanel {
 				System.out.println("in swordVElse");
 				number = game.findTokenToAnimate(run.currentPlayer, p);
 				if(number == -10) {
-
+					playDisappearSound();
+					reactionPair = p;
+					SWEDisappear = true;
 				}else if(number == -11) {
 					reactionDisappear = p.getTwo();
 					playDisappearSound();
 					reactionPair = p;
 					SWEDisappear = true;
 				}else if(number == -12) {
-
+					playDisappearSound();
+					reactionPair = p;
+					SWEDisappear = true;
 				}else if(number == -13) {
 
 				}else if(number == -14) {
@@ -397,6 +402,32 @@ public class BoardPanel extends JPanel {
 					}
 				}
 
+			}else if(game.getDirectionOfAnimation(run.currentPlayer, p).equals("swordVElse")) {
+				System.out.println("in swordVElse");
+				horiNumber = game.findTokenToAnimateHori(run.currentPlayer, p);
+				if(horiNumber == -20) {
+					playDisappearSound();
+					reactionPair = p;
+					SWEDisappear = true;
+				}else if(horiNumber == -21) {
+					reactionDisappear = p.getTwo();
+					playDisappearSound();
+					reactionPair = p;
+					SWEDisappear = true;
+				}else if(horiNumber == -22) {
+					playDisappearSound();
+					reactionPair = p;
+					SWEDisappear = true;
+				}else if(horiNumber == -23) {
+					playDisappearSound();
+					reactionPair = p;
+					SWEDisappear = true;
+
+				}else if(horiNumber == -24) {
+
+				}else if(horiNumber == -25) {
+
+				}
 			}
 			else {
 				game.horizontalReaction(run.currentPlayer, p);
@@ -826,6 +857,10 @@ public class BoardPanel extends JPanel {
 			reactionDisappearSVE(_g);
 		}
 
+		if(pairDisappear) {
+
+		}
+
 		if(reactionDisappear!=null) {
 			reactionDisappear(_g);
 		}
@@ -870,14 +905,23 @@ public class BoardPanel extends JPanel {
 			}else {
 				alpha = 0;
 				reactionDisappear = null;
+
 				//return;
 			}
 		}
 	}
 
 	public void reactionDisappearSVE(Graphics2D g){
-		if(number == -11) {
-			if((getCol(reactionDisappear.xLoc) + getRow(reactionDisappear.yLoc)) % 2 != 1) {
+		if(number == -10) { // both die
+			if((getCol(reactionPair.getOne().xLoc) + getRow(reactionPair.getOne().yLoc)) % 2 != 1) {
+				g.setColor(new Color(255,255,255,alpha)); // white
+			}
+			else {
+				g.setColor(new Color(0,0,0,alpha));
+			}
+			g.fillRect(reactionPair.getOne().xLoc, reactionPair.getOne().yLoc, WIDTH, HEIGHT);
+
+			if((getCol(reactionPair.getTwo().xLoc) + getRow(reactionPair.getTwo().yLoc)) % 2 != 1) {
 				g.setColor(new Color(255,255,255,alpha)); // white
 			}
 			else {
@@ -897,8 +941,171 @@ public class BoardPanel extends JPanel {
 				activateAnimation = false;
 				SWEDisappear = false;
 				number = -1000;
+				if(game.getBoard().checkForReaction()) {
+					run.pass.setEnabled(false);
+					run.setBoardReactionsTrue();
+				}else {
+					run.setBoardReactionsFalse();
+					run.pass.setEnabled(true);
+				}
 			}
 		}
+		else if(number == -11) {
+			if((getCol(reactionPair.getTwo().xLoc) + getRow(reactionPair.getTwo().yLoc)) % 2 != 1) {
+				g.setColor(new Color(255,255,255,alpha)); // white
+			}
+			else {
+				g.setColor(new Color(0,0,0,alpha));
+			}
+			g.fillRect(reactionPair.getTwo().xLoc, reactionPair.getTwo().yLoc, WIDTH, HEIGHT);
+			if(alpha < 250) {
+				alpha +=5;
+			}else {
+				alpha = 0;
+				reactionDisappear = null;
+				reactionMoveAnimation = false;
+				reactions = false;
+				skip = false;
+				game.verticalReaction(run.currentPlayer, reactionPair);
+				chosenToken = null;
+				activateAnimation = false;
+				SWEDisappear = false;
+				number = -1000;
+				if(game.getBoard().checkForReaction()) {
+					run.pass.setEnabled(false);
+					run.setBoardReactionsTrue();
+				}else {
+					run.setBoardReactionsFalse();
+					run.pass.setEnabled(true);
+				}
+			}
+		}else if (number == -12) {
+			if((getCol(reactionPair.getOne().xLoc) + getRow(reactionPair.getOne().yLoc)) % 2 != 1) {
+				g.setColor(new Color(255,255,255,alpha)); // white
+			}
+			else {
+				g.setColor(new Color(0,0,0,alpha));
+			}
+			g.fillRect(reactionPair.getOne().xLoc, reactionPair.getOne().yLoc, WIDTH, HEIGHT);
+			if(alpha < 250) {
+				alpha +=5;
+			}else {
+				alpha = 0;
+				reactionDisappear = null;
+				reactionMoveAnimation = false;
+				reactions = false;
+				skip = false;
+				game.verticalReaction(run.currentPlayer, reactionPair);
+				chosenToken = null;
+				activateAnimation = false;
+				SWEDisappear = false;
+				number = -1000;
+				if(game.getBoard().checkForReaction()) {
+					run.pass.setEnabled(false);
+					run.setBoardReactionsTrue();
+				}else {
+					run.setBoardReactionsFalse();
+					run.pass.setEnabled(true);
+				}
+			}
+		}else if (horiNumber == -20) {
+			System.out.println("in -20");
+			if((getCol(reactionPair.getOne().xLoc) + getRow(reactionPair.getOne().yLoc)) % 2 != 1) {
+				g.setColor(new Color(255,255,255,alpha)); // white
+			}
+			else {
+				g.setColor(new Color(0,0,0,alpha));
+			}
+			g.fillRect(reactionPair.getOne().xLoc, reactionPair.getOne().yLoc, WIDTH, HEIGHT);
+
+			if((getCol(reactionPair.getTwo().xLoc) + getRow(reactionPair.getTwo().yLoc)) % 2 != 1) {
+				g.setColor(new Color(255,255,255,alpha)); // white
+			}
+			else {
+				g.setColor(new Color(0,0,0,alpha));
+			}
+			g.fillRect(reactionPair.getTwo().xLoc, reactionPair.getTwo().yLoc, WIDTH, HEIGHT);
+			if(alpha < 250) {
+				alpha +=5;
+			}else {
+				alpha = 0;
+				reactionDisappear = null;
+				reactionMoveAnimation = false;
+				reactions = false;
+				skip = false;
+				game.horizontalReaction(run.currentPlayer, reactionPair);
+				chosenToken = null;
+				activateAnimation = false;
+				SWEDisappear = false;
+				number = -1000;
+				if(game.getBoard().checkForReaction()) {
+					run.pass.setEnabled(false);
+					run.setBoardReactionsTrue();
+				}else {
+					run.setBoardReactionsFalse();
+					run.pass.setEnabled(true);
+				}
+			}
+		}else if (horiNumber == -21) {
+			if((getCol(reactionPair.getTwo().xLoc) + getRow(reactionPair.getTwo().yLoc)) % 2 != 1) {
+				g.setColor(new Color(255,255,255,alpha)); // white
+			}
+			else {
+				g.setColor(new Color(0,0,0,alpha));
+			}
+			g.fillRect(reactionPair.getTwo().xLoc, reactionPair.getTwo().yLoc, WIDTH, HEIGHT);
+			if(alpha < 250) {
+				alpha +=5;
+			}else {
+				alpha = 0;
+				reactionDisappear = null;
+				reactionMoveAnimation = false;
+				reactions = false;
+				skip = false;
+				game.horizontalReaction(run.currentPlayer, reactionPair);
+				chosenToken = null;
+				activateAnimation = false;
+				SWEDisappear = false;
+				number = -1000;
+				if(game.getBoard().checkForReaction()) {
+					run.pass.setEnabled(false);
+					run.setBoardReactionsTrue();
+				}else {
+					run.setBoardReactionsFalse();
+					run.pass.setEnabled(true);
+				}
+			}
+		}else if (horiNumber == -22) {
+			if((getCol(reactionPair.getOne().xLoc) + getRow(reactionPair.getOne().yLoc)) % 2 != 1) {
+				g.setColor(new Color(255,255,255,alpha)); // white
+			}
+			else {
+				g.setColor(new Color(0,0,0,alpha));
+			}
+			g.fillRect(reactionPair.getOne().xLoc, reactionPair.getOne().yLoc, WIDTH, HEIGHT);
+			if(alpha < 250) {
+				alpha +=5;
+			}else {
+				alpha = 0;
+				reactionDisappear = null;
+				reactionMoveAnimation = false;
+				reactions = false;
+				skip = false;
+				game.horizontalReaction(run.currentPlayer, reactionPair);
+				chosenToken = null;
+				activateAnimation = false;
+				SWEDisappear = false;
+				number = -1000;
+				if(game.getBoard().checkForReaction()) {
+					run.pass.setEnabled(false);
+					run.setBoardReactionsTrue();
+				}else {
+					run.setBoardReactionsFalse();
+					run.pass.setEnabled(true);
+				}
+			}
+		}
+
 	}
 
 	public void reactionDisappearPair(Graphics2D g){

@@ -763,6 +763,34 @@ public class SwordAndShieldGame {
 		return -15;
 	}
 
+	public int findTokenToAnimateHori(Player player, Pair p) {
+		BoardPiece one = p.getOne();
+		BoardPiece two = p.getTwo();
+		Player play = p.getPlayer();
+		if(two!=null) { // if two doesn't equal null, then the player ins't involved
+			if (one.getEast() == 1 && two.getWest() == 1) { // sword - sword
+				return -20;
+			} else if (one.getEast() == 1 && two.getWest() == 0) { // sword - nothing
+				return -21;
+			} else if (one.getEast() == 1 && two.getWest() == 2) { // sword - shield
+				//done
+			} else if (one.getEast() == 0 && two.getWest() == 1) { // nothing - sword
+				return -22;
+			} else if (one.getEast() == 2 && two.getWest() == 1) { // shield - sword
+				//done
+			}
+		}else { //do the player vs board piece reactions
+			if(one.getEast() == 1 && play!=null && play.getName().equals("yellow")) { // sword - yellow player
+				return -23;
+			}else if(one.getWest() == 1 && play!=null && play.getName().equals("green")){ // sword - green player
+				return -24;
+			}else {
+				System.out.println("Invalid Pair");
+			}
+		}
+		return -25;
+	}
+
 	public Player getGreen() {
 		return green;
 	}
