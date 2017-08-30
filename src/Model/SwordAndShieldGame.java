@@ -93,12 +93,12 @@ public class SwordAndShieldGame {
 
 		//For move and disappear
 
-		/*BoardPiece one = yellow.find("g");
+		BoardPiece one = yellow.find("g");
 		board.getBoard()[1][4] = one;
 		BoardPiece three = yellow.find("c");
 		board.getBoard()[2][4] = three;
 		BoardPiece two = yellow.find("e");
-		board.getBoard()[0][4] = two;*/
+		board.getBoard()[0][4] = two;
 
 
 		//reaction disappear test
