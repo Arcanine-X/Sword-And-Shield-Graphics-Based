@@ -66,6 +66,7 @@ public class BoardPanel extends JPanel {
 	Pair pairToDisappear;
 	public BoardPiece reactionDisappear;
 	public boolean activateAnimation = false;
+	String animationDir = "";
 	public BoardPanel(SwordAndShieldGame game, GameFrame run) {
 		this.game = game;
 		this.run = run;
@@ -228,98 +229,207 @@ public class BoardPanel extends JPanel {
 		System.out.println(p.getDir());
 		int howManyToAnimate;
 		if(p.getDir().equals("vert")) {
-			howManyToAnimate = game.verticalReactionAnimation(run.currentPlayer, p);
-			System.out.println("bloop " + howManyToAnimate);
-			if(howManyToAnimate == 0) {
-				System.out.println(p.getOne().toString());
-				System.out.println(p.getTwo().toString());
-			}
-			else if(howManyToAnimate == -1) {
-				//needs to disappear
-			}else if(howManyToAnimate == -2) {
-				game.verticalReaction(run.currentPlayer, p);
-			}else {
-				for(int i = howManyToAnimate; i >= 0; i --) {
-					int row = getRow(p.getTwo().yLoc - (i*HEIGHT));
-					int col = getCol(p.getTwo().xLoc);
-					BoardPiece bp = ((BoardPiece)game.getBoard().getBoard()[row][col]);
-					bp.destY = bp.yLoc - HEIGHT;
-					bp.moveY = bp.yLoc;
-					bp.moveX = bp.xLoc;
-					if(bp.equals(p.getTwo())) {
-						continue;
+			animationDir = game.getDirectionOfAnimation(run.currentPlayer, p);
+			if(game.getDirectionOfAnimation(run.currentPlayer, p).equals("up")) {
+				howManyToAnimate = game.verticalReactionAnimation(run.currentPlayer, p);
+				System.out.println("bloop " + howManyToAnimate);
+				if(howManyToAnimate == 0) {
+					System.out.println(p.getOne().toString());
+					System.out.println(p.getTwo().toString());
+				}
+				else if(howManyToAnimate == -1) {
+					//needs to disappear
+				}else if(howManyToAnimate == -2) {
+					game.verticalReaction(run.currentPlayer, p);
+				}else {
+					for(int i = howManyToAnimate; i >= 0; i --) {
+						int row = getRow(p.getTwo().yLoc - (i*HEIGHT));
+						int col = getCol(p.getTwo().xLoc);
+						BoardPiece bp = ((BoardPiece)game.getBoard().getBoard()[row][col]);
+						bp.destY = bp.yLoc - HEIGHT;
+						bp.moveY = bp.yLoc;
+						bp.moveX = bp.xLoc;
+						if(bp.equals(p.getTwo())) {
+							continue;
+						}
+						if(row != 0) {
+							aList.add(bp);
+						}else {
+							reactionDisappear = bp;
+							playDisappearSound();
+						}
+						activateAnimation = true;
 					}
-					if(row != 0) {
-						aList.add(bp);
-
-					}else {
-						reactionDisappear = bp;
-						playDisappearSound();
-						System.out.println("reaction disappear piece is " + reactionDisappear.toString());
-					}
-					activateAnimation = true;
 				}
 			}
+			else if(game.getDirectionOfAnimation(run.currentPlayer, p).equals("down")) {
+				System.out.println("in down animation for reactions");
+				howManyToAnimate = game.verticalReactionAnimation(run.currentPlayer, p);
+				System.out.println("bloop " + howManyToAnimate);
+				if(howManyToAnimate == 0) {
+					System.out.println(p.getOne().toString());
+					System.out.println(p.getTwo().toString());
+				}else if(howManyToAnimate == -1) {
+					//needs to disappear
+				}else if(howManyToAnimate == -2) {
+					game.verticalReaction(run.currentPlayer, p);
+				}
+				else {
+					System.out.println("in else?");
+					for(int i = 0; i <= howManyToAnimate; i ++) {
+					//for(int i = howManyToAnimate; i >= 0; i --) {
+						System.out.println("in for loooooooooooooooooop???");
+						int row = getRow(p.getOne().yLoc + (i*HEIGHT));
+						int col = getCol(p.getOne().xLoc);
+						BoardPiece bp = ((BoardPiece)game.getBoard().getBoard()[row][col]);
+						bp.destY = bp.yLoc + HEIGHT;
+						bp.moveY = bp.yLoc;
+						bp.moveX = bp.xLoc;
+						if(bp.equals(p.getOne())) {
+							continue;
+						}
+						if(row != 9) {
+							aList.add(bp);
+						}else {
+							reactionDisappear = bp;
+							playDisappearSound();
+						}
+						activateAnimation = true;
+					}
+				}
 
+			}else {
+				//Who cares about animations something went wrong
+				//Just do the reaction
+				//game.verticalReaction(run.currentPlayer, p);
+
+			}
 		}
 	}
 
 
 	public void reactionHope(Graphics2D g, List<BoardPiece> toAnimate) {
-		if(toAnimate.isEmpty()) {
-			reactionMoveAnimation = false;
-			reactions = false;
-			skip = false;
-			game.verticalReaction(run.currentPlayer, reactionPiece);
-			chosenToken = null;
-			activateAnimation = false;
-			aList.clear();
-			if(game.getBoard().checkForReaction()) {
-				run.pass.setEnabled(false);
-				run.setBoardReactionsTrue();
-			}else {
-				run.setBoardReactionsFalse();
-				run.pass.setEnabled(true);
-			}
-		}
-		for(BoardPiece bp : toAnimate) {
-			if(bp == null) {
-				continue;
-			}
-			g.setColor(Color.DARK_GRAY);
-			g.fillRect(bp.moveX, bp.moveY, WIDTH, WIDTH);
-			g.setColor(Color.YELLOW);
-			g.fillOval(bp.moveX, bp.moveY, WIDTH, HEIGHT);
-			g.setColor(Color.red);
-			g.setStroke(new BasicStroke(6));
-			drawToken(g, bp, bp.moveX, bp.moveY);
-			g.setStroke(new BasicStroke(0));
-			if (bp.moveY > bp.destY) {
-				bp.moveY -= 2;
-			}
-			else {
+		if(animationDir.equals("up")) {
+			if(toAnimate.isEmpty()) {
 				reactionMoveAnimation = false;
 				reactions = false;
 				skip = false;
 				game.verticalReaction(run.currentPlayer, reactionPiece);
 				chosenToken = null;
 				activateAnimation = false;
+				aList.clear();
+				if(game.getBoard().checkForReaction()) {
+					run.pass.setEnabled(false);
+					run.setBoardReactionsTrue();
+				}else {
+					run.setBoardReactionsFalse();
+					run.pass.setEnabled(true);
+				}
 			}
-		}
-		if(activateAnimation == false) {
-			aList.clear();
-			if(game.getBoard().checkForReaction()) {
-				run.pass.setEnabled(false);
-				run.setBoardReactionsTrue();
-			}else {
-				run.setBoardReactionsFalse();
-				run.pass.setEnabled(true);
+			for(BoardPiece bp : toAnimate) {
+				if(bp == null) {
+					continue;
+				}
+				g.setColor(Color.DARK_GRAY);
+				g.fillRect(bp.moveX, bp.moveY, WIDTH, WIDTH);
+				g.setColor(Color.YELLOW);
+				g.fillOval(bp.moveX, bp.moveY, WIDTH, HEIGHT);
+				g.setColor(Color.red);
+				g.setStroke(new BasicStroke(6));
+				drawToken(g, bp, bp.moveX, bp.moveY);
+				g.setStroke(new BasicStroke(0));
+				if (bp.moveY > bp.destY) {
+					bp.moveY -= 2;
+				}
+				else {
+					reactionMoveAnimation = false;
+					reactions = false;
+					skip = false;
+					game.verticalReaction(run.currentPlayer, reactionPiece);
+					chosenToken = null;
+					activateAnimation = false;
+				}
 			}
+			if(activateAnimation == false) {
+				aList.clear();
+				if(game.getBoard().checkForReaction()) {
+					run.pass.setEnabled(false);
+					run.setBoardReactionsTrue();
+				}else {
+					run.setBoardReactionsFalse();
+					run.pass.setEnabled(true);
+				}
 
+			}
+			if(skip == false) {
+				everyBpToAnimate.clear();
+			}
 		}
-		if(skip == false) {
-			everyBpToAnimate.clear();
+		else if(animationDir.equals("down")) {
+			System.out.println("in down animation");
+			if(toAnimate.isEmpty()) {
+				System.out.println("in em,pty");
+				reactionMoveAnimation = false;
+				reactions = false;
+				skip = false;
+				game.verticalReaction(run.currentPlayer, reactionPiece);
+				chosenToken = null;
+				activateAnimation = false;
+				aList.clear();
+				if(game.getBoard().checkForReaction()) {
+					run.pass.setEnabled(false);
+					run.setBoardReactionsTrue();
+				}else {
+					run.setBoardReactionsFalse();
+					run.pass.setEnabled(true);
+				}
+			}
+			///
+			System.out.println("maybe entering for loop??");
+			for(BoardPiece bp : toAnimate) {
+				System.out.println("in for loop?");
+				if(bp == null) {
+					continue;
+				}
+				g.setColor(Color.DARK_GRAY);
+				g.fillRect(bp.moveX, bp.moveY, WIDTH, WIDTH);
+				g.setColor(Color.YELLOW);
+				g.fillOval(bp.moveX, bp.moveY, WIDTH, HEIGHT);
+				g.setColor(Color.red);
+				g.setStroke(new BasicStroke(6));
+				drawToken(g, bp, bp.moveX, bp.moveY);
+				g.setStroke(new BasicStroke(0));
+				System.out.println("in here aswell");
+				if (bp.moveY < bp.destY) {
+					bp.moveY += 2;
+				}
+				else {
+					reactionMoveAnimation = false;
+					reactions = false;
+					skip = false;
+					game.verticalReaction(run.currentPlayer, reactionPiece);
+					chosenToken = null;
+					activateAnimation = false;
+				}
+			}
+			///
+			
+			if(activateAnimation == false) {
+				aList.clear();
+				if(game.getBoard().checkForReaction()) {
+					run.pass.setEnabled(false);
+					run.setBoardReactionsTrue();
+				}else {
+					run.setBoardReactionsFalse();
+					run.pass.setEnabled(true);
+				}
+
+			}
+			if(skip == false) {
+				everyBpToAnimate.clear();
+			}
 		}
+		
 	}
 
 
