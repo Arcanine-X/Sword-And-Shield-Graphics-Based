@@ -93,12 +93,12 @@ public class SwordAndShieldGame {
 
 		//For move and disappear
 
-		BoardPiece one = yellow.find("g");
+		/*BoardPiece one = yellow.find("g");
 		board.getBoard()[1][4] = one;
 		BoardPiece three = yellow.find("c");
 		board.getBoard()[2][4] = three;
 		BoardPiece two = yellow.find("e");
-		board.getBoard()[0][4] = two;
+		board.getBoard()[0][4] = two;*/
 
 
 		//reaction disappear test
@@ -630,7 +630,7 @@ public class SwordAndShieldGame {
 			}else if (one.getEast() == 2 && two.getWest() == 1 && p.getDir().equals("hori")) { // shield - sword
 				return "right";
 			}else {
-				System.out.println("Invalid Pair");
+				return "swordVElse";
 			}
 		}
 		return "error";
@@ -734,6 +734,33 @@ public class SwordAndShieldGame {
 			}
 			return count;
 		}
+	}
+
+	public int findTokenToAnimate(Player player, Pair p) {
+		// Five possible reactions, sword - sword, sword - nothing, nothing - sword, shield - sword, sword - shield
+		BoardPiece one = p.getOne();
+		BoardPiece two = p.getTwo();
+		Player play = p.getPlayer();
+		if(two!=null) { // if two doesn't equal null, then the player ins't involved
+			if (one.getSouth() == 1 && two.getNorth() == 1) { // sword - sword
+				return -10;
+			} else if (one.getSouth() == 1 && two.getNorth() == 2) { // sword - shield
+				//already done
+			} else if (one.getSouth() == 1 && two.getNorth() == 0) { // sword - nothing
+				return -11;
+			} else if (one.getSouth() == 0 && two.getNorth() == 1) { // nothing - sword
+				return -12;
+			} else if (one.getSouth() == 2 && two.getNorth() == 1) { // shield - sword
+				//already done
+			}
+		}else { //do the player vs board piece reactions
+			if(one.getSouth()==1 && play!=null && play.getName().equals("yellow")) { // sword - yellow player
+				return -13;
+			}else if(one.getNorth() == 1 && play!=null && play.getName().equals("green")){ // sword - green player
+				return -14;
+			}
+		}
+		return -15;
 	}
 
 	public Player getGreen() {

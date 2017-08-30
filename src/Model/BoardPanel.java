@@ -67,6 +67,11 @@ public class BoardPanel extends JPanel {
 	public BoardPiece reactionDisappear;
 	public boolean activateAnimation = false;
 	String animationDir = "";
+	BoardPiece SDisappearPiece;
+	public boolean SWEDisappear;
+	public boolean pairDisappear;
+	Pair reactionPair;
+	int number;
 	public BoardPanel(SwordAndShieldGame game, GameFrame run) {
 		this.game = game;
 		this.run = run;
@@ -298,16 +303,33 @@ public class BoardPanel extends JPanel {
 					}
 				}
 
-			}else {
+			}else if(game.getDirectionOfAnimation(run.currentPlayer, p).equals("swordVElse")) {
+				System.out.println("in swordVElse");
+				number = game.findTokenToAnimate(run.currentPlayer, p);
+				if(number == -10) {
+
+				}else if(number == -11) {
+					reactionDisappear = p.getTwo();
+					playDisappearSound();
+					reactionPair = p;
+					SWEDisappear = true;
+				}else if(number == -12) {
+
+				}else if(number == -13) {
+
+				}else if(number == -14) {
+
+				}else if(number == -15) {
+
+				}
+			}
+			else {
 				game.verticalReaction(run.currentPlayer, p);
 			}
 		}
 		if(p.getDir().equals("hori")) {
 			animationDir = game.getDirectionOfAnimation(run.currentPlayer, p);
-			System.out.println("in horizontal yay");
-			System.out.println(game.getDirectionOfAnimation(run.currentPlayer, p));
 			if(game.getDirectionOfAnimation(run.currentPlayer, p).equals("right")) {
-				System.out.println("in horizontal if");
 				howManyToAnimate = game.horizontalReactionAnimation(run.currentPlayer, p);
 				if(howManyToAnimate == 0) {
 					System.out.println(p.getOne().toString());
@@ -318,10 +340,7 @@ public class BoardPanel extends JPanel {
 					game.horizontalReaction(run.currentPlayer, p);
 
 				}else {
-					System.out.println("in else?");
 					for(int i = 0; i <= howManyToAnimate; i ++) {
-						////////////
-						System.out.println("in for loooooooooooooooooop???");
 						int row = getRow(p.getOne().yLoc);
 						int col = getCol(p.getOne().xLoc + (i*WIDTH));
 						BoardPiece bp = ((BoardPiece)game.getBoard().getBoard()[row][col]);
@@ -341,7 +360,6 @@ public class BoardPanel extends JPanel {
 						activateAnimation = true;
 					}
 				}
-
 			}
 			else if(game.getDirectionOfAnimation(run.currentPlayer, p).equals("left")) {
 				System.out.println("in horizontal if");
@@ -384,6 +402,8 @@ public class BoardPanel extends JPanel {
 				game.horizontalReaction(run.currentPlayer, p);
 			}
 		}
+
+
 	}
 
 
@@ -580,7 +600,7 @@ public class BoardPanel extends JPanel {
 				everyBpToAnimate.clear();
 			}
 		}
-		
+
 		else if(animationDir.equals("left")) {
 			System.out.println("in left animation");
 			if(toAnimate.isEmpty()) {
@@ -801,6 +821,11 @@ public class BoardPanel extends JPanel {
 		if(reactions) {
 			drawReactions(_g);
 		}
+
+		if(SWEDisappear) {
+			reactionDisappearSVE(_g);
+		}
+
 		if(reactionDisappear!=null) {
 			reactionDisappear(_g);
 		}
@@ -849,6 +874,54 @@ public class BoardPanel extends JPanel {
 			}
 		}
 	}
+
+	public void reactionDisappearSVE(Graphics2D g){
+		if(number == -11) {
+			if((getCol(reactionDisappear.xLoc) + getRow(reactionDisappear.yLoc)) % 2 != 1) {
+				g.setColor(new Color(255,255,255,alpha)); // white
+			}
+			else {
+				g.setColor(new Color(0,0,0,alpha));
+			}
+			g.fillRect(reactionPair.getTwo().xLoc, reactionPair.getTwo().yLoc, WIDTH, HEIGHT);
+			if(alpha < 250) {
+				alpha +=5;
+			}else {
+				alpha = 0;
+				reactionDisappear = null;
+				reactionMoveAnimation = false;
+				reactions = false;
+				skip = false;
+				game.verticalReaction(run.currentPlayer, reactionPair);
+				chosenToken = null;
+				activateAnimation = false;
+				SWEDisappear = false;
+				number = -1000;
+			}
+		}
+	}
+
+	public void reactionDisappearPair(Graphics2D g){
+		if(reactionDisappear!=null) {
+			if((getCol(reactionDisappear.xLoc) + getRow(reactionDisappear.yLoc)) % 2 != 1) {
+				g.setColor(new Color(255,255,255,alpha)); // white
+			}
+			else {
+				g.setColor(new Color(0,0,0,alpha));
+			}
+			g.fillRect(reactionDisappear.xLoc, reactionDisappear.yLoc, WIDTH, HEIGHT);
+			//g.fillRect(disappearCol*WIDTH, disapppearRow * HEIGHT, WIDTH, HEIGHT);
+			if(alpha < 250) {
+				alpha +=5;
+			}else {
+				alpha = 0;
+				reactionDisappear = null;
+				//return;
+			}
+		}
+	}
+
+
 
 
 
