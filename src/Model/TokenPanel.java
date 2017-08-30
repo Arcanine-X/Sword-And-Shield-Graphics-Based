@@ -2,6 +2,7 @@ package Model;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
@@ -210,6 +211,10 @@ public class TokenPanel extends JPanel implements Observer{
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D _g = (Graphics2D) g;
+		GradientPaint blackToGray = new GradientPaint(0, 0, Color.WHITE,
+                0, this.getHeight(), Color.BLACK);
+     _g.setPaint(blackToGray);
+     _g.fillRect(0, 0, this.getWidth(), this.getHeight());
 		if(!clickedPieceRotations.isEmpty()) {
 			if(animateCreation) {
 				applyAnimation(_g);

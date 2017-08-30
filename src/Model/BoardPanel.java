@@ -1954,20 +1954,16 @@ public class BoardPanel extends JPanel {
 					Player p = (Player) board[row][col];
 					if (p.getName().equals("yellow")) {
 						g.setColor(Color.YELLOW);
-						g.fillOval(col * WIDTH + 5, row * HEIGHT + 5, WIDTH - 10, HEIGHT - 10);
-						g.setColor(Color.black);
-						g.drawOval(col * WIDTH + 5, row * HEIGHT + 5, WIDTH - 10, HEIGHT - 10);
-						g.drawArc(col * WIDTH + 10, row * HEIGHT, WIDTH - 20, HEIGHT - 10, 0, -180);
 					} else {
 						g.setColor(Color.GREEN);
-						g.fillOval(col * WIDTH + 5, row * HEIGHT + 5, WIDTH - 10, HEIGHT - 10);
-						g.setColor(Color.black);
-						g.drawOval(col * WIDTH + 5, row * HEIGHT + 5, WIDTH - 10, HEIGHT - 10);
-						g.drawArc(col * WIDTH + 10, row * HEIGHT, WIDTH - 20, HEIGHT - 10, 0, -180);
 					}
-					g.setColor(Color.BLACK);
-					g.fillOval(col * WIDTH + WIDTH / 4, row * HEIGHT + HEIGHT / 4, WIDTH / 5, HEIGHT / 5);
-					g.fillOval(col * WIDTH + WIDTH / 2, row * HEIGHT + HEIGHT / 4, WIDTH / 5, HEIGHT / 5);
+					g.fillOval(col * WIDTH, row * HEIGHT, WIDTH, HEIGHT);
+                    g.setColor(Color.black);
+                    g.drawOval(col * WIDTH, row * HEIGHT, WIDTH, HEIGHT);
+                    g.setColor(Color.BLACK);
+                    g.fillOval(col * WIDTH +WIDTH/3, row * HEIGHT + HEIGHT/3, WIDTH /10, HEIGHT/10); 
+                    g.fillOval(col*WIDTH-WIDTH/3 + WIDTH-5, row*HEIGHT+HEIGHT/3, WIDTH/10, WIDTH/10);
+                    g.drawArc(col*WIDTH+WIDTH/3, row*HEIGHT+HEIGHT/3, WIDTH/3, HEIGHT/3, 180, 180);
 				} else {
 					if ((row + col) % 2 != 1) {
 						g.setColor(Color.WHITE);
