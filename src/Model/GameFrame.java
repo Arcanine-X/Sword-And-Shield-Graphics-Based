@@ -120,11 +120,13 @@ public class GameFrame extends JFrame implements Observer {
 				}
 				if (game.getBoard().getUndoStack().size() > 1) {
 					GameFrame.this.game.undo(currentPlayer);
-
-					if (game.getBoard().checkForReaction()) {
+					boardPanel.repaint();
+					if(game.getBoard().checkForReaction()) {
+						pass.setEnabled(false);
 						setBoardReactionsTrue();
-					} else {
+					}else {
 						setBoardReactionsFalse();
+						pass.setEnabled(true);
 					}
 				}
 			}

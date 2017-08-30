@@ -81,14 +81,16 @@ public class TokenPanel extends JPanel implements Observer{
 		});
 
 	}
-	
+
 	public void createToken() {
 		game.createToken(player, create);         //<-------------Creates token
 		clickedPiece = null;
 		if(game.getBoard().checkForReaction()) {
 			run.setBoardReactionsTrue();
+			run.pass.setEnabled(false);
 		}else {
 			run.setBoardReactionsFalse();
+			run.pass.setEnabled(true);
 		}
 		if(pieceToPlay!=null) {
 			System.out.println("create is : ");
@@ -208,7 +210,6 @@ public class TokenPanel extends JPanel implements Observer{
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D _g = (Graphics2D) g;
-
 		if(!clickedPieceRotations.isEmpty()) {
 			if(animateCreation) {
 				applyAnimation(_g);
