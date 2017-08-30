@@ -621,16 +621,49 @@ public class SwordAndShieldGame {
 		BoardPiece two = p.getTwo();
 		Player play = p.getPlayer();
 		if(two!=null) { // if two doesn't equal null, then the player ins't involved
-			if (one.getSouth() == 1 && two.getNorth() == 2) { // sword - shield
+			if (one.getSouth() == 1 && two.getNorth() == 2 && p.getDir().equals("vert")) { // sword - shield
 				return "up";
-			} else if (one.getSouth() == 2 && two.getNorth() == 1) { // shield - sword
+			} else if (one.getSouth() == 2 && two.getNorth() == 1 && p.getDir().equals("vert")) { // shield - sword
 				return "down";
-			} else {
+			} else if (one.getEast() == 1 && two.getWest() == 2 && p.getDir().equals("hori")) { // sword - shield
+				return "left";
+			}else if (one.getEast() == 2 && two.getWest() == 1 && p.getDir().equals("hori")) { // shield - sword
+				return "right";
+			}else {
 				System.out.println("Invalid Pair");
 			}
 		}
 		return "error";
 	}
+
+	public int horizontalReactionAnimation(Player player, Pair p) {
+		BoardPiece one = p.getOne();
+		BoardPiece two = p.getTwo();
+		if (one.getEast() == 1 && two.getWest() == 2) { // sword - shield
+			return tryPushLeftAnimation(two.getName());
+		}else if (one.getEast() == 2 && two.getWest() == 1) {// shield - sword
+			return tryPushRightAnimation(one.getName());
+		}
+		return -2;
+	}
+
+	public int tryPushRightAnimation(String pusher) {
+		int c = board.getX(pusher);
+		int r = board.getY(pusher);
+		int count = 0;
+		if (c + 1 > 9) {
+			return -1;
+		} else {
+			for (int i = c + 1, j = 0; i < board.getBoard().length; i++, j++) { // calculate the number of adjacent tiles to the tile being pushed
+				if (board.getBoard()[r][i] instanceof BoardPiece && count == j) {
+					count++;
+				}
+			}
+			return count;
+		}
+	}
+
+
 
 	public int verticalReactionAnimation(Player player, Pair p) {
 		// Five possible reactions, sword - sword, sword - nothing, nothing - sword, shield - sword, sword - shield
@@ -648,6 +681,24 @@ public class SwordAndShieldGame {
 			}
 		}
 		return -2;
+	}
+
+	public int tryPushLeftAnimation(String pusher) {
+		int c = board.getX(pusher);
+		int r = board.getY(pusher);
+		int count = 0;
+		// if its less then 0 than set it to null - going of the board
+		if (c - 1 < 0) {
+			return -1;
+		} else {
+			//calculate number of adjacent tiles
+			for (int i = c - 1, j = 0; i >= 0; i--, j++) {
+				if (board.getBoard()[r][i] instanceof BoardPiece && count == j) { // calculate the number of adjacent tiles to the tile thats being pushed
+					count++;
+				}
+			}
+			return count;
+		}
 	}
 
 	public int tryPushDownAnimation(String pusher) {
