@@ -20,7 +20,6 @@ public class BoardPiece implements Token {
 	boolean needToAnimate = false;
 	int destX, destY;
 	int xLoc, yLoc;
-	int flyingX, flyingY;
 	Color color;
 
 	// 0 for nothing, 1 for sword, 2 for shield

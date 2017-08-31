@@ -19,6 +19,7 @@ import java.util.Observer;
 import javax.swing.JPanel;
 
 public class TokenPanel extends JPanel implements Observer{
+	private static final Color TOKEN_SQUARE = new Color(179, 218, 255);
 	public int WIDTH = 60;
 	private int HEIGHT = 60;
 	private static final int GAP = 8;
@@ -50,6 +51,9 @@ public class TokenPanel extends JPanel implements Observer{
 		this.tokens = player.getTokens();
 		this.run = run;
 		this.setMinimumSize(new Dimension(100,220));
+		
+		
+		
 		this.addMouseListener(new MouseListener() {
 			@Override
 			public void mouseReleased(MouseEvent e) {}
@@ -84,17 +88,14 @@ public class TokenPanel extends JPanel implements Observer{
 	}
 
 	public void createToken() {
-		game.createToken(player, create);         //<-------------Creates token
+		game.createToken(player, create);
 		clickedPiece = null;
 		if(game.getBoard().checkForReaction()) {
 			run.setBoardReactionsTrue();
-			//run.pass.setEnabled(false);
 			run.buttonPanel.pass.setEnabled(false);
 		}else {
 			run.setBoardReactionsFalse();
-			//run.pass.setEnabled(true);
 			run.buttonPanel.pass.setEnabled(true);
-
 		}
 		if(pieceToPlay!=null) {
 			System.out.println("create is : ");
@@ -110,34 +111,16 @@ public class TokenPanel extends JPanel implements Observer{
 				String letter = pieceToPlay.getName();
 				int rotation = i*90;
 				create = "create " + letter + " " + rotation;
-				System.out.println(pieceToPlay.toString());
 				clickedPieceRotations.clear();
-				pieceToPlay.flyingX = 1 * WIDTH;
 				toFlyRot = rotation;
-				System.out.println("flying x is " + pieceToPlay.flyingX );
 				setPieceToFly(pieceToPlay);
 				timeToFly = true;
-				System.out.println("set to true");
-			/*	game.createToken(player, create);         //<-------------Creates token
-				clickedPiece = null;
-				if(game.getBoard().checkForReaction()) {
-					run.setBoardReactionsTrue();
-				}else {
-					run.setBoardReactionsFalse();
-				}*/
 				break;
 			}
 			x += GAP;
 			x += WIDTH;
 		}
 		x = GAP;
-
-
-		/*if(pieceToPlay!=null) {
-			System.out.println("create is : ");
-			System.out.println(create);
-			create = "";
-		}*/
 	}
 
 	public void setPieceToFly(BoardPiece bp) {
@@ -232,7 +215,7 @@ public class TokenPanel extends JPanel implements Observer{
 
 	public void applyAnimation(Graphics2D g) {
 		for(int i = 0; i < clickedPieceRotations.size(); i++) {
-			g.setColor(new Color(0,0,0,alpha));
+			g.setColor(new Color(179, 218, 255,alpha));
 			g.fillRect(x, y, WIDTH, WIDTH);
 			if (player.getName().equals("yellow")) {
 				currentPlayerColor = new Color(255,255,0,alpha);
@@ -260,16 +243,14 @@ public class TokenPanel extends JPanel implements Observer{
 
 
 	public void drawBoard(Graphics2D g) {
-
 		WIDTH = Math.min(getWidth(), getHeight())/7 - Math.min(getWidth(), getHeight())/60;
 		HEIGHT = Math.min(getWidth(), getHeight())/7 - Math.min(getWidth(), getHeight())/60;
-
 		if (player.getName().equals("yellow")) {}
 		if (player.getName().equals("green")) {}
 		for (int row = 0; row < tokens.length; row++) {
 			for (int col = 0; col < tokens[0].length; col++) {
 				if (tokens[row][col] instanceof BoardPiece) {
-					g.setColor(Color.BLACK);
+					g.setColor(TOKEN_SQUARE);
 					g.fillRect(x, y, WIDTH, WIDTH);
 					if (player.getName().equals("yellow")) {
 						g.setColor(Color.YELLOW);

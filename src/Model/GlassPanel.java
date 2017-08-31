@@ -5,9 +5,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Toolkit;
-
-import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 
 public class GlassPanel extends JPanel {
@@ -22,9 +19,8 @@ public class GlassPanel extends JPanel {
 	private int HEIGHT = 60;
 	private int destinationX;
 	private int destinationY;
-	private int greenDestination;
-	int x, y;
-	int drawX, drawY;
+	private int x, y;
+	private int drawX, drawY;
 	boolean doOnce = false;
 	private static final int DIVIDER = 10;
 
@@ -71,8 +67,8 @@ public class GlassPanel extends JPanel {
 				//if (!(drawY >= destinationY) || !(drawX <= destinationX)) {
 				//	animateYellow((Graphics2D) g);
 				//} else {
-				//	tokenPanelY.timeToFly = false;
-				//	doOnce = false;
+					tokenPanelY.timeToFly = false;
+					doOnce = false;
 					tokenPanelY.createToken();
 				//}
 			}

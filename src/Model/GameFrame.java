@@ -37,7 +37,7 @@ public class GameFrame extends JFrame implements Observer {
 	public boolean disableBoard = false;
 	public BoardPiece creationPiece = null;
 	public boolean deadOnce = false;
-	Player currentPlayer;
+	public Player currentPlayer;
 	JLayeredPane layer = new JLayeredPane();
 	int turn = 1;
 	GlassPanel glassPanel;
