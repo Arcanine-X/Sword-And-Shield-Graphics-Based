@@ -838,7 +838,6 @@ public class BoardPanel extends JPanel {
 		super.paintComponent(g);
 		Graphics2D _g = (Graphics2D) g;
 		drawBoard(_g);
-		displayInfo(_g);
 
 		if(game.getBoard().getUndoStack().size() == 1) {
 			chosenToken = null;
@@ -846,22 +845,15 @@ public class BoardPanel extends JPanel {
 		if(reactions) {
 			drawReactions(_g);
 		}
-
 		if(SWEDisappear) {
 			reactionDisappearSVE(_g);
 		}
-
-		if(pairDisappear) {
-
-		}
-
 		if(reactionDisappear!=null) {
 			reactionDisappear(_g);
 		}
 		else if(activateAnimation) {
 			reactionHope(_g, aList);
 		}
-
 		if(reactionMoveAnimation) {
 			reactionHope(_g, reactionMoves);
 		}
@@ -878,9 +870,7 @@ public class BoardPanel extends JPanel {
 			if(!reactions) {
 				drawBoard(_g);
 			}
-			//drawBoard(_g);
 			highlightSelectedToken(_g);
-			displayInfo(_g);
 		}
 	}
 
@@ -893,14 +883,11 @@ public class BoardPanel extends JPanel {
 				g.setColor(new Color(0,0,0,alpha));
 			}
 			g.fillRect(reactionDisappear.xLoc, reactionDisappear.yLoc, WIDTH, HEIGHT);
-			//g.fillRect(disappearCol*WIDTH, disapppearRow * HEIGHT, WIDTH, HEIGHT);
 			if(alpha < 250) {
 				alpha +=5;
 			}else {
 				alpha = 0;
 				reactionDisappear = null;
-
-				//return;
 			}
 		}
 	}
@@ -937,21 +924,11 @@ public class BoardPanel extends JPanel {
 				number = -1000;
 				if(game.getBoard().checkForReaction()) {
 					run.setBoardReactionsTrue();
-					//run.pass.setEnabled(false);
 					run.buttonPanel.pass.setEnabled(false);
 				}else {
 					run.setBoardReactionsFalse();
-					//run.pass.setEnabled(true);
 					run.buttonPanel.pass.setEnabled(true);
-
 				}
-				/*if(game.getBoard().checkForReaction()) {
-					run.pass.setEnabled(false);
-					run.setBoardReactionsTrue();
-				}else {
-					run.setBoardReactionsFalse();
-					run.pass.setEnabled(true);
-				}*/
 			}
 		}
 		else if(number == -11) {
@@ -977,21 +954,11 @@ public class BoardPanel extends JPanel {
 				number = -1000;
 				if(game.getBoard().checkForReaction()) {
 					run.setBoardReactionsTrue();
-					//run.pass.setEnabled(false);
 					run.buttonPanel.pass.setEnabled(false);
 				}else {
 					run.setBoardReactionsFalse();
-					//run.pass.setEnabled(true);
 					run.buttonPanel.pass.setEnabled(true);
-
 				}
-				/*if(game.getBoard().checkForReaction()) {
-					run.pass.setEnabled(false);
-					run.setBoardReactionsTrue();
-				}else {
-					run.setBoardReactionsFalse();
-					run.pass.setEnabled(true);
-				}*/
 			}
 		}else if (number == -12) {
 			if((getCol(reactionPair.getOne().xLoc) + getRow(reactionPair.getOne().yLoc)) % 2 != 1) {
@@ -1016,21 +983,11 @@ public class BoardPanel extends JPanel {
 				number = -1000;
 				if(game.getBoard().checkForReaction()) {
 					run.setBoardReactionsTrue();
-					//run.pass.setEnabled(false);
 					run.buttonPanel.pass.setEnabled(false);
 				}else {
 					run.setBoardReactionsFalse();
-					//run.pass.setEnabled(true);
 					run.buttonPanel.pass.setEnabled(true);
-
 				}
-				/*if(game.getBoard().checkForReaction()) {
-					run.pass.setEnabled(false);
-					run.setBoardReactionsTrue();
-				}else {
-					run.setBoardReactionsFalse();
-					run.pass.setEnabled(true);
-				}*/
 			}
 		}else if (horiNumber == -20) {
 			System.out.println("in -20");
@@ -1064,21 +1021,11 @@ public class BoardPanel extends JPanel {
 				horiNumber = -1000;
 				if(game.getBoard().checkForReaction()) {
 					run.setBoardReactionsTrue();
-					//run.pass.setEnabled(false);
 					run.buttonPanel.pass.setEnabled(false);
 				}else {
 					run.setBoardReactionsFalse();
-					//run.pass.setEnabled(true);
 					run.buttonPanel.pass.setEnabled(true);
-
 				}
-				/*if(game.getBoard().checkForReaction()) {
-					run.pass.setEnabled(false);
-					run.setBoardReactionsTrue();
-				}else {
-					run.setBoardReactionsFalse();
-					run.pass.setEnabled(true);
-				}*/
 			}
 		}else if (horiNumber == -21) {
 			if((getCol(reactionPair.getTwo().xLoc) + getRow(reactionPair.getTwo().yLoc)) % 2 != 1) {
@@ -1103,21 +1050,11 @@ public class BoardPanel extends JPanel {
 				horiNumber = -1000;
 				if(game.getBoard().checkForReaction()) {
 					run.setBoardReactionsTrue();
-					//run.pass.setEnabled(false);
 					run.buttonPanel.pass.setEnabled(false);
 				}else {
 					run.setBoardReactionsFalse();
-					//run.pass.setEnabled(true);
 					run.buttonPanel.pass.setEnabled(true);
-
 				}
-				/*if(game.getBoard().checkForReaction()) {
-					run.pass.setEnabled(false);
-					run.setBoardReactionsTrue();
-				}else {
-					run.setBoardReactionsFalse();
-					run.pass.setEnabled(true);
-				}*/
 			}
 		}else if (horiNumber == -22) {
 			if((getCol(reactionPair.getOne().xLoc) + getRow(reactionPair.getOne().yLoc)) % 2 != 1) {
@@ -1142,24 +1079,13 @@ public class BoardPanel extends JPanel {
 				horiNumber = -1000;
 				if(game.getBoard().checkForReaction()) {
 					run.setBoardReactionsTrue();
-					//run.pass.setEnabled(false);
 					run.buttonPanel.pass.setEnabled(false);
 				}else {
 					run.setBoardReactionsFalse();
-					//run.pass.setEnabled(true);
 					run.buttonPanel.pass.setEnabled(true);
-
 				}
-				/*if(game.getBoard().checkForReaction()) {
-					run.pass.setEnabled(false);
-					run.setBoardReactionsTrue();
-				}else {
-					run.setBoardReactionsFalse();
-					run.pass.setEnabled(true);
-				}*/
 			}
 		}
-
 	}
 
 	public void reactionDisappearPair(Graphics2D g){
@@ -1171,22 +1097,14 @@ public class BoardPanel extends JPanel {
 				g.setColor(new Color(0,0,0,alpha));
 			}
 			g.fillRect(reactionDisappear.xLoc, reactionDisappear.yLoc, WIDTH, HEIGHT);
-			//g.fillRect(disappearCol*WIDTH, disapppearRow * HEIGHT, WIDTH, HEIGHT);
 			if(alpha < 250) {
 				alpha +=5;
 			}else {
 				alpha = 0;
 				reactionDisappear = null;
-				//return;
 			}
 		}
 	}
-
-
-
-
-
-
 
 
 	public void drawReactions(Graphics2D g) {
@@ -1194,7 +1112,6 @@ public class BoardPanel extends JPanel {
 		List<Pair> reactions = game.getBoard().getReactions();
 		if(!reactions.isEmpty()) {
 			run.buttonPanel.pass.setEnabled(false);
-			//run.pass.setEnabled(false);
 		}
 		for(Pair p : reactions) {
 			if(p.getOne() instanceof BoardPiece && p.getTwo() instanceof BoardPiece) { // Check for boardpiece reactions
@@ -1286,20 +1203,11 @@ public class BoardPanel extends JPanel {
 			}
 		}else if(!(mouseX > WIDTH * 2 && mouseX < WIDTH * 2 + WIDTH*6 && mouseY > HEIGHT * 2 && mouseY < HEIGHT * 2 + HEIGHT*6) && mouseX > 0 && mouseY > 0) {
 			game.rotateToken(run.currentPlayer, "rotate " + hugeToken.getName() + " " + 0);
-			/*if(game.getBoard().checkForReaction()) {
-				run.pass.setEnabled(false);
-				run.setBoardReactionsTrue();
-			}else {
-				run.setBoardReactionsFalse();
-				run.pass.setEnabled(true);
-			}*/
 			if(game.getBoard().checkForReaction()) {
 				run.setBoardReactionsTrue();
-				//run.pass.setEnabled(false);
 				run.buttonPanel.pass.setEnabled(false);
 			}else {
 				run.setBoardReactionsFalse();
-				//run.pass.setEnabled(true);
 				run.buttonPanel.pass.setEnabled(true);
 
 			}
@@ -1339,7 +1247,6 @@ public class BoardPanel extends JPanel {
 
 				disappearPiece = (BoardPiece) board[disapppearRow][disappearCol];
 				disappearSkip = true;
-				//https://www.youtube.com/watch?v=QVrxiJyLTqU
 				playDisappearSound();
 				applyHoudiniEffect(g, disappearPiece);
 			}else {
@@ -1449,28 +1356,11 @@ public class BoardPanel extends JPanel {
 				}
 				if(game.getBoard().checkForReaction()) {
 					run.setBoardReactionsTrue();
-					//run.pass.setEnabled(false);
 					run.buttonPanel.pass.setEnabled(false);
 				}else {
 					run.setBoardReactionsFalse();
-					//run.pass.setEnabled(true);
 					run.buttonPanel.pass.setEnabled(true);
-
 				}
-				/*if(game.getBoard().checkForReaction()) {
-					run.pass.setEnabled(false);
-					run.setBoardReactionsTrue();
-				}else {
-					run.setBoardReactionsFalse();
-					run.pass.setEnabled(true);
-				}*/
-
-				/*if(game.getBoard().checkForReaction()) {
-					run.setBoardReactionsTrue();
-				}else {
-					run.setBoardReactionsFalse();
-				}*/
-
 			}
 		}
 	}
@@ -1827,26 +1717,11 @@ public class BoardPanel extends JPanel {
 					game.moveToken(run.currentPlayer, "move " + letter + " down");
 					if(game.getBoard().checkForReaction()) {
 						run.setBoardReactionsTrue();
-						//run.pass.setEnabled(false);
 						run.buttonPanel.pass.setEnabled(false);
 					}else {
 						run.setBoardReactionsFalse();
-						//run.pass.setEnabled(true);
 						run.buttonPanel.pass.setEnabled(true);
-
 					}
-					/*if(game.getBoard().checkForReaction()) {
-						run.pass.setEnabled(false);
-						run.setBoardReactionsTrue();
-					}else {
-						run.setBoardReactionsFalse();
-						run.pass.setEnabled(true);
-					}*/
-					/*if(game.getBoard().checkForReaction()) {
-						run.setBoardReactionsTrue();
-					}else {
-						run.setBoardReactionsFalse();
-					}*/
 				}
 				chosenToken = null;
 			}
@@ -1886,26 +1761,11 @@ public class BoardPanel extends JPanel {
 					game.moveToken(run.currentPlayer, "move " + letter + " up");
 					if(game.getBoard().checkForReaction()) {
 						run.setBoardReactionsTrue();
-						//run.pass.setEnabled(false);
 						run.buttonPanel.pass.setEnabled(false);
 					}else {
 						run.setBoardReactionsFalse();
-						//run.pass.setEnabled(true);
 						run.buttonPanel.pass.setEnabled(true);
-
 					}
-					/*if(game.getBoard().checkForReaction()) {
-						run.pass.setEnabled(false);
-						run.setBoardReactionsTrue();
-					}else {
-						run.setBoardReactionsFalse();
-						run.pass.setEnabled(true);
-					}*/
-					/*if(game.getBoard().checkForReaction()) {
-						run.setBoardReactionsTrue();
-					}else {
-						run.setBoardReactionsFalse();
-					}*/
 				}
 				chosenToken = null;
 			}
@@ -1927,17 +1787,6 @@ public class BoardPanel extends JPanel {
 	}
 
 
-	public void displayInfo(Graphics2D g) {
-		g.setColor(Color.BLACK);
-		g.setFont(new Font("Serif", Font.BOLD, 12));
-		g.drawString("It is " + run.currentPlayer.getName() + "'s turn", 50, 620);
-		if (game.getBoard().getUndoStack().size() > 1) {
-			g.drawString("Rotate, Move, Undo or Pass ", 50, 640);
-		} else {
-			g.drawString("Create a token or Pass", 50, 640);
-		}
-	}
-
 	public void drawBoard(Graphics2D g) {
 		WIDTH = Math.min(getWidth(), getHeight())/10 - Math.min(getWidth(), getHeight())/60;
 		HEIGHT = Math.min(getWidth(), getHeight())/10 - Math.min(getWidth(), getHeight())/60;
@@ -1953,19 +1802,31 @@ public class BoardPanel extends JPanel {
 							g.fillRect(col * WIDTH, row * HEIGHT, WIDTH, HEIGHT);
 							continue;
 						}
-						g.setColor(new Color(95,170,163));
+						BoardPiece temp = (BoardPiece) board[row][col];
+						if(temp.needToAnimate) {
+							g.setColor(new Color(144, 238, 144));
+							g.fillRect(col * WIDTH, row * HEIGHT, WIDTH, HEIGHT);
+							continue;
+						}
+						g.setColor(TOKEN_SQUARE);
 						g.fillRect(col * WIDTH, row * HEIGHT, WIDTH, WIDTH);
-						g.setColor(Color.GREEN);
+						if(temp.getCol().equals("yellow")) {
+							g.setColor(Color.YELLOW);
+						}
+						else {
+							g.setColor(Color.GREEN);;
+						}
 						g.fillOval(col * WIDTH, row * HEIGHT, WIDTH, HEIGHT);
 						g.setColor(Color.red);
 						g.setStroke(new BasicStroke(6));
-						BoardPiece temp = (BoardPiece) board[row][col];
+
 						temp.xLoc = col*WIDTH;
 						temp.yLoc = row*HEIGHT;
 						drawToken(g, (BoardPiece) board[row][col], col * WIDTH, row * HEIGHT);
 						g.setStroke(new BasicStroke(0));
+						drawLetter(g, temp, row, col);
 					} else {
-						g.setColor(new Color(144, 238, 144));
+						g.setColor(YELLOW_CREATION);
 						g.fillRect(col * WIDTH, row * HEIGHT, WIDTH, HEIGHT);
 					}
 				} else if (row == 7 && col == 7) {
@@ -1975,17 +1836,31 @@ public class BoardPanel extends JPanel {
 							g.fillRect(col * WIDTH, row * HEIGHT, WIDTH, HEIGHT);
 							continue;
 						}
+
+						BoardPiece temp = (BoardPiece) board[row][col];
+
+						if(temp.needToAnimate) {
+							g.setColor(new Color(255, 250, 205));
+							g.fillRect(col * WIDTH, row * HEIGHT, WIDTH, HEIGHT);
+							continue;
+						}
 						g.setColor(TOKEN_SQUARE);
 						g.fillRect(col * WIDTH, row * HEIGHT, WIDTH, WIDTH);
-						g.setColor(Color.YELLOW);
+						if(temp.getCol().equals("yellow")) {
+							g.setColor(Color.YELLOW);
+						}
+						else {
+							g.setColor(Color.GREEN);;
+						}
 						g.fillOval(col * WIDTH, row * HEIGHT, WIDTH, HEIGHT);
 						g.setColor(Color.red);
 						g.setStroke(new BasicStroke(6));
-						BoardPiece temp = (BoardPiece) board[row][col];
+
 						temp.xLoc = col*WIDTH;
 						temp.yLoc = row*HEIGHT;
 						drawToken(g, (BoardPiece) board[row][col], col * WIDTH, row * HEIGHT);
 						g.setStroke(new BasicStroke(0));
+						drawLetter(g, temp, row, col);
 					} else {
 						g.setColor(YELLOW_CREATION);
 						g.fillRect(col * WIDTH, row * HEIGHT, WIDTH, HEIGHT);
@@ -2022,43 +1897,7 @@ public class BoardPanel extends JPanel {
 					g.setStroke(new BasicStroke(6));
 					drawToken(g, (BoardPiece) board[row][col], col * WIDTH, row * HEIGHT);
 					g.setStroke(new BasicStroke(0));
-					g.setFont(new Font("Serif", Font.BOLD, 16));
-					if (game.getYellow().getMovesSoFar().contains(temp.getName())) {
-						g.setColor(Color.WHITE);
-						g.drawString("M", col * WIDTH - 1, row * HEIGHT + 1 + HEIGHT/4);
-						g.drawString("M", col * WIDTH - 1, row * HEIGHT - 1 + HEIGHT/4);
-						g.drawString("M", col * WIDTH + 1, row * HEIGHT + 1 + HEIGHT/4);
-						g.drawString("M", col * WIDTH + 1, row * HEIGHT - 1 + HEIGHT/4);
-						g.setColor(Color.BLACK);
-						g.drawString("M", col * WIDTH, row * HEIGHT + HEIGHT/4);
-					}
-					else if (game.getYellow().getEveryMovement().contains(temp)) {
-						g.setColor(Color.WHITE);
-						g.drawString("R", col * WIDTH - 1, row * HEIGHT + 1 + HEIGHT/4);
-						g.drawString("R", col * WIDTH - 1, row * HEIGHT - 1 + HEIGHT/4);
-						g.drawString("R", col * WIDTH + 1, row * HEIGHT + 1 + HEIGHT/4);
-						g.drawString("R", col * WIDTH + 1, row * HEIGHT - 1 + HEIGHT/4);
-						g.setColor(Color.BLACK);
-						g.drawString("R", col * WIDTH, row * HEIGHT + HEIGHT/4);
-					}
-					if (game.getGreen().getMovesSoFar().contains(temp.getName())) {
-						g.setColor(Color.WHITE);
-						g.drawString("M", col * WIDTH - 1, row * HEIGHT + 1 + HEIGHT/4);
-						g.drawString("M", col * WIDTH - 1, row * HEIGHT - 1 + HEIGHT/4);
-						g.drawString("M", col * WIDTH + 1, row * HEIGHT + 1 + HEIGHT/4);
-						g.drawString("M", col * WIDTH + 1, row * HEIGHT - 1 + HEIGHT/4);
-						g.setColor(Color.BLACK);
-						g.drawString("M", col * WIDTH, row * HEIGHT + HEIGHT/4);
-					}
-					else if (game.getGreen().getEveryMovement().contains(temp)) {
-						g.setColor(Color.WHITE);
-						g.drawString("R", col * WIDTH - 1, row * HEIGHT + 1 + HEIGHT/4);
-						g.drawString("R", col * WIDTH - 1, row * HEIGHT - 1 + HEIGHT/4);
-						g.drawString("R", col * WIDTH + 1, row * HEIGHT + 1 + HEIGHT/4);
-						g.drawString("R", col * WIDTH + 1, row * HEIGHT - 1 + HEIGHT/4);
-						g.setColor(Color.BLACK);
-						g.drawString("R", col * WIDTH, row * HEIGHT + HEIGHT/4);
-					}
+					drawLetter(g, temp, row, col);
 				}
 				else if(board[row][col] == null && row == 8 && col == 8) {
 					g.setColor(Color.BLACK);
@@ -2102,15 +1941,46 @@ public class BoardPanel extends JPanel {
 		}
 	}
 
-	/*
-	 * g.setColor(Color.red);
-g.drawString("Outline", ShiftWest(x, 1), ShiftNorth(y, 1));
-g.drawString("Outline", ShiftWest(x, 1), ShiftSouth(y, 1));
-g.drawString("Outline", ShiftEast(x, 1), ShiftNorth(y, 1));
-g.drawString("Outline", ShiftEast(x, 1), ShiftSouth(y, 1));
-g.setColor(Color.yellow);
-g.drawString("Outline", x, y);
-	 */
+	public void drawLetter(Graphics2D g, BoardPiece temp, int row, int col) {
+		g.setFont(new Font("Serif", Font.BOLD, 16));
+		if (game.getYellow().getMovesSoFar().contains(temp.getName())) {
+			g.setColor(Color.WHITE);
+			g.drawString("M", col * WIDTH - 1, row * HEIGHT + 1 + HEIGHT/4);
+			g.drawString("M", col * WIDTH - 1, row * HEIGHT - 1 + HEIGHT/4);
+			g.drawString("M", col * WIDTH + 1, row * HEIGHT + 1 + HEIGHT/4);
+			g.drawString("M", col * WIDTH + 1, row * HEIGHT - 1 + HEIGHT/4);
+			g.setColor(Color.BLACK);
+			g.drawString("M", col * WIDTH, row * HEIGHT + HEIGHT/4);
+		}
+		else if (game.getYellow().getEveryMovement().contains(temp)) {
+			g.setColor(Color.WHITE);
+			g.drawString("R", col * WIDTH - 1, row * HEIGHT + 1 + HEIGHT/4);
+			g.drawString("R", col * WIDTH - 1, row * HEIGHT - 1 + HEIGHT/4);
+			g.drawString("R", col * WIDTH + 1, row * HEIGHT + 1 + HEIGHT/4);
+			g.drawString("R", col * WIDTH + 1, row * HEIGHT - 1 + HEIGHT/4);
+			g.setColor(Color.BLACK);
+			g.drawString("R", col * WIDTH, row * HEIGHT + HEIGHT/4);
+		}
+		if (game.getGreen().getMovesSoFar().contains(temp.getName())) {
+			g.setColor(Color.WHITE);
+			g.drawString("M", col * WIDTH - 1, row * HEIGHT + 1 + HEIGHT/4);
+			g.drawString("M", col * WIDTH - 1, row * HEIGHT - 1 + HEIGHT/4);
+			g.drawString("M", col * WIDTH + 1, row * HEIGHT + 1 + HEIGHT/4);
+			g.drawString("M", col * WIDTH + 1, row * HEIGHT - 1 + HEIGHT/4);
+			g.setColor(Color.BLACK);
+			g.drawString("M", col * WIDTH, row * HEIGHT + HEIGHT/4);
+		}
+		else if (game.getGreen().getEveryMovement().contains(temp)) {
+			g.setColor(Color.WHITE);
+			g.drawString("R", col * WIDTH - 1, row * HEIGHT + 1 + HEIGHT/4);
+			g.drawString("R", col * WIDTH - 1, row * HEIGHT - 1 + HEIGHT/4);
+			g.drawString("R", col * WIDTH + 1, row * HEIGHT + 1 + HEIGHT/4);
+			g.drawString("R", col * WIDTH + 1, row * HEIGHT - 1 + HEIGHT/4);
+			g.setColor(Color.BLACK);
+			g.drawString("R", col * WIDTH, row * HEIGHT + HEIGHT/4);
+		}
+	}
+
 
 	private void drawToken(Graphics2D g, BoardPiece piece, int x, int y) {
 		if (piece.getNorth() == 1) {
@@ -2139,10 +2009,6 @@ g.drawString("Outline", x, y);
 	}
 
 	private void drawHugeTokenParts(Graphics2D g, BoardPiece piece, int x, int y) {
-
-		//g.fillOval(WIDTH * 2, HEIGHT * 2, WIDTH*6, HEIGHT*6);
-
-
 		if (piece.getNorth() == 1) {
 			g.drawLine(x + WIDTH*6 / 2, y + STROKE, x + WIDTH*6 / 2, y + HEIGHT*6 / 2);
 		} else if (piece.getNorth() == 2) {

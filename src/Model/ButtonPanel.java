@@ -1,5 +1,10 @@
 package Model;
 
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -16,6 +21,7 @@ public class ButtonPanel extends JPanel{
 	public ButtonPanel(SwordAndShieldGame game, GameFrame run) {
 		this.game = game;
 		this.run = run;
+		this.setMinimumSize(new Dimension((int)run.getPreferredSize().getWidth(), 60));
 		this.add(undo);
 		this.add(surrender);
 		this.add(pass);
@@ -69,5 +75,29 @@ public class ButtonPanel extends JPanel{
 				System.exit(1);
 			}
 		});
+	}
+
+	public void displayInfo(Graphics2D g) {
+		g.setColor(Color.BLACK);
+		g.setFont(new Font("Serif", Font.BOLD, 16));
+		g.drawString("It is " + run.currentPlayer.getName() + "'s turn :", (run.returnWidth()/2) - 180, 50);
+		if(run.boardPanel.reactions) {
+			g.setColor(Color.red);
+			g.drawString("Reactions! You cannot continue untill you complete all the reactions", (run.returnWidth()/2), 50);
+		}
+		else if (game.getBoard().getUndoStack().size() > 1) {
+			g.drawString("Rotate, Move, Undo or Pass ", (run.returnWidth()/2), 50);
+		}
+		else {
+			g.drawString("Create a token or Pass", (run.returnWidth()/2), 50);
+		}
+	}
+
+	 @Override
+	protected void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		displayInfo((Graphics2D)g);
+
+
 	}
 }

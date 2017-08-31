@@ -116,6 +116,12 @@ public class SwordAndShieldGame {
 		board.getBoard()[1][2] = two;
 		BoardPiece three = yellow.find("c");
 		board.getBoard()[2][2] = three;*/
+		
+		BoardPiece one = green.find("C");
+		board.getBoard()[7][6] = one;
+		
+		
+		
 	}
 
 	/**
