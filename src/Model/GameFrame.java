@@ -17,6 +17,8 @@ import javax.swing.JSplitPane;
 import javax.swing.Timer;
 import javax.swing.WindowConstants;
 
+import Controller.TokenController;
+
 /**
  * This class main game is the main jFrame and holds all the components of the game. It consists of the various panels in which other game
  * logic is contained.
@@ -41,6 +43,7 @@ public class GameFrame extends JFrame implements Observer {
 	JLayeredPane layer = new JLayeredPane();
 	int turn = 1;
 	GlassPanel glassPanel;
+	TokenController tokenController;
 	public GameFrame() {
 		game = new SwordAndShieldGame();
 		this.setTitle("~~Sword And Shiled Game~~");

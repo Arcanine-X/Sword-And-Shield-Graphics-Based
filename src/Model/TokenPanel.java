@@ -18,6 +18,8 @@ import java.util.Observer;
 
 import javax.swing.JPanel;
 
+import Controller.TokenController;
+
 public class TokenPanel extends JPanel implements Observer{
 	private static final Color TOKEN_SQUARE = new Color(179, 218, 255);
 	public int WIDTH = 60;
@@ -44,17 +46,20 @@ public class TokenPanel extends JPanel implements Observer{
 	BoardPiece toFly;
 	int toFlyRot;
 	public boolean timeToFly = false;
+	TokenController tokenController;
+
 
 	public TokenPanel(SwordAndShieldGame game, Player player, GameFrame run) {
 		this.game = game;
 		this.player = player;
 		this.tokens = player.getTokens();
 		this.run = run;
+		tokenController = new TokenController(game, run, this);
+		this.addMouseListener(tokenController);
 		this.setMinimumSize(new Dimension(100,220));
-		
-		
-		
-		this.addMouseListener(new MouseListener() {
+
+
+		/*this.addMouseListener(new MouseListener() {
 			@Override
 			public void mouseReleased(MouseEvent e) {}
 			@Override
@@ -83,7 +88,7 @@ public class TokenPanel extends JPanel implements Observer{
 					}
 				}
 			}
-		});
+		});*/
 
 	}
 
@@ -197,8 +202,8 @@ public class TokenPanel extends JPanel implements Observer{
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D _g = (Graphics2D) g;
-		GradientPaint blackToGray = new GradientPaint(0, 0, Color.WHITE,
-                0, this.getHeight(), Color.BLACK);
+		GradientPaint blackToGray = new GradientPaint(0, 0, Color.BLACK,
+                0, this.getHeight(), TOKEN_SQUARE);
      _g.setPaint(blackToGray);
      _g.fillRect(0, 0, this.getWidth(), this.getHeight());
 		if(!clickedPieceRotations.isEmpty()) {
@@ -313,4 +318,30 @@ public class TokenPanel extends JPanel implements Observer{
 	public void update(Observable o, Object arg) {
 		repaint();
 	}
+
+	public int getMouseX() {
+		return mouseX;
+	}
+
+	public void setMouseX(int mouseX) {
+		this.mouseX = mouseX;
+	}
+
+	public int getMouseY() {
+		return mouseY;
+	}
+
+	public void setMouseY(int mouseY) {
+		this.mouseY = mouseY;
+	}
+
+	public BoardPiece getClickedPiece() {
+		return clickedPiece;
+	}
+
+	public void setClickedPiece(BoardPiece clickedPiece) {
+		this.clickedPiece = clickedPiece;
+	}
+
+
 }
