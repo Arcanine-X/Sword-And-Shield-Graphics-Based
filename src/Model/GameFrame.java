@@ -28,8 +28,8 @@ import Controller.TokenController;
 public class GameFrame extends JFrame implements Observer {
 	SwordAndShieldGame game;
 	ButtonPanel buttonPanel;
-	BoardPanel boardPanel;
-	TokenPanel tokenPanelY;
+	public BoardPanel boardPanel;
+	public TokenPanel tokenPanelY;
 	TokenPanel tokenPanelG;
 	GraveyardPanel graveyardY;
 	GraveyardPanel graveyardG;

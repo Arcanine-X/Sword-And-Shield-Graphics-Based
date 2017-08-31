@@ -22,6 +22,10 @@ public class BoardController implements KeyListener, MouseListener{
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
+		if(boardPanel.moveAnimation || boardPanel.rotationAnimation || boardPanel.SWEDisappear || boardPanel.disappearAnimation) {
+			return;
+		}
+		
 		boardPanel.mouseX = e.getX();
 		boardPanel.mouseY = e.getY();
 		if(!boardPanel.reactions) {

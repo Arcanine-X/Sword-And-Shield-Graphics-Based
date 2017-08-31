@@ -121,10 +121,10 @@ public class SwordAndShieldGame {
 		//board.getBoard()[7][6] = one;
 
 		//Wrong animation test
-		BoardPiece one = yellow.find("c");
-		board.getBoard()[8][6] = one;
-		BoardPiece two = green.find("X");
-		board.getBoard()[9][6] = two;
+		//BoardPiece one = yellow.find("c");
+		//board.getBoard()[8][6] = one;
+		//BoardPiece two = green.find("X");
+		//board.getBoard()[9][6] = two;
 
 
 

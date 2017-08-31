@@ -45,7 +45,7 @@ public class BoardPanel extends JPanel {
 	private boolean skip = false;
 	private List<BoardPiece> everyBpToAnimate = new ArrayList<BoardPiece>();
 	private String letter = "";
-	private boolean disappearAnimation = false;
+	public boolean disappearAnimation = false;
 	private boolean disappearSkip = false;
 	private int disappearCol, disapppearRow;
 	private BoardPiece disappearPiece;
@@ -79,6 +79,8 @@ public class BoardPanel extends JPanel {
 	int number;
 	int horiNumber;
 	BoardController boardController;
+	ReactionAnimation reactionAnimation;
+
 	public BoardPanel(SwordAndShieldGame game, GameFrame run) {
 		this.game = game;
 		this.run = run;
@@ -87,6 +89,7 @@ public class BoardPanel extends JPanel {
 		this.addKeyListener(boardController);
 		board = game.getBoard().getBoard();
 		this.setMinimumSize(new Dimension(200,200));
+		reactionAnimation = new ReactionAnimation(game, run, this);
 	}
 
 	public Pair findPair(BoardPiece one, BoardPiece two, Player player) {
@@ -108,7 +111,6 @@ public class BoardPanel extends JPanel {
 	}
 
 	public void findChosenReaction() {
-
 		for(Reaction r : reactionOptions) {
 			Pair p;
 			if(r.player!=null) {
@@ -126,10 +128,12 @@ public class BoardPanel extends JPanel {
 	public void doReaction(Pair p) {
 		if(p.getDir().equals("hori")) {
 			reactionPiece = p;
+			//reactionAnimation.tryReactionAnimation(p);
 			tryReactionAnimation(p);
 		}
 		else {
 			reactionPiece = p;
+			//reactionAnimation.tryReactionAnimation(p);
 			tryReactionAnimation(p);
 		}
 		checkForWinner();
@@ -343,8 +347,6 @@ public class BoardPanel extends JPanel {
 				game.horizontalReaction(run.currentPlayer, p);
 			}
 		}
-
-
 	}
 
 
@@ -1192,7 +1194,7 @@ public class BoardPanel extends JPanel {
 
 				}
 				else {
-					
+
 					disappearCol = getCol(chosenX+ (piecesToAnimate*WIDTH));
 					disapppearRow = getRow(chosenY );
 				}

@@ -36,13 +36,13 @@ public class TokenPanel extends JPanel implements Observer{
 	private int mouseX;
 	private int mouseY;
 	SwordAndShieldGame game;
-	Player player;
-	BoardPiece clickedPiece = null;
+	public Player player;
+	public BoardPiece clickedPiece = null;
 	BoardPiece pieceToPlay;
 	GameFrame run;
 	boolean animateCreation = false;
 	List<BoardPiece> clickedPieceRotations = new ArrayList<BoardPiece>();
-	String create = "create";
+	public String create = "create";
 	private int alpha = 0;
 	Color currentPlayerColor;
 	int scaleToken;
@@ -65,22 +65,6 @@ public class TokenPanel extends JPanel implements Observer{
 		this.setMinimumSize(new Dimension(100,220));
 	}
 
-	/**
-	 * Helper method for loading image icons.
-	 *
-	 * @param filename
-	 * @return
-	 */
-	private static ImageIcon makeImageIcon(String filename) {
-		// using the URL means the image loads when stored
-		// in a jar or expanded into individual files.
-		java.net.URL imageURL = GameFrame.class.getResource(filename);
-		ImageIcon icon = null;
-		if (imageURL != null) {
-			icon = new ImageIcon(imageURL);
-		}
-		return icon;
-	}
 
 	public void createToken() {
 		game.createToken(player, create);
@@ -241,20 +225,19 @@ public class TokenPanel extends JPanel implements Observer{
 
 		WIDTH = Math.min(getWidth(), getHeight())/7 - Math.min(getWidth(), getHeight())/60;
 		HEIGHT = Math.min(getWidth(), getHeight())/7 - Math.min(getWidth(), getHeight())/60;
-		//BufferedImage img=new ImgUtils().scaleImage(WIDTH,HEIGHT,"token.png");
+		BufferedImage imgY =new ImgUtils().scaleImage(WIDTH,HEIGHT,"tokenY.png");
 
 		for (int row = 0; row < tokens.length; row++) {
 			for (int col = 0; col < tokens[0].length; col++) {
 				if (tokens[row][col] instanceof BoardPiece) {
 					g.setColor(TOKEN_SQUARE);
-
 					g.fillRect(x, y, WIDTH, WIDTH);
 					if (player.getName().equals("yellow")) {
 						g.setColor(Color.YELLOW);
 					} else {
 						g.setColor(Color.GREEN);
 					}
-					//g.drawImage(img,x,y, this);
+					//g.drawImage(imgY,x,y, this);
 					g.fillOval(x, y, WIDTH, HEIGHT);
 					g.setColor(Color.red);
 					g.setStroke(new BasicStroke(6));
