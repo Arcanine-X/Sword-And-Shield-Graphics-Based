@@ -21,7 +21,6 @@ public class TokenController implements MouseListener{
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		System.out.println("blaaaaaah");
 		tokenPanel.setMouseX(e.getX());
 		tokenPanel.setMouseY(e.getY());
 		if(game.getBoard().getUndoStack().size() == 1) {

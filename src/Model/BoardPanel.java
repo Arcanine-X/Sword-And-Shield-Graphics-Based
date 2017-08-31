@@ -20,25 +20,27 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.swing.JPanel;
 
+import Controller.BoardController;
+
 public class BoardPanel extends JPanel {
 	private static final Color TOKEN_SQUARE = new Color(179, 218, 255);
 	private static final Color YELLOW_CREATION = new Color(255, 250, 205);
 	public int WIDTH = 60;
 	public int HEIGHT = 60;
 	private static final int STROKE = 3;
-	private int mouseX;
-	private int mouseY;
+	public int mouseX;
+	public int mouseY;
 	private int chosenX;
 	private int chosenY;
 	private int moveY;
 	private int moveX;
 	private SwordAndShieldGame game;
-	private BoardPiece chosenToken;
+	public BoardPiece chosenToken;
 	private Token[][] board;
 	private GameFrame run;
-	private boolean moveAnimation = false;
-	private boolean rotationAnimation = false;
-	private String moveDir = "";
+	public boolean moveAnimation = false;
+	public boolean rotationAnimation = false;
+	public String moveDir = "";
 	private boolean skip = false;
 	private List<BoardPiece> everyBpToAnimate = new ArrayList<BoardPiece>();
 	private String letter = "";
@@ -49,7 +51,7 @@ public class BoardPanel extends JPanel {
 	private int alpha = 0;
 	private boolean singleMove = false;
 	int piecesToAnimate;
-	int mouseClicks;
+	public int mouseClicks;
 	int rotationCount = 0;
 	BoardPiece hugeToken;
 	public boolean reactionMoveAnimation = false;
@@ -75,16 +77,21 @@ public class BoardPanel extends JPanel {
 	Pair reactionPair;
 	int number;
 	int horiNumber;
+	BoardController boardController;
 	public BoardPanel(SwordAndShieldGame game, GameFrame run) {
 		this.game = game;
 		this.run = run;
+		boardController = new BoardController(game, run, this);
+		this.addMouseListener(boardController);
+		this.addKeyListener(boardController);
 		board = game.getBoard().getBoard();
 		this.setMinimumSize(new Dimension(200,200));
+		
+		
 
-		this.addMouseListener(new MouseListener() {
+		/*this.addMouseListener(new MouseListener() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				BoardPanel.this.repaint();
 			}
 			@Override
 			public void mousePressed(MouseEvent e) {
@@ -172,7 +179,7 @@ public class BoardPanel extends JPanel {
 				}
 				repaint();
 			}
-		});
+		});*/
 	}
 
 	public Pair findPair(BoardPiece one, BoardPiece two, Player player) {
@@ -1682,8 +1689,6 @@ public class BoardPanel extends JPanel {
 						run.setBoardReactionsFalse();
 						run.buttonPanel.pass.setEnabled(true);
 					}
-
-
 				}
 				chosenToken = null;
 			}
@@ -1742,7 +1747,6 @@ public class BoardPanel extends JPanel {
 			if(bp == null) {
 				continue;
 			}
-
 			g.setColor(TOKEN_SQUARE);
 			g.fillRect(moveX, bp.moveY, WIDTH, WIDTH);
 			if(bp.getCol().equals("yellow")) {
