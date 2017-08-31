@@ -1,6 +1,7 @@
 package Model;
 
 import java.awt.BasicStroke;
+import java.awt.Checkbox;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.security.auth.callback.ChoiceCallback;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.swing.JPanel;
@@ -125,19 +127,7 @@ public class BoardPanel extends JPanel {
 		}
 	}
 
-	public void doReaction(Pair p) {
-		if(p.getDir().equals("hori")) {
-			reactionPiece = p;
-			//reactionAnimation.tryReactionAnimation(p);
-			tryReactionAnimation(p);
-		}
-		else {
-			reactionPiece = p;
-			//reactionAnimation.tryReactionAnimation(p);
-			tryReactionAnimation(p);
-		}
-		checkForWinner();
-
+	public void checkForMoreReactions() {
 		if(game.getBoard().checkForReaction()) {
 			run.setBoardReactionsTrue();
 			run.buttonPanel.pass.setEnabled(false);
@@ -145,108 +135,181 @@ public class BoardPanel extends JPanel {
 			run.setBoardReactionsFalse();
 			run.buttonPanel.pass.setEnabled(true);
 		}
+	}
+
+
+	public void doReaction(Pair p) {
+		if(p.getDir().equals("hori") || p.getDir().equals("vert")) {
+			reactionPiece = p;
+			tryReactionAnimation(p);
+		}
+		checkForWinner();
+		checkForMoreReactions();
 		p = null;
 		chosenToken = null;
+	}
+
+	public void upReactionAnimation(Pair p, int howManyToAnimate) {
+		System.out.println("bloop " + howManyToAnimate);
+		if(howManyToAnimate == 0 || howManyToAnimate == -1 || howManyToAnimate == -2) {
+			game.verticalReaction(run.currentPlayer, p);
+		}else {
+			for(int i = howManyToAnimate; i >= 0; i --) {
+				int row = getRow(p.getTwo().yLoc - (i*HEIGHT));
+				int col = getCol(p.getTwo().xLoc);
+				BoardPiece bp = ((BoardPiece)game.getBoard().getBoard()[row][col]);
+				bp.destY = bp.yLoc - HEIGHT;
+				bp.moveY = bp.yLoc;
+				bp.moveX = bp.xLoc;
+				if(bp.equals(p.getTwo())) {
+					continue;
+				}
+				if((row!=0) && !(col == 0 && row == 2) && !(col==1 && row == 2)) {
+					bp.needToAnimate = true;
+					aList.add(bp);
+				}else {
+					reactionDisappear = bp;
+					playDisappearSound();
+				}
+				activateAnimation = true;
+			}
+		}
+	}
+
+	public void vertReactionSVE(Pair p) {
+		number = game.findTokenToAnimate(run.currentPlayer, p);
+		if(number == -10 || number == -12) {
+			playDisappearSound();
+			reactionPair = p;
+			SWEDisappear = true;
+		}else if(number == -11) {
+			reactionDisappear = p.getTwo();
+			playDisappearSound();
+			reactionPair = p;
+			SWEDisappear = true;
+		}else if(number == -13) {
+			playDisappearSound();
+			game.verticalReaction(run.currentPlayer, p);
+		}else if(number == -14) {
+			playDisappearSound();
+			game.verticalReaction(run.currentPlayer, p);
+		}else if(number == -15) {
+
+		}
+	}
+
+	public void downReactionAnimation(Pair p, int howManyToAnimate) {
+		if(howManyToAnimate == 0 || howManyToAnimate == -1 || howManyToAnimate == -2) {
+			game.verticalReaction(run.currentPlayer, p);
+		}else {
+			for(int i = 0; i <= howManyToAnimate; i ++) {
+				int row = getRow(p.getOne().yLoc + (i*HEIGHT));
+				int col = getCol(p.getOne().xLoc);
+				BoardPiece bp = ((BoardPiece)game.getBoard().getBoard()[row][col]);
+				bp.destY = bp.yLoc + HEIGHT;
+				bp.moveY = bp.yLoc;
+				bp.moveX = bp.xLoc;
+				if(bp.equals(p.getOne())) {
+					continue;
+				}
+				if((row!=9) && !(col == 8 && row == 7) && !(col==9 && row == 7)) {
+					bp.needToAnimate = true;
+					aList.add(bp);
+				}else {
+					reactionDisappear = bp;
+					playDisappearSound();
+				}
+				activateAnimation = true;
+			}
+		}
+	}
+
+	public void rightReactionAnimation(Pair p, int howManyToAnimate) {
+		if(howManyToAnimate == 0 || howManyToAnimate == -1 || howManyToAnimate == -2) {
+			game.horizontalReaction(run.currentPlayer, p);
+		}else {
+			for(int i = 0; i <= howManyToAnimate; i ++) {
+				int row = getRow(p.getOne().yLoc);
+				int col = getCol(p.getOne().xLoc + (i*WIDTH));
+				BoardPiece bp = ((BoardPiece)game.getBoard().getBoard()[row][col]);
+				bp.destY = bp.yLoc;
+				bp.moveY = bp.yLoc;
+				bp.moveX = bp.xLoc;
+				bp.destX = bp.xLoc + WIDTH;
+				if(bp.equals(p.getOne())) {
+					continue;
+				}
+				if((col!=9) && !(col == 7 && row == 8) && !(col==7 && row == 9)) {
+					bp.needToAnimate = true;
+					aList.add(bp);
+				}else {
+					reactionDisappear = bp;
+					playDisappearSound();
+				}
+				activateAnimation = true;
+			}
+		}
+	}
+
+	public void leftReactionAnimation(Pair p, int howManyToAnimate) {
+		if(howManyToAnimate == 0 || howManyToAnimate == -1 || howManyToAnimate == -2) {
+			game.horizontalReaction(run.currentPlayer, p);
+		}else {
+			for(int i = howManyToAnimate; i >= 0; i --) {
+				int row = getRow(p.getTwo().yLoc);
+				int col = getCol(p.getTwo().xLoc - (i*WIDTH));
+				BoardPiece bp = ((BoardPiece)game.getBoard().getBoard()[row][col]);
+				bp.destY = bp.yLoc;
+				bp.moveY = bp.yLoc;
+				bp.moveX = bp.xLoc;
+				bp.destX = bp.xLoc - WIDTH;
+				if(bp.equals(p.getTwo())) {
+					continue;
+				}
+				if((col!=0) && !(col == 2 && row == 0) && !(col==2 && row == 1)) {
+					bp.needToAnimate = true;
+					aList.add(bp);
+				}else {
+					reactionDisappear = bp;
+					playDisappearSound();
+				}
+				activateAnimation = true;
+			}
+		}
+	}
+
+	public void horiReactionSVE(Pair p) {
+		System.out.println("in hori sve");
+		horiNumber = game.findTokenToAnimateHori(run.currentPlayer, p);
+		if(horiNumber == -20 || horiNumber == -21 || horiNumber == -22) {
+			playDisappearSound();
+			reactionPair = p;
+			SWEDisappear = true;
+		}
+		else if(horiNumber == -23) {
+			playDisappearSound();
+			game.horizontalReaction(run.currentPlayer, p);
+		}else if(horiNumber == -24) {
+			playDisappearSound();
+			game.horizontalReaction(run.currentPlayer, p);
+		}
+	else if(horiNumber == -25) {
+		}
 	}
 
 	public void tryReactionAnimation(Pair p) {
 		System.out.println(p.getDir());
 		int howManyToAnimate;
 		if(p.getDir().equals("vert")) {
+			howManyToAnimate = game.verticalReactionAnimation(run.currentPlayer, p);
 			animationDir = game.getDirectionOfAnimation(run.currentPlayer, p);
 			if(game.getDirectionOfAnimation(run.currentPlayer, p).equals("up")) {
-				howManyToAnimate = game.verticalReactionAnimation(run.currentPlayer, p);
-				System.out.println("bloop " + howManyToAnimate);
-				if(howManyToAnimate == 0) {
-					System.out.println(p.getOne().toString());
-					System.out.println(p.getTwo().toString());
-				}
-				else if(howManyToAnimate == -1) {
-					//needs to disappear
-				}else if(howManyToAnimate == -2) {
-					game.verticalReaction(run.currentPlayer, p);
-				}else {
-					for(int i = howManyToAnimate; i >= 0; i --) {
-						int row = getRow(p.getTwo().yLoc - (i*HEIGHT));
-						int col = getCol(p.getTwo().xLoc);
-						BoardPiece bp = ((BoardPiece)game.getBoard().getBoard()[row][col]);
-						bp.destY = bp.yLoc - HEIGHT;
-						bp.moveY = bp.yLoc;
-						bp.moveX = bp.xLoc;
-						if(bp.equals(p.getTwo())) {
-							continue;
-						}
-						if((row!=0) && !(col == 0 && row == 2) && !(col==1 && row == 2)) {
-							bp.needToAnimate = true;
-							aList.add(bp);
-						}else {
-							reactionDisappear = bp;
-							playDisappearSound();
-						}
-						activateAnimation = true;
-					}
-				}
+				upReactionAnimation(p, howManyToAnimate);
 			}
 			else if(game.getDirectionOfAnimation(run.currentPlayer, p).equals("down")) {
-				System.out.println("in down animation for reactions");
-				howManyToAnimate = game.verticalReactionAnimation(run.currentPlayer, p);
-				System.out.println("bloop " + howManyToAnimate);
-				if(howManyToAnimate == 0) {
-					System.out.println(p.getOne().toString());
-					System.out.println(p.getTwo().toString());
-				}else if(howManyToAnimate == -1) {
-					//needs to disappear
-				}else if(howManyToAnimate == -2) {
-					game.verticalReaction(run.currentPlayer, p);
-				}
-				else {
-					System.out.println("in else?");
-					for(int i = 0; i <= howManyToAnimate; i ++) {
-						System.out.println("in for loooooooooooooooooop???");
-						int row = getRow(p.getOne().yLoc + (i*HEIGHT));
-						int col = getCol(p.getOne().xLoc);
-						BoardPiece bp = ((BoardPiece)game.getBoard().getBoard()[row][col]);
-						bp.destY = bp.yLoc + HEIGHT;
-						bp.moveY = bp.yLoc;
-						bp.moveX = bp.xLoc;
-						if(bp.equals(p.getOne())) {
-							continue;
-						}
-						if((row!=9) && !(col == 8 && row == 7) && !(col==9 && row == 7)) {
-							bp.needToAnimate = true;
-							aList.add(bp);
-						}else {
-							reactionDisappear = bp;
-							playDisappearSound();
-						}
-						activateAnimation = true;
-					}
-				}
-
+				downReactionAnimation(p, howManyToAnimate);
 			}else if(game.getDirectionOfAnimation(run.currentPlayer, p).equals("swordVElse")) {
-				number = game.findTokenToAnimate(run.currentPlayer, p);
-				if(number == -10) {
-					playDisappearSound();
-					reactionPair = p;
-					SWEDisappear = true;
-				}else if(number == -11) {
-					reactionDisappear = p.getTwo();
-					playDisappearSound();
-					reactionPair = p;
-					SWEDisappear = true;
-				}else if(number == -12) {
-					playDisappearSound();
-					reactionPair = p;
-					SWEDisappear = true;
-				}else if(number == -13) {
-					playDisappearSound();
-					game.verticalReaction(run.currentPlayer, p);
-				}else if(number == -14) {
-					playDisappearSound();
-					game.verticalReaction(run.currentPlayer, p);
-				}else if(number == -15) {
-
-				}
+				vertReactionSVE(p);
 			}
 			else {
 				game.verticalReaction(run.currentPlayer, p);
@@ -254,94 +317,14 @@ public class BoardPanel extends JPanel {
 		}
 		if(p.getDir().equals("hori")) {
 			animationDir = game.getDirectionOfAnimation(run.currentPlayer, p);
+			howManyToAnimate = game.horizontalReactionAnimation(run.currentPlayer, p);
 			if(game.getDirectionOfAnimation(run.currentPlayer, p).equals("right")) {
-				howManyToAnimate = game.horizontalReactionAnimation(run.currentPlayer, p);
-				if(howManyToAnimate == 0) {
-					System.out.println(p.getOne().toString());
-					System.out.println(p.getTwo().toString());
-				}else if(howManyToAnimate == -1) {
-				}else if(howManyToAnimate == -2) {
-					game.horizontalReaction(run.currentPlayer, p);
-
-				}else {
-					for(int i = 0; i <= howManyToAnimate; i ++) {
-						int row = getRow(p.getOne().yLoc);
-						int col = getCol(p.getOne().xLoc + (i*WIDTH));
-						BoardPiece bp = ((BoardPiece)game.getBoard().getBoard()[row][col]);
-						bp.destY = bp.yLoc;
-						bp.moveY = bp.yLoc;
-						bp.moveX = bp.xLoc;
-						bp.destX = bp.xLoc + WIDTH;
-						if(bp.equals(p.getOne())) {
-							continue;
-						}
-						if((col!=9) && !(col == 7 && row == 8) && !(col==7 && row == 9)) {
-							bp.needToAnimate = true;
-							aList.add(bp);
-						}else {
-							reactionDisappear = bp;
-							playDisappearSound();
-						}
-						activateAnimation = true;
-					}
-				}
+				rightReactionAnimation(p, howManyToAnimate);
 			}
 			else if(game.getDirectionOfAnimation(run.currentPlayer, p).equals("left")) {
-				howManyToAnimate = game.horizontalReactionAnimation(run.currentPlayer, p);
-				if(howManyToAnimate == 0) {
-				}else if(howManyToAnimate == -1) {
-					//needs to disappear
-				}else if(howManyToAnimate == -2) {
-					game.horizontalReaction(run.currentPlayer, p);
-
-				}else {
-					for(int i = howManyToAnimate; i >= 0; i --) {
-						int row = getRow(p.getTwo().yLoc);
-						int col = getCol(p.getTwo().xLoc - (i*WIDTH));
-						BoardPiece bp = ((BoardPiece)game.getBoard().getBoard()[row][col]);
-						bp.destY = bp.yLoc;
-						bp.moveY = bp.yLoc;
-						bp.moveX = bp.xLoc;
-						bp.destX = bp.xLoc - WIDTH;
-						if(bp.equals(p.getTwo())) {
-							continue;
-						}
-						if((col!=0) && !(col == 2 && row == 0) && !(col==2 && row == 1)) {
-							bp.needToAnimate = true;
-							aList.add(bp);
-						}else {
-							reactionDisappear = bp;
-							playDisappearSound();
-						}
-						activateAnimation = true;
-					}
-				}
-
+				leftReactionAnimation(p, howManyToAnimate);
 			}else if(game.getDirectionOfAnimation(run.currentPlayer, p).equals("swordVElse")) {
-				System.out.println("in swordVElse");
-				horiNumber = game.findTokenToAnimateHori(run.currentPlayer, p);
-				if(horiNumber == -20) {
-					playDisappearSound();
-					reactionPair = p;
-					SWEDisappear = true;
-				}else if(horiNumber == -21) {
-					reactionDisappear = p.getTwo();
-					playDisappearSound();
-					reactionPair = p;
-					SWEDisappear = true;
-				}else if(horiNumber == -22) {
-					playDisappearSound();
-					reactionPair = p;
-					SWEDisappear = true;
-				}else if(horiNumber == -23) {
-					playDisappearSound();
-					game.horizontalReaction(run.currentPlayer, p);
-				}else if(horiNumber == -24) {
-					playDisappearSound();
-					game.horizontalReaction(run.currentPlayer, p);
-				}
-			else if(horiNumber == -25) {
-				}
+				horiReactionSVE(p);
 			}
 			else {
 				game.horizontalReaction(run.currentPlayer, p);
@@ -349,265 +332,88 @@ public class BoardPanel extends JPanel {
 		}
 	}
 
+	public void drawAnimatingToken(Graphics2D g, BoardPiece bp) {
+		g.setColor(TOKEN_SQUARE);
+		g.fillRect(bp.moveX, bp.moveY, WIDTH, WIDTH);
+		if(bp.getCol().equals("yellow")) {
+			g.setColor(Color.YELLOW);
+		}else {
+			g.setColor(Color.GREEN);
+		}
+		g.fillOval(bp.moveX, bp.moveY, WIDTH, HEIGHT);
+		g.setColor(Color.red);
+		g.setStroke(new BasicStroke(6));
+		drawToken(g, bp, bp.moveX, bp.moveY);
+		g.setStroke(new BasicStroke(0));
+	}
 
-	public void reactionHope(Graphics2D g, List<BoardPiece> toAnimate) {
-		if(animationDir.equals("up")) {
-			if(toAnimate.isEmpty()) {
-				reactionMoveAnimation = false;
-				reactions = false;
-				skip = false;
-				game.verticalReaction(run.currentPlayer, reactionPiece);
-				chosenToken = null;
-				activateAnimation = false;
-				aList.clear();
-				if(game.getBoard().checkForReaction()) {
-					run.setBoardReactionsTrue();
-					run.buttonPanel.pass.setEnabled(false);
-				}else {
-					run.setBoardReactionsFalse();
-					run.buttonPanel.pass.setEnabled(true);
-				}
+	public void displayReactionAnimation(Graphics2D g, List<BoardPiece> toAnimate) {
+		if(toAnimate.isEmpty()) {
+			activateAnimation = false;
+		}
+		for(BoardPiece bp : toAnimate) {
+			if(bp == null) {
+				continue;
 			}
-			for(BoardPiece bp : toAnimate) {
-				if(bp == null) {
-					continue;
-				}
-				g.setColor(TOKEN_SQUARE);
-				g.fillRect(bp.moveX, bp.moveY, WIDTH, WIDTH);
-				if(bp.getCol().equals("yellow")) {
-					g.setColor(Color.YELLOW);
-				}else {
-					g.setColor(Color.GREEN);
-				}
-				g.fillOval(bp.moveX, bp.moveY, WIDTH, HEIGHT);
-				g.setColor(Color.red);
-				g.setStroke(new BasicStroke(6));
-				drawToken(g, bp, bp.moveX, bp.moveY);
-				g.setStroke(new BasicStroke(0));
+			drawAnimatingToken(g, bp);
+			if(animationDir.equals("up")) {
 				if (bp.moveY > bp.destY) {
 					bp.moveY -= 2;
 				}
 				else {
-					reactionMoveAnimation = false;
-					reactions = false;
-					skip = false;
-					game.verticalReaction(run.currentPlayer, reactionPiece);
-					chosenToken = null;
 					activateAnimation = false;
 				}
-			}
-			if(activateAnimation == false) {
-				for(BoardPiece bp : toAnimate) {
-					bp.needToAnimate = false;
-				}
-				aList.clear();
-				if(game.getBoard().checkForReaction()) {
-					run.setBoardReactionsTrue();
-					run.buttonPanel.pass.setEnabled(false);
-				}else {
-					run.setBoardReactionsFalse();
-					run.buttonPanel.pass.setEnabled(true);
-				}
-			}
-			if(skip == false) {
-				everyBpToAnimate.clear();
-			}
-		}
-		else if(animationDir.equals("down")) {
-			if(toAnimate.isEmpty()) {
-				reactionMoveAnimation = false;
-				reactions = false;
-				skip = false;
-				game.verticalReaction(run.currentPlayer, reactionPiece);
-				chosenToken = null;
-				activateAnimation = false;
-				aList.clear();
-				if(game.getBoard().checkForReaction()) {
-					run.setBoardReactionsTrue();
-					run.buttonPanel.pass.setEnabled(false);
-				}else {
-					run.setBoardReactionsFalse();
-					run.buttonPanel.pass.setEnabled(true);
-				}
-			}
-			///
-			for(BoardPiece bp : toAnimate) {
-				if(bp == null) {
-					continue;
-				}
-				g.setColor(TOKEN_SQUARE);
-				g.fillRect(bp.moveX, bp.moveY, WIDTH, WIDTH);
-				if(bp.getCol().equals("yellow")) {
-					g.setColor(Color.YELLOW);
-				}else {
-					g.setColor(Color.GREEN);
-				}
-				g.fillOval(bp.moveX, bp.moveY, WIDTH, HEIGHT);
-				g.setColor(Color.red);
-				g.setStroke(new BasicStroke(6));
-				drawToken(g, bp, bp.moveX, bp.moveY);
-				g.setStroke(new BasicStroke(0));
+			}else if(animationDir.equals("down")) {
 				if (bp.moveY < bp.destY) {
 					bp.moveY += 2;
 				}
 				else {
-					reactionMoveAnimation = false;
-					reactions = false;
-					skip = false;
-					game.verticalReaction(run.currentPlayer, reactionPiece);
-					chosenToken = null;
 					activateAnimation = false;
 				}
-			}
-			if(activateAnimation == false) {
-				for(BoardPiece bp : toAnimate) {
-					bp.needToAnimate = false;
-				}
-				aList.clear();
-				if(game.getBoard().checkForReaction()) {
-					run.setBoardReactionsTrue();
-					run.buttonPanel.pass.setEnabled(false);
-				}else {
-					run.setBoardReactionsFalse();
-					run.buttonPanel.pass.setEnabled(true);
 
-				}
-			}
-			if(skip == false) {
-				everyBpToAnimate.clear();
-			}
-		}
-		else if(animationDir.equals("right")) {
-			if(toAnimate.isEmpty()) {
-				reactionMoveAnimation = false;
-				reactions = false;
-				skip = false;
-				game.horizontalReaction(run.currentPlayer, reactionPiece);
-				chosenToken = null;
-				activateAnimation = false;
-				aList.clear();
-				if(game.getBoard().checkForReaction()) {
-					run.setBoardReactionsTrue();
-					run.buttonPanel.pass.setEnabled(false);
-				}else {
-					run.setBoardReactionsFalse();
-					run.buttonPanel.pass.setEnabled(true);
-				}
-			}
-			for(BoardPiece bp : toAnimate) {
-				if(bp == null) {
-					continue;
-				}
-				g.setColor(TOKEN_SQUARE);
-				g.fillRect(bp.moveX, bp.moveY, WIDTH, WIDTH);
-				if(bp.getCol().equals("yellow")) {
-					g.setColor(Color.YELLOW);
-				}else {
-					g.setColor(Color.GREEN);
-				}
-				g.fillOval(bp.moveX, bp.moveY, WIDTH, HEIGHT);
-				g.setColor(Color.red);
-				g.setStroke(new BasicStroke(6));
-				drawToken(g, bp, bp.moveX, bp.moveY);
-				g.setStroke(new BasicStroke(0));
-				if (bp.moveX < bp.destX) {
-					bp.moveX += 2;
-				}
-				else {
-					reactionMoveAnimation = false;
-					reactions = false;
-					skip = false;
-					game.horizontalReaction(run.currentPlayer, reactionPiece);
-					chosenToken = null;
-					activateAnimation = false;
-				}
-			}
-			if(activateAnimation == false) {
-				for(BoardPiece bp : toAnimate) {
-					bp.needToAnimate = false;
-				}
-				aList.clear();
-				if(game.getBoard().checkForReaction()) {
-					run.setBoardReactionsTrue();
-					//run.pass.setEnabled(false);
-					run.buttonPanel.pass.setEnabled(false);
-				}else {
-					run.setBoardReactionsFalse();
-					//run.pass.setEnabled(true);
-					run.buttonPanel.pass.setEnabled(true);
-
-				}
-			}
-			if(skip == false) {
-				everyBpToAnimate.clear();
-			}
-		}
-
-		else if(animationDir.equals("left")) {
-			if(toAnimate.isEmpty()) {
-				reactionMoveAnimation = false;
-				reactions = false;
-				skip = false;
-				game.horizontalReaction(run.currentPlayer, reactionPiece);
-				chosenToken = null;
-				activateAnimation = false;
-				aList.clear();
-				if(game.getBoard().checkForReaction()) {
-					run.setBoardReactionsTrue();
-					run.buttonPanel.pass.setEnabled(false);
-				}else {
-					run.setBoardReactionsFalse();
-					run.buttonPanel.pass.setEnabled(true);
-				}
-			}
-			for(BoardPiece bp : toAnimate) {
-				if(bp == null) {
-					continue;
-				}
-				g.setColor(TOKEN_SQUARE);
-				g.fillRect(bp.moveX, bp.moveY, WIDTH, WIDTH);
-				if(bp.getCol().equals("yellow")) {
-					g.setColor(Color.YELLOW);
-				}else {
-					g.setColor(Color.GREEN);
-				}
-				g.fillOval(bp.moveX, bp.moveY, WIDTH, HEIGHT);
-				g.setColor(Color.red);
-				g.setStroke(new BasicStroke(6));
-				drawToken(g, bp, bp.moveX, bp.moveY);
-				g.setStroke(new BasicStroke(0));
+			}else if(animationDir.equals("left")) {
 				if (bp.moveX > bp.destX) {
 					bp.moveX -= 2;
 				}
 				else {
-					reactionMoveAnimation = false;
-					reactions = false;
-					skip = false;
-					game.horizontalReaction(run.currentPlayer, reactionPiece);
-					chosenToken = null;
+					activateAnimation = false;
+				}
+			}else if(animationDir.equals("right")) {
+				if (bp.moveX < bp.destX) {
+					bp.moveX += 2;
+				}
+				else {
 					activateAnimation = false;
 				}
 			}
-			///
 
-			if(activateAnimation == false) {
-				for(BoardPiece bp : toAnimate) {
-					bp.needToAnimate = false;
-				}
-				aList.clear();
-				if(game.getBoard().checkForReaction()) {
-					run.setBoardReactionsTrue();
-					run.buttonPanel.pass.setEnabled(false);
-				}else {
-					run.setBoardReactionsFalse();
-					run.buttonPanel.pass.setEnabled(true);
-				}
-			}
-			if(skip == false) {
-				everyBpToAnimate.clear();
-			}
 		}
+		if(activateAnimation == false) {
+			for(BoardPiece bp : toAnimate) {
+				bp.needToAnimate = false;
+			}
+			reactionMoveAnimation = false;
+			reactions = false;
+			skip = false;
+			if(animationDir.equals("up") || animationDir.equals("down")) {
+				game.verticalReaction(run.currentPlayer, reactionPiece);
 
+			}else if(animationDir.equals("left") || animationDir.equals("right")) {
+				game.horizontalReaction(run.currentPlayer, reactionPiece);
+
+			}
+			chosenToken = null;
+			activateAnimation = false;
+			aList.clear();
+			checkForMoreReactions();
+		}
+		if(skip == false) {
+			everyBpToAnimate.clear();
+		}
+	}
+
+	public void reactionHope(Graphics2D g, List<BoardPiece> toAnimate) {
+		displayReactionAnimation(g, toAnimate);
 	}
 
 
@@ -624,7 +430,6 @@ public class BoardPanel extends JPanel {
 		}
 	}
 
-	// http://zetcode.com/gfx/java2d/transparency/
 	public void attemptClickMove() {
 		if (chosenToken != null) {
 			if(run.currentPlayer.getMovesSoFar().contains(chosenToken.getName())){
@@ -802,198 +607,97 @@ public class BoardPanel extends JPanel {
 		}
 	}
 
+	public Color getCorrectColorPairOne(Pair p) {
+		if((getCol(reactionPair.getOne().xLoc) + getRow(reactionPair.getOne().yLoc)) % 2 != 1) {
+			return (new Color(255,255,255,alpha)); // white
+		}
+		else {
+			return (new Color(0,0,0,alpha)); // black
+		}
+	}
+
+	public Color getCorrectColorPairTwo(Pair p) {
+		if((getCol(reactionPair.getTwo().xLoc) + getRow(reactionPair.getTwo().yLoc)) % 2 != 1) {
+			return (new Color(255,255,255,alpha)); // white
+		}
+		else {
+			return (new Color(0,0,0,alpha));
+		}
+	}
+
+	public void doneDisappearAnimation() {
+		alpha = 0;
+		reactionDisappear = null;
+		reactionMoveAnimation = false;
+		reactions = false;
+		skip = false;
+		chosenToken = null;
+		activateAnimation = false;
+		SWEDisappear = false;
+		number = -1000;
+		horiNumber = -1000;
+		checkForMoreReactions();
+	}
+
 	public void reactionDisappearSVE(Graphics2D g){
 		if(number == -10) { // both die
-			if((getCol(reactionPair.getOne().xLoc) + getRow(reactionPair.getOne().yLoc)) % 2 != 1) {
-				g.setColor(new Color(255,255,255,alpha)); // white
-			}
-			else {
-				g.setColor(new Color(0,0,0,alpha));
-			}
+			g.setColor(getCorrectColorPairOne(reactionPair));
 			g.fillRect(reactionPair.getOne().xLoc, reactionPair.getOne().yLoc, WIDTH, HEIGHT);
-
-			if((getCol(reactionPair.getTwo().xLoc) + getRow(reactionPair.getTwo().yLoc)) % 2 != 1) {
-				g.setColor(new Color(255,255,255,alpha)); // white
-			}
-			else {
-				g.setColor(new Color(0,0,0,alpha));
-			}
+			g.setColor(getCorrectColorPairTwo(reactionPair));
 			g.fillRect(reactionPair.getTwo().xLoc, reactionPair.getTwo().yLoc, WIDTH, HEIGHT);
 			if(alpha < 250) {
 				alpha +=5;
 			}else {
-				alpha = 0;
-				reactionDisappear = null;
-				reactionMoveAnimation = false;
-				reactions = false;
-				skip = false;
 				game.verticalReaction(run.currentPlayer, reactionPair);
-				chosenToken = null;
-				activateAnimation = false;
-				SWEDisappear = false;
-				number = -1000;
-				if(game.getBoard().checkForReaction()) {
-					run.setBoardReactionsTrue();
-					run.buttonPanel.pass.setEnabled(false);
-				}else {
-					run.setBoardReactionsFalse();
-					run.buttonPanel.pass.setEnabled(true);
-				}
+				doneDisappearAnimation();
 			}
 		}
 		else if(number == -11) {
-			if((getCol(reactionPair.getTwo().xLoc) + getRow(reactionPair.getTwo().yLoc)) % 2 != 1) {
-				g.setColor(new Color(255,255,255,alpha)); // white
-			}
-			else {
-				g.setColor(new Color(0,0,0,alpha));
-			}
+			g.setColor(getCorrectColorPairTwo(reactionPair));
 			g.fillRect(reactionPair.getTwo().xLoc, reactionPair.getTwo().yLoc, WIDTH, HEIGHT);
 			if(alpha < 250) {
 				alpha +=5;
 			}else {
-				alpha = 0;
-				reactionDisappear = null;
-				reactionMoveAnimation = false;
-				reactions = false;
-				skip = false;
 				game.verticalReaction(run.currentPlayer, reactionPair);
-				chosenToken = null;
-				activateAnimation = false;
-				SWEDisappear = false;
-				number = -1000;
-				if(game.getBoard().checkForReaction()) {
-					run.setBoardReactionsTrue();
-					run.buttonPanel.pass.setEnabled(false);
-				}else {
-					run.setBoardReactionsFalse();
-					run.buttonPanel.pass.setEnabled(true);
-				}
+				doneDisappearAnimation();
 			}
 		}else if (number == -12) {
-			if((getCol(reactionPair.getOne().xLoc) + getRow(reactionPair.getOne().yLoc)) % 2 != 1) {
-				g.setColor(new Color(255,255,255,alpha)); // white
-			}
-			else {
-				g.setColor(new Color(0,0,0,alpha));
-			}
+			g.setColor(getCorrectColorPairOne(reactionPair));
 			g.fillRect(reactionPair.getOne().xLoc, reactionPair.getOne().yLoc, WIDTH, HEIGHT);
 			if(alpha < 250) {
 				alpha +=5;
 			}else {
-				alpha = 0;
-				reactionDisappear = null;
-				reactionMoveAnimation = false;
-				reactions = false;
-				skip = false;
 				game.verticalReaction(run.currentPlayer, reactionPair);
-				chosenToken = null;
-				activateAnimation = false;
-				SWEDisappear = false;
-				number = -1000;
-				if(game.getBoard().checkForReaction()) {
-					run.setBoardReactionsTrue();
-					run.buttonPanel.pass.setEnabled(false);
-				}else {
-					run.setBoardReactionsFalse();
-					run.buttonPanel.pass.setEnabled(true);
-				}
+				doneDisappearAnimation();
 			}
 		}else if (horiNumber == -20) {
-			System.out.println("in -20");
-			if((getCol(reactionPair.getOne().xLoc) + getRow(reactionPair.getOne().yLoc)) % 2 != 1) {
-				g.setColor(new Color(255,255,255,alpha)); // white
-			}
-			else {
-				g.setColor(new Color(0,0,0,alpha));
-			}
+			g.setColor(getCorrectColorPairOne(reactionPair));
 			g.fillRect(reactionPair.getOne().xLoc, reactionPair.getOne().yLoc, WIDTH, HEIGHT);
-
-			if((getCol(reactionPair.getTwo().xLoc) + getRow(reactionPair.getTwo().yLoc)) % 2 != 1) {
-				g.setColor(new Color(255,255,255,alpha)); // white
-			}
-			else {
-				g.setColor(new Color(0,0,0,alpha));
-			}
+			g.setColor(getCorrectColorPairTwo(reactionPair));
 			g.fillRect(reactionPair.getTwo().xLoc, reactionPair.getTwo().yLoc, WIDTH, HEIGHT);
 			if(alpha < 250) {
 				alpha +=5;
 			}else {
-				alpha = 0;
-				reactionDisappear = null;
-				reactionMoveAnimation = false;
-				reactions = false;
-				skip = false;
+				doneDisappearAnimation();
 				game.horizontalReaction(run.currentPlayer, reactionPair);
-				chosenToken = null;
-				activateAnimation = false;
-				SWEDisappear = false;
-				horiNumber = -1000;
-				if(game.getBoard().checkForReaction()) {
-					run.setBoardReactionsTrue();
-					run.buttonPanel.pass.setEnabled(false);
-				}else {
-					run.setBoardReactionsFalse();
-					run.buttonPanel.pass.setEnabled(true);
-				}
 			}
 		}else if (horiNumber == -21) {
-			if((getCol(reactionPair.getTwo().xLoc) + getRow(reactionPair.getTwo().yLoc)) % 2 != 1) {
-				g.setColor(new Color(255,255,255,alpha)); // white
-			}
-			else {
-				g.setColor(new Color(0,0,0,alpha));
-			}
+			g.setColor(getCorrectColorPairTwo(reactionPair));
 			g.fillRect(reactionPair.getTwo().xLoc, reactionPair.getTwo().yLoc, WIDTH, HEIGHT);
 			if(alpha < 250) {
 				alpha +=5;
 			}else {
-				alpha = 0;
-				reactionDisappear = null;
-				reactionMoveAnimation = false;
-				reactions = false;
-				skip = false;
+				doneDisappearAnimation();
 				game.horizontalReaction(run.currentPlayer, reactionPair);
-				chosenToken = null;
-				activateAnimation = false;
-				SWEDisappear = false;
-				horiNumber = -1000;
-				if(game.getBoard().checkForReaction()) {
-					run.setBoardReactionsTrue();
-					run.buttonPanel.pass.setEnabled(false);
-				}else {
-					run.setBoardReactionsFalse();
-					run.buttonPanel.pass.setEnabled(true);
-				}
 			}
 		}else if (horiNumber == -22) {
-			if((getCol(reactionPair.getOne().xLoc) + getRow(reactionPair.getOne().yLoc)) % 2 != 1) {
-				g.setColor(new Color(255,255,255,alpha)); // white
-			}
-			else {
-				g.setColor(new Color(0,0,0,alpha));
-			}
+			g.fillRect(reactionPair.getOne().xLoc, reactionPair.getOne().yLoc, WIDTH, HEIGHT);
 			g.fillRect(reactionPair.getOne().xLoc, reactionPair.getOne().yLoc, WIDTH, HEIGHT);
 			if(alpha < 250) {
 				alpha +=5;
 			}else {
-				alpha = 0;
-				reactionDisappear = null;
-				reactionMoveAnimation = false;
-				reactions = false;
-				skip = false;
 				game.horizontalReaction(run.currentPlayer, reactionPair);
-				chosenToken = null;
-				activateAnimation = false;
-				SWEDisappear = false;
-				horiNumber = -1000;
-				if(game.getBoard().checkForReaction()) {
-					run.setBoardReactionsTrue();
-					run.buttonPanel.pass.setEnabled(false);
-				}else {
-					run.setBoardReactionsFalse();
-					run.buttonPanel.pass.setEnabled(true);
-				}
+				doneDisappearAnimation();
 			}
 		}
 	}
@@ -1143,7 +847,7 @@ public class BoardPanel extends JPanel {
 	}
 
 	public void applyDisappearAnimation(Graphics2D g) {
-		if(moveDir.equals("up")) {
+		if(moveDir.equals("up") || moveDir.equals("down")) {
 			if(disappearSkip == false) {
 				if(piecesToAnimate==-1) {
 					disappearCol = getCol(chosenX);
@@ -1152,29 +856,11 @@ public class BoardPanel extends JPanel {
 				}
 				else {
 					disappearCol = getCol(chosenX);
-					disapppearRow = getRow(chosenY - (piecesToAnimate*HEIGHT));
-				}
-
-				disappearPiece = (BoardPiece) board[disapppearRow][disappearCol];
-				disappearSkip = true;
-				playDisappearSound();
-				applyHoudiniEffect(g, disappearPiece);
-			}else {
-				if(disappearPiece!=null) {
-					applyHoudiniEffect(g, disappearPiece);
-				}
-			}
-		}else if(moveDir.equals("down")) {
-			if(disappearSkip == false) {
-				if(piecesToAnimate==-1) {
-					disappearCol = getCol(chosenX);
-					disapppearRow = getRow(chosenY);
-					singleMove = true;
-
-				}
-				else {
-					disappearCol = getCol(chosenX);
-					disapppearRow = getRow(chosenY + (piecesToAnimate*HEIGHT));
+					if(moveDir.equals("up")) {
+						disapppearRow = getRow(chosenY - (piecesToAnimate*HEIGHT));
+					}else {
+						disapppearRow = getRow(chosenY + (piecesToAnimate*HEIGHT));
+					}
 				}
 				disappearPiece = (BoardPiece) board[disapppearRow][disappearCol];
 				disappearSkip = true;
@@ -1185,30 +871,7 @@ public class BoardPanel extends JPanel {
 					applyHoudiniEffect(g, disappearPiece);
 				}
 			}
-		}else if(moveDir.equals("right")) {
-			if(disappearSkip == false) {
-				if(piecesToAnimate==-1) {
-					disappearCol = getCol(chosenX);
-					disapppearRow = getRow(chosenY);
-					singleMove = true;
-
-				}
-				else {
-
-					disappearCol = getCol(chosenX+ (piecesToAnimate*WIDTH));
-					disapppearRow = getRow(chosenY );
-				}
-				disappearPiece = (BoardPiece) board[disapppearRow][disappearCol];
-				System.out.println("so something is disappearing " + disappearPiece.toString());
-				disappearSkip = true;
-				playDisappearSound();
-				applyHoudiniEffect(g, disappearPiece);
-			}else {
-				if(disappearPiece!=null) {
-					applyHoudiniEffect(g, disappearPiece);
-				}
-			}
-		}else if(moveDir.equals("left")) {
+		}else if(moveDir.equals("right") || moveDir.equals("left")) {
 			if(disappearSkip == false) {
 				if(piecesToAnimate==-1) {
 					disappearCol = getCol(chosenX);
@@ -1216,7 +879,11 @@ public class BoardPanel extends JPanel {
 					singleMove = true;
 				}
 				else {
-					disappearCol = getCol(chosenX - (piecesToAnimate*WIDTH));
+					if(moveDir.equals("right")) {
+						disappearCol = getCol(chosenX+ (piecesToAnimate*WIDTH));
+					}else {
+						disappearCol = getCol(chosenX - (piecesToAnimate*WIDTH));
+					}
 					disapppearRow = getRow(chosenY );
 				}
 				disappearPiece = (BoardPiece) board[disapppearRow][disappearCol];
@@ -1230,7 +897,6 @@ public class BoardPanel extends JPanel {
 			}
 		}
 	}
-
 
 
 	public void applyHoudiniEffect(Graphics2D g, BoardPiece toAnimate){
@@ -1600,13 +1266,7 @@ public class BoardPanel extends JPanel {
 				if(chosenToken!=null) {
 					letter = chosenToken.getName();
 					game.moveToken(run.currentPlayer, "move " + letter + " right");
-					if(game.getBoard().checkForReaction()) {
-						run.setBoardReactionsTrue();
-						run.buttonPanel.pass.setEnabled(false);
-					}else {
-						run.setBoardReactionsFalse();
-						run.buttonPanel.pass.setEnabled(true);
-					}
+					checkForMoreReactions();
 				}
 				chosenToken = null;
 			}
@@ -1644,13 +1304,7 @@ public class BoardPanel extends JPanel {
 				if(chosenToken!=null) {
 					letter = chosenToken.getName();
 					game.moveToken(run.currentPlayer, "move " + letter + " down");
-					if(game.getBoard().checkForReaction()) {
-						run.setBoardReactionsTrue();
-						run.buttonPanel.pass.setEnabled(false);
-					}else {
-						run.setBoardReactionsFalse();
-						run.buttonPanel.pass.setEnabled(true);
-					}
+					checkForMoreReactions();
 				}
 				chosenToken = null;
 			}
@@ -1687,13 +1341,7 @@ public class BoardPanel extends JPanel {
 				if(chosenToken!=null) {
 					letter = chosenToken.getName();
 					game.moveToken(run.currentPlayer, "move " + letter + " up");
-					if(game.getBoard().checkForReaction()) {
-						run.setBoardReactionsTrue();
-						run.buttonPanel.pass.setEnabled(false);
-					}else {
-						run.setBoardReactionsFalse();
-						run.buttonPanel.pass.setEnabled(true);
-					}
+					checkForMoreReactions();
 				}
 				chosenToken = null;
 			}
@@ -1943,19 +1591,16 @@ public class BoardPanel extends JPanel {
 		} else if (piece.getNorth() == 2) {
 			g.drawLine(x + STROKE, y + STROKE, x + WIDTH*6 - STROKE, y + STROKE);
 		}
-
 		if (piece.getEast() == 1) {
 			g.drawLine(x + WIDTH*6 / 2 + STROKE, y + HEIGHT*6 / 2, x + WIDTH*6 - STROKE, y + HEIGHT*6 / 2);
 		} else if (piece.getEast() == 2) {
 			g.drawLine(x + WIDTH*6 - STROKE, y + STROKE, x + WIDTH*6 - STROKE, y + HEIGHT*6 - STROKE);
 		}
-
 		if (piece.getSouth() == 1) {
 			g.drawLine(x + WIDTH*6 / 2, y + HEIGHT*6 / 2, x + WIDTH*6 / 2, y + HEIGHT*6 - STROKE);
 		} else if (piece.getSouth() == 2) {
 			g.drawLine(x + STROKE, y + HEIGHT*6 - STROKE, x + WIDTH*6 - STROKE, y + HEIGHT*6 - STROKE);
 		}
-
 		if (piece.getWest() == 1) {
 			g.drawLine(x + STROKE, y + HEIGHT*6 / 2, x + WIDTH*6 / 2 - STROKE, y + HEIGHT*6 / 2);
 		} else if (piece.getWest() == 2) {

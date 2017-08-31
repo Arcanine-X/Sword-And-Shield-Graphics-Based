@@ -660,8 +660,8 @@ public class SwordAndShieldGame {
 			}else if (one.getEast() == 2 && two.getWest() == 1 && p.getDir().equals("hori")) { // shield - sword
 				return "right";
 			}else {
-				return "error";
-				//return "swordVElse";
+				//return "error";
+				return "swordVElse";
 			}
 		}
 		return "swordVElse";
