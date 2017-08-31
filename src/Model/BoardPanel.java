@@ -4,6 +4,7 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -86,100 +87,6 @@ public class BoardPanel extends JPanel {
 		this.addKeyListener(boardController);
 		board = game.getBoard().getBoard();
 		this.setMinimumSize(new Dimension(200,200));
-		
-		
-
-		/*this.addMouseListener(new MouseListener() {
-			@Override
-			public void mouseReleased(MouseEvent e) {
-			}
-			@Override
-			public void mousePressed(MouseEvent e) {
-			}
-
-			@Override
-			public void mouseExited(MouseEvent e) {
-			}
-
-			@Override
-			public void mouseEntered(MouseEvent e) {
-			}
-
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				BoardPanel.this.repaint();
-				mouseX = e.getX();
-				mouseY = e.getY();
-				if(!reactions) {
-					findClickedToken();
-				}
-				System.out.println(mouseClicks);
-				if (chosenToken != null && mouseClicks >=2 && !rotationAnimation && reactions == false) {
-					attemptRotation();
-					attemptClickMove();
-				}else if(reactions){
-					findChosenReaction();
-				}else {
-
-				}
-
-
-			}
-		});
-
-		this.addKeyListener(new KeyListener() {
-			@Override
-			public void keyTyped(KeyEvent e) {
-			}
-
-			@Override
-			public void keyReleased(KeyEvent e) {
-			}
-
-			@Override
-			public void keyPressed(KeyEvent e) {
-				int key = e.getKeyCode();
-				if(chosenToken == null) {
-					return;
-				}
-				if(run.currentPlayer.getMovesSoFar().contains(chosenToken.getName())){
-					return;
-				}
-				if (key == KeyEvent.VK_UP) {
-					if (chosenToken != null) {
-						String letter = chosenToken.getName();
-						System.out.println("move " + letter + " up");
-						moveAnimation = true;
-						moveDir = "up";
-					}
-				} else if (key == KeyEvent.VK_RIGHT) {
-					if (chosenToken != null) {
-						String letter = chosenToken.getName();
-						System.out.println("move " + letter + " right");
-						moveAnimation = true;
-						moveDir = "right";
-					}
-				} else if (key == KeyEvent.VK_LEFT) {
-					if (chosenToken != null) {
-						String letter = chosenToken.getName();
-						System.out.println("move " + letter + " left");
-						moveAnimation = true;
-						moveDir = "left";
-
-					}
-				} else if (key == KeyEvent.VK_DOWN) {
-					if (chosenToken != null) {
-						String letter = chosenToken.getName();
-						System.out.println("move " + letter + " down");
-						moveAnimation = true;
-						moveDir = "down";
-					}
-				} else {
-					System.out.println("invalid key");
-				}
-				repaint();
-			}
-		});*/
 	}
 
 	public Pair findPair(BoardPiece one, BoardPiece two, Player player) {
@@ -229,22 +136,11 @@ public class BoardPanel extends JPanel {
 
 		if(game.getBoard().checkForReaction()) {
 			run.setBoardReactionsTrue();
-			//run.pass.setEnabled(false);
 			run.buttonPanel.pass.setEnabled(false);
 		}else {
 			run.setBoardReactionsFalse();
-			//run.pass.setEnabled(true);
 			run.buttonPanel.pass.setEnabled(true);
-
 		}
-
-		/*if(game.getBoard().checkForReaction()) {
-			run.pass.setEnabled(false);
-			run.setBoardReactionsTrue();
-		}else {
-			run.setBoardReactionsFalse();
-			run.pass.setEnabled(true);
-		}*/
 		p = null;
 		chosenToken = null;
 	}
@@ -851,7 +747,6 @@ public class BoardPanel extends JPanel {
 		super.paintComponent(g);
 		Graphics2D _g = (Graphics2D) g;
 		drawBoard(_g);
-
 		if(game.getBoard().getUndoStack().size() == 1) {
 			chosenToken = null;
 		}
@@ -1297,10 +1192,12 @@ public class BoardPanel extends JPanel {
 
 				}
 				else {
+					
 					disappearCol = getCol(chosenX+ (piecesToAnimate*WIDTH));
 					disapppearRow = getRow(chosenY );
 				}
 				disappearPiece = (BoardPiece) board[disapppearRow][disappearCol];
+				System.out.println("so something is disappearing " + disappearPiece.toString());
 				disappearSkip = true;
 				playDisappearSound();
 				applyHoudiniEffect(g, disappearPiece);
@@ -1485,7 +1382,8 @@ public class BoardPanel extends JPanel {
 				BoardPiece temp;
 				if(piecesToAnimate > 0) {
 					temp = everyBpToAnimate.get(1);
-					if(temp.destY > 540) {
+					if(temp.destY > (9 * HEIGHT)) {
+					//if(temp.destY > 540) {
 						disappearPiece = temp;
 						everyBpToAnimate.remove(temp);
 						disappearAnimation = true;
@@ -1500,6 +1398,7 @@ public class BoardPanel extends JPanel {
 				everyBpToAnimate.clear();
 				piecesToAnimate = run.currentPlayer.rightCounter(chosenToken, game.getBoard());
 				if(piecesToAnimate == -1) {
+					System.out.println("in -1");
 					disappearAnimation = true;
 					moveAnimation = false;
 					skip = false;
@@ -1527,9 +1426,11 @@ public class BoardPanel extends JPanel {
 					}
 				}
 				if(piecesToAnimate == 0) {
+					System.out.println("0 to animate");
 					int row = getRow(chosenY);
 					int col = getCol(chosenX);
 					if((row == 8 && (col + 1) == 8 )|| (row == 9 && (col + 1) == 8)) {
+						System.out.println("set to tru");
 						disappearPiece = chosenToken;
 						disappearAnimation = true;
 						moveAnimation = false;
@@ -1538,11 +1439,26 @@ public class BoardPanel extends JPanel {
 				}
 				skip = true;
 				BoardPiece temp;
-				if(piecesToAnimate > 0) {
+				/*
+				 * if(piecesToAnimate > 0) {
 					temp = everyBpToAnimate.get(1);
-					if(temp.destX > 540) {
+					if(temp.destX < 0) {
 						disappearPiece = temp;
 						everyBpToAnimate.remove(temp);
+						disappearAnimation = true;
+						return;
+					}
+				}
+				 */
+				if(piecesToAnimate > 0) {
+					System.out.println("what is " + (9 * WIDTH));
+					temp = everyBpToAnimate.get(1);
+					System.out.println("temp dest x is " + temp.destX);
+					if(temp.destX > (9 * WIDTH)) {
+					//if(temp.destX > 540) {
+						disappearPiece = temp;
+						everyBpToAnimate.remove(temp);
+						System.out.println("in >0");
 						disappearAnimation = true;
 						return;
 					}
@@ -1800,6 +1716,7 @@ public class BoardPanel extends JPanel {
 	public void drawBoard(Graphics2D g) {
 		WIDTH = Math.min(getWidth(), getHeight())/10 - Math.min(getWidth(), getHeight())/60;
 		HEIGHT = Math.min(getWidth(), getHeight())/10 - Math.min(getWidth(), getHeight())/60;
+
 		for (int row = 0; row < board.length; row++) {
 			for (int col = 0; col < board.length; col++) {
 				if (board[row][col] instanceof InvalidSquare) {

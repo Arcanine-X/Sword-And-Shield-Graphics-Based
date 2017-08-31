@@ -3,6 +3,7 @@ package Model;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
@@ -37,6 +38,7 @@ public class ButtonPanel extends JPanel{
 				if (game.getBoard().getUndoStack().size() == 1) {
 					game.setFirstCreation(true);
 				}
+
 				if (game.getBoard().getUndoStack().size() > 1) {
 					run.game.undo(run.currentPlayer);
 					run.boardPanel.repaint();
@@ -96,8 +98,12 @@ public class ButtonPanel extends JPanel{
 	 @Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
+		Graphics2D _g = (Graphics2D)g;
+		GradientPaint blackToGray = new GradientPaint(0, 30, new Color(255, 255, 204),
+                (float) run.getPreferredSize().getWidth(), 30, new Color(204, 255, 204));
+       _g.setPaint(blackToGray);
+        _g.fillRect(0, 0, (int) run.getPreferredSize().getWidth(), (int) run.getPreferredSize().getHeight());
+
 		displayInfo((Graphics2D)g);
-
-
 	}
 }

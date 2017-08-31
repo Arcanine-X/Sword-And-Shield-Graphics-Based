@@ -108,7 +108,7 @@ public class SwordAndShieldGame {
 		board.getBoard()[1][7] = two;
 		BoardPiece three = yellow.find("c");
 		board.getBoard()[2][7] = three;*/
-		
+
 		//reaction tests for invalid zones
 		/*BoardPiece one = yellow.find("s");
 		board.getBoard()[0][2] = one;
@@ -116,12 +116,20 @@ public class SwordAndShieldGame {
 		board.getBoard()[1][2] = two;
 		BoardPiece three = yellow.find("c");
 		board.getBoard()[2][2] = three;*/
-		
-		BoardPiece one = green.find("C");
-		board.getBoard()[7][6] = one;
-		
-		
-		
+
+		//BoardPiece one = green.find("C");
+		//board.getBoard()[7][6] = one;
+
+		//Wrong animation test
+		BoardPiece one = yellow.find("c");
+		board.getBoard()[8][6] = one;
+		BoardPiece two = green.find("X");
+		board.getBoard()[9][6] = two;
+
+
+
+
+
 	}
 
 	/**
@@ -266,6 +274,8 @@ public class SwordAndShieldGame {
 		success(); // Create a record of the game state for undo
 	}
 
+
+
 	/**
 	 * Undo method, reverts to the previous game state that was saved. This method removes the last added things from
 	 * all the lists, and creates new records of the game states.
@@ -280,15 +290,23 @@ public class SwordAndShieldGame {
 		board.createRecord(); // create new record
 		green.clearGraveYards();
 		yellow.clearGraveYards();
-		if (!player.getMovesSoFar().isEmpty()) {
-			player.getMovesSoFar().remove(player.getMovesSoFar().size() - 1);
-		}
+
 		if (player.getSetterCount() > player.getOriginalCount()) {
 			firstCreation = true;
 		}
-		if (!player.getEveryMovement().isEmpty()) {
-			player.getEveryMovement().remove(player.getEveryMovement().size() - 1);
-		}
+		//if(reactionsAreActive == false) {
+			if (!player.getMovesSoFar().isEmpty()) {
+				for(String s : player.getMovesSoFar()) {
+					System.out.println("bloop ::: " + s.toString());
+				}
+				player.getMovesSoFar().remove(player.getMovesSoFar().size() - 1);
+			}
+			if (!player.getEveryMovement().isEmpty()) {
+
+				player.getEveryMovement().remove(player.getEveryMovement().size() - 1);
+
+			}
+		//}
 		if (board.checkForReaction()) {
 			board.redraw();
 			return;
@@ -315,10 +333,8 @@ public class SwordAndShieldGame {
 		if (board.checkForReaction()) {
 			return;
 		}
-		//############### Come up with a better fix ##################
-		// ######## may not even work with multiple reactions
-		//player.getEveryMovement().add(null);
-		//player.getMovesSoFar().add("reaction");
+		player.getMovesSoFar().add("reaction");
+		player.getEveryMovement().add(null);
 	}
 
 	/**

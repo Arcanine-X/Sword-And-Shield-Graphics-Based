@@ -3,9 +3,14 @@ package Model;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class GraveyardPanel extends JPanel {
@@ -32,8 +37,8 @@ public class GraveyardPanel extends JPanel {
 	}
 
 	public void drawGrave(Graphics2D g) {
-		WIDTH = Math.min(getWidth(), getHeight())/10 - Math.min(getWidth(), getHeight())/60;
-		HEIGHT = Math.min(getWidth(), getHeight())/10 - Math.min(getWidth(), getHeight())/60;
+		WIDTH = Math.min(getWidth(), getHeight())/5 - Math.min(getWidth(), getHeight())/60;
+		HEIGHT = Math.min(getWidth(), getHeight())/5 - Math.min(getWidth(), getHeight())/60;
 		BoardPiece[][] graveYard = player.getGraveYard();
 		for (int row = 0; row < graveYard.length; row++) {
 			for (int col = 0; col < graveYard[0].length; col++) {
@@ -92,9 +97,9 @@ public class GraveyardPanel extends JPanel {
 
 	}
 
-	@Override
+	/*@Override
 	public Dimension getPreferredSize() {
 		return new Dimension(400,400);
 	}
-
+*/
 }

@@ -5,10 +5,13 @@ import java.awt.Dimension;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,6 +19,7 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
+import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
 import Controller.TokenController;
@@ -47,6 +51,8 @@ public class TokenPanel extends JPanel implements Observer{
 	int toFlyRot;
 	public boolean timeToFly = false;
 	TokenController tokenController;
+    Image token = Toolkit.getDefaultToolkit().getImage("token.png");
+
 
 
 	public TokenPanel(SwordAndShieldGame game, Player player, GameFrame run) {
@@ -57,39 +63,23 @@ public class TokenPanel extends JPanel implements Observer{
 		tokenController = new TokenController(game, run, this);
 		this.addMouseListener(tokenController);
 		this.setMinimumSize(new Dimension(100,220));
+	}
 
-
-		/*this.addMouseListener(new MouseListener() {
-			@Override
-			public void mouseReleased(MouseEvent e) {}
-			@Override
-			public void mousePressed(MouseEvent e) {}
-			@Override
-			public void mouseExited(MouseEvent e) {}
-			@Override
-			public void mouseEntered(MouseEvent e) {}
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				mouseX = e.getX();
-				mouseY = e.getY();
-				if(game.getBoard().getUndoStack().size() == 1) {
-					if(clickedPiece==null) {
-						clicked();
-						if(clickedPiece!=null) {
-							if(!clickedPiece.getCol().equals(run.currentPlayer.getName())) {
-								clickedPiece = null;
-								return;
-							}
-							getRotations();
-
-						}
-					}else {
-						playToken();
-					}
-				}
-			}
-		});*/
-
+	/**
+	 * Helper method for loading image icons.
+	 *
+	 * @param filename
+	 * @return
+	 */
+	private static ImageIcon makeImageIcon(String filename) {
+		// using the URL means the image loads when stored
+		// in a jar or expanded into individual files.
+		java.net.URL imageURL = GameFrame.class.getResource(filename);
+		ImageIcon icon = null;
+		if (imageURL != null) {
+			icon = new ImageIcon(imageURL);
+		}
+		return icon;
 	}
 
 	public void createToken() {
@@ -248,20 +238,23 @@ public class TokenPanel extends JPanel implements Observer{
 
 
 	public void drawBoard(Graphics2D g) {
+
 		WIDTH = Math.min(getWidth(), getHeight())/7 - Math.min(getWidth(), getHeight())/60;
 		HEIGHT = Math.min(getWidth(), getHeight())/7 - Math.min(getWidth(), getHeight())/60;
-		if (player.getName().equals("yellow")) {}
-		if (player.getName().equals("green")) {}
+		//BufferedImage img=new ImgUtils().scaleImage(WIDTH,HEIGHT,"token.png");
+
 		for (int row = 0; row < tokens.length; row++) {
 			for (int col = 0; col < tokens[0].length; col++) {
 				if (tokens[row][col] instanceof BoardPiece) {
 					g.setColor(TOKEN_SQUARE);
+
 					g.fillRect(x, y, WIDTH, WIDTH);
 					if (player.getName().equals("yellow")) {
 						g.setColor(Color.YELLOW);
 					} else {
 						g.setColor(Color.GREEN);
 					}
+					//g.drawImage(img,x,y, this);
 					g.fillOval(x, y, WIDTH, HEIGHT);
 					g.setColor(Color.red);
 					g.setStroke(new BasicStroke(6));
