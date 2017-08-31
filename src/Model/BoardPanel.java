@@ -1,24 +1,15 @@
 package Model;
 
 import java.awt.BasicStroke;
-import java.awt.Checkbox;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-
-import javax.security.auth.callback.ChoiceCallback;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.swing.JPanel;
@@ -104,10 +95,7 @@ public class BoardPanel extends JPanel {
 				if(p.getOne().equals(one) && p.getTwo().equals(two)) {
 					return p;
 				}
-			}else {
-
 			}
-
 		}
 		return null;
 	}
@@ -178,12 +166,7 @@ public class BoardPanel extends JPanel {
 
 	public void vertReactionSVE(Pair p) {
 		number = game.findTokenToAnimate(run.currentPlayer, p);
-		if(number == -10 || number == -12) {
-			playDisappearSound();
-			reactionPair = p;
-			SWEDisappear = true;
-		}else if(number == -11) {
-			reactionDisappear = p.getTwo();
+		if(number == -10 || number == -11 || number == -12) {
 			playDisappearSound();
 			reactionPair = p;
 			SWEDisappear = true;
@@ -279,7 +262,6 @@ public class BoardPanel extends JPanel {
 	}
 
 	public void horiReactionSVE(Pair p) {
-		System.out.println("in hori sve");
 		horiNumber = game.findTokenToAnimateHori(run.currentPlayer, p);
 		if(horiNumber == -20 || horiNumber == -21 || horiNumber == -22) {
 			playDisappearSound();
@@ -292,8 +274,8 @@ public class BoardPanel extends JPanel {
 		}else if(horiNumber == -24) {
 			playDisappearSound();
 			game.horizontalReaction(run.currentPlayer, p);
-		}
-	else if(horiNumber == -25) {
+		}else if(horiNumber == -25) {
+			game.horizontalReaction(run.currentPlayer, p);
 		}
 	}
 
@@ -392,7 +374,6 @@ public class BoardPanel extends JPanel {
 			for(BoardPiece bp : toAnimate) {
 				bp.needToAnimate = false;
 			}
-			reactionMoveAnimation = false;
 			reactions = false;
 			skip = false;
 			if(animationDir.equals("up") || animationDir.equals("down")) {
@@ -411,11 +392,6 @@ public class BoardPanel extends JPanel {
 			everyBpToAnimate.clear();
 		}
 	}
-
-	public void reactionHope(Graphics2D g, List<BoardPiece> toAnimate) {
-		displayReactionAnimation(g, toAnimate);
-	}
-
 
 	public void attemptRotation() {
 		if(chosenToken != null) {
@@ -530,7 +506,6 @@ public class BoardPanel extends JPanel {
 						chosenToken = null;
 						continue;
 					} else {
-						System.out.println("in setting null");
 						//chosenToken = null;
 					}
 				}
@@ -567,10 +542,7 @@ public class BoardPanel extends JPanel {
 			reactionDisappear(_g);
 		}
 		else if(activateAnimation) {
-			reactionHope(_g, aList);
-		}
-		if(reactionMoveAnimation) {
-			reactionHope(_g, reactionMoves);
+			displayReactionAnimation(_g, aList);
 		}
 		if(disappearAnimation) {
 			applyDisappearAnimation(_g);
@@ -628,7 +600,6 @@ public class BoardPanel extends JPanel {
 	public void doneDisappearAnimation() {
 		alpha = 0;
 		reactionDisappear = null;
-		reactionMoveAnimation = false;
 		reactions = false;
 		skip = false;
 		chosenToken = null;
@@ -943,6 +914,226 @@ public class BoardPanel extends JPanel {
 		}
 	}
 
+	public void negativeOne() {
+		disappearAnimation = true;
+		moveAnimation = false;
+		skip = false;
+		chosenToken = null;
+		return;
+	}
+
+
+	public void applyMoveAnimationUp(Graphics2D g) {
+		if(skip == false) {
+			everyBpToAnimate.clear();
+			piecesToAnimate = run.currentPlayer.upCounter(chosenToken, game.getBoard());
+			if(piecesToAnimate == -1) {
+				negativeOne();
+			}
+			chosenToken.moveX = moveX;
+			chosenToken.moveY = moveY;
+			chosenToken.destY = chosenY - HEIGHT;
+			everyBpToAnimate.add(chosenToken);
+			for(int i = piecesToAnimate; i > 0; i--) {
+				int row = getRow(chosenY - (i*HEIGHT));
+				int col = getCol(chosenX);
+				BoardPiece bp = ((BoardPiece)game.getBoard().getBoard()[row][col]);
+				bp.needToAnimate = true;
+				bp.moveX = chosenX;
+				bp.moveY = chosenY - (i * HEIGHT);
+				bp.destY = chosenY -((i+1) * HEIGHT);
+				everyBpToAnimate.add(bp);
+
+				if(((row-1) == 1 && col == 0 )|| ((row-1)==1 && col ==1)) {
+					everyBpToAnimate.remove(bp);
+					disappearPiece = bp;
+					disappearAnimation = true;
+					return;
+				}
+			}
+			if(piecesToAnimate == 0) {
+				int row = getRow(chosenY);
+				int col = getCol(chosenX);
+				if(((row-1) == 1 && col == 0 )|| ((row-1)==1 && col ==1)) {
+					disappearPiece = chosenToken;
+					disappearAnimation = true;
+					return;
+				}
+			}
+			skip = true;
+			BoardPiece temp;
+			if(piecesToAnimate > 0) {
+				temp = everyBpToAnimate.get(1);
+				if(temp.destY < 0) {
+					disappearPiece = temp;
+					everyBpToAnimate.remove(temp);
+					disappearAnimation = true;
+					return;
+				}
+			}
+		}else {
+			animateUp(g, everyBpToAnimate);
+		}
+	}
+
+	public void applyMoveAnimationDown(Graphics2D g) {
+		if(skip == false) {
+			everyBpToAnimate.clear();
+			piecesToAnimate = run.currentPlayer.downCounter(chosenToken, game.getBoard());
+			if(piecesToAnimate == -1) {
+				negativeOne();
+			}
+			chosenToken.moveX = moveX;
+			chosenToken.moveY = moveY;
+			chosenToken.destY = chosenY + HEIGHT;
+			everyBpToAnimate.add(chosenToken);
+			for(int i = piecesToAnimate; i > 0; i--) {
+				int row = getRow(chosenY + (i*HEIGHT));
+				int col = getCol(chosenX);
+				BoardPiece bp = ((BoardPiece)game.getBoard().getBoard()[row][col]);
+				bp.moveX = chosenX;
+				bp.moveY = chosenY + (i * HEIGHT);
+				bp.destY = chosenY +((i+1) * HEIGHT);
+				everyBpToAnimate.add(bp);
+				if(((row+1) == 8 && col == 8 )|| ((row+1)==8 && col ==9)) {
+					everyBpToAnimate.remove(bp);
+					disappearPiece = bp;
+					disappearAnimation = true;
+					return;
+				}
+			}
+			if(piecesToAnimate == 0) {
+				int row = getRow(chosenY);
+				int col = getCol(chosenX);
+				if(((row+1) == 8 && col == 8 )|| ((row+1)==8 && col ==9)) {
+					disappearPiece = chosenToken;
+					disappearAnimation = true;
+					moveAnimation = false;
+					return;
+				}
+			}
+			skip = true;
+			BoardPiece temp;
+			if(piecesToAnimate > 0) {
+				temp = everyBpToAnimate.get(1);
+				if(temp.destY > (9 * HEIGHT)) {
+					disappearPiece = temp;
+					everyBpToAnimate.remove(temp);
+					disappearAnimation = true;
+					return;
+				}
+			}
+		}else {
+			animateDown(g, everyBpToAnimate);
+		}
+	}
+
+	public void applyMoveAnimationLeft(Graphics2D g) {
+		if(skip == false) {
+			everyBpToAnimate.clear();
+			piecesToAnimate = run.currentPlayer.leftCounter(chosenToken, game.getBoard());
+			if(piecesToAnimate == -1) {
+				negativeOne();
+			}
+			chosenToken.moveX = moveX;
+			chosenToken.moveY = moveY;
+			chosenToken.destX = chosenX - WIDTH;
+			everyBpToAnimate.add(chosenToken);
+			for(int i = piecesToAnimate; i > 0; i--) {
+				int row = getRow(chosenY);
+				int col = getCol(chosenX - (i*WIDTH));
+				BoardPiece bp = ((BoardPiece)game.getBoard().getBoard()[row][col]);
+				bp.moveX = chosenX - (i*WIDTH);
+				bp.moveY = chosenY;
+				bp.destX = chosenX - ((i+1) * WIDTH);
+				everyBpToAnimate.add(bp);
+				if((row == 0 && (col - 1) == 1 )|| (row == 1 && (col - 1) == 1)) {
+					everyBpToAnimate.remove(bp);
+					disappearPiece = bp;
+					disappearAnimation = true;
+					return;
+				}
+			}
+			if(piecesToAnimate == 0) {
+				int row = getRow(chosenY);
+				int col = getCol(chosenX);
+				if((row == 0 && (col - 1) == 1 )|| (row == 1 && (col - 1) == 1)) {
+					disappearPiece = chosenToken;
+					disappearAnimation = true;
+					moveAnimation = false;
+					return;
+				}
+			}
+			skip = true;
+			BoardPiece temp;
+			if(piecesToAnimate > 0) {
+				temp = everyBpToAnimate.get(1);
+				if(temp.destX < 0) {
+					disappearPiece = temp;
+					everyBpToAnimate.remove(temp);
+					disappearAnimation = true;
+					return;
+				}
+			}
+		}else {
+			animateLeft(g, everyBpToAnimate);
+		}
+	}
+
+	public void applyMoveAnimationRight(Graphics2D g) {
+		if(skip == false) {
+			everyBpToAnimate.clear();
+			piecesToAnimate = run.currentPlayer.rightCounter(chosenToken, game.getBoard());
+			if(piecesToAnimate == -1) {
+				negativeOne();
+			}
+			chosenToken.moveX = moveX;
+			chosenToken.moveY = moveY;
+			chosenToken.destX = chosenX + WIDTH;
+			everyBpToAnimate.add(chosenToken);
+			for(int i = piecesToAnimate; i > 0; i--) {
+				int row = getRow(chosenY);
+				int col = getCol(chosenX + (i*WIDTH));
+				BoardPiece bp = ((BoardPiece)game.getBoard().getBoard()[row][col]);
+
+				bp.moveX = chosenX + (i*WIDTH);
+				bp.moveY = chosenY;
+				bp.destX = chosenX +((i+1) * WIDTH);
+				everyBpToAnimate.add(bp);
+				if((row == 8 && (col + 1) == 8 )|| (row == 9 && (col + 1) == 8)) {
+					everyBpToAnimate.remove(bp);
+					disappearPiece = bp;
+					disappearAnimation = true;
+					return;
+				}
+			}
+			if(piecesToAnimate == 0) {
+				int row = getRow(chosenY);
+				int col = getCol(chosenX);
+				if((row == 8 && (col + 1) == 8 )|| (row == 9 && (col + 1) == 8)) {
+					disappearPiece = chosenToken;
+					disappearAnimation = true;
+					moveAnimation = false;
+					return;
+				}
+			}
+			skip = true;
+			BoardPiece temp;
+			if(piecesToAnimate > 0) {
+				temp = everyBpToAnimate.get(1);
+				if(temp.destX > (9 * WIDTH)) {
+					disappearPiece = temp;
+					everyBpToAnimate.remove(temp);
+					disappearAnimation = true;
+					return;
+				}
+			}
+		}else {
+			animateRight(g, everyBpToAnimate);
+		}
+
+	}
+
 	public void applyMoveAnimation(Graphics2D g) {
 		/*
 		 * Moving up works by counting number of tiles above it that need to be pushed aswell
@@ -952,245 +1143,31 @@ public class BoardPanel extends JPanel {
 		 * Once they have arrived set of boolean to turn of move animation, and actually move the piece to create the illusion
 		 */
 		if (moveDir.equals("up")) {
-			if(skip == false) {
-				everyBpToAnimate.clear();
-				piecesToAnimate = run.currentPlayer.upCounter(chosenToken, game.getBoard());
-				if(piecesToAnimate == -1) {
-					disappearAnimation = true;
-					moveAnimation = false;
-					skip = false;
-					chosenToken = null;
-					return;
-				}
-				chosenToken.moveX = moveX;
-				chosenToken.moveY = moveY;
-				chosenToken.destY = chosenY - HEIGHT;
-				everyBpToAnimate.add(chosenToken);
-				for(int i = piecesToAnimate; i > 0; i--) {
-					int row = getRow(chosenY - (i*HEIGHT));
-					int col = getCol(chosenX);
-					BoardPiece bp = ((BoardPiece)game.getBoard().getBoard()[row][col]);
-					bp.needToAnimate = true;
-					bp.moveX = chosenX;
-					bp.moveY = chosenY - (i * HEIGHT);
-					bp.destY = chosenY -((i+1) * HEIGHT);
-					everyBpToAnimate.add(bp);
-
-					if(((row-1) == 1 && col == 0 )|| ((row-1)==1 && col ==1)) {
-						everyBpToAnimate.remove(bp);
-						disappearPiece = bp;
-						disappearAnimation = true;
-						return;
-					}
-				}
-				if(piecesToAnimate == 0) {
-					int row = getRow(chosenY);
-					int col = getCol(chosenX);
-					if(((row-1) == 1 && col == 0 )|| ((row-1)==1 && col ==1)) {
-						disappearPiece = chosenToken;
-						disappearAnimation = true;
-						return;
-					}
-				}
-				skip = true;
-				BoardPiece temp;
-				if(piecesToAnimate > 0) {
-					temp = everyBpToAnimate.get(1);
-					if(temp.destY < 0) {
-						disappearPiece = temp;
-						everyBpToAnimate.remove(temp);
-						disappearAnimation = true;
-						return;
-					}
-				}
-			}else {
-				animateUp(g, everyBpToAnimate);
-			}
+			applyMoveAnimationUp(g);
 		}else if(moveDir.equals("down")) {
-			if(skip == false) {
-				everyBpToAnimate.clear();
-				piecesToAnimate = run.currentPlayer.downCounter(chosenToken, game.getBoard());
-				if(piecesToAnimate == -1) {
-					disappearAnimation = true;
-					moveAnimation = false;
-					skip = false;
-					chosenToken = null;
-					return;
-				}
-				chosenToken.moveX = moveX;
-				chosenToken.moveY = moveY;
-				chosenToken.destY = chosenY + HEIGHT;
-				everyBpToAnimate.add(chosenToken);
-				for(int i = piecesToAnimate; i > 0; i--) {
-					int row = getRow(chosenY + (i*HEIGHT));
-					int col = getCol(chosenX);
-					BoardPiece bp = ((BoardPiece)game.getBoard().getBoard()[row][col]);
-					bp.moveX = chosenX;
-					bp.moveY = chosenY + (i * HEIGHT);
-					bp.destY = chosenY +((i+1) * HEIGHT);
-					everyBpToAnimate.add(bp);
-					if(((row+1) == 8 && col == 8 )|| ((row+1)==8 && col ==9)) {
-						everyBpToAnimate.remove(bp);
-						disappearPiece = bp;
-						disappearAnimation = true;
-						return;
-					}
-				}
-				if(piecesToAnimate == 0) {
-					int row = getRow(chosenY);
-					int col = getCol(chosenX);
-					if(((row+1) == 8 && col == 8 )|| ((row+1)==8 && col ==9)) {
-						disappearPiece = chosenToken;
-						disappearAnimation = true;
-						moveAnimation = false;
-						return;
-					}
-				}
-				skip = true;
-				BoardPiece temp;
-				if(piecesToAnimate > 0) {
-					temp = everyBpToAnimate.get(1);
-					if(temp.destY > (9 * HEIGHT)) {
-					//if(temp.destY > 540) {
-						disappearPiece = temp;
-						everyBpToAnimate.remove(temp);
-						disappearAnimation = true;
-						return;
-					}
-				}
-			}else {
-				animateDown(g, everyBpToAnimate);
-			}
+			applyMoveAnimationDown(g);
 		}else if(moveDir.equals("right")) {
-			if(skip == false) {
-				everyBpToAnimate.clear();
-				piecesToAnimate = run.currentPlayer.rightCounter(chosenToken, game.getBoard());
-				if(piecesToAnimate == -1) {
-					System.out.println("in -1");
-					disappearAnimation = true;
-					moveAnimation = false;
-					skip = false;
-					chosenToken = null;
-					return;
-				}
-				chosenToken.moveX = moveX;
-				chosenToken.moveY = moveY;
-				chosenToken.destX = chosenX + WIDTH;
-				everyBpToAnimate.add(chosenToken);
-				for(int i = piecesToAnimate; i > 0; i--) {
-					int row = getRow(chosenY);
-					int col = getCol(chosenX + (i*WIDTH));
-					BoardPiece bp = ((BoardPiece)game.getBoard().getBoard()[row][col]);
-
-					bp.moveX = chosenX + (i*WIDTH);
-					bp.moveY = chosenY;
-					bp.destX = chosenX +((i+1) * WIDTH);
-					everyBpToAnimate.add(bp);
-					if((row == 8 && (col + 1) == 8 )|| (row == 9 && (col + 1) == 8)) {
-						everyBpToAnimate.remove(bp);
-						disappearPiece = bp;
-						disappearAnimation = true;
-						return;
-					}
-				}
-				if(piecesToAnimate == 0) {
-					System.out.println("0 to animate");
-					int row = getRow(chosenY);
-					int col = getCol(chosenX);
-					if((row == 8 && (col + 1) == 8 )|| (row == 9 && (col + 1) == 8)) {
-						System.out.println("set to tru");
-						disappearPiece = chosenToken;
-						disappearAnimation = true;
-						moveAnimation = false;
-						return;
-					}
-				}
-				skip = true;
-				BoardPiece temp;
-				/*
-				 * if(piecesToAnimate > 0) {
-					temp = everyBpToAnimate.get(1);
-					if(temp.destX < 0) {
-						disappearPiece = temp;
-						everyBpToAnimate.remove(temp);
-						disappearAnimation = true;
-						return;
-					}
-				}
-				 */
-				if(piecesToAnimate > 0) {
-					System.out.println("what is " + (9 * WIDTH));
-					temp = everyBpToAnimate.get(1);
-					System.out.println("temp dest x is " + temp.destX);
-					if(temp.destX > (9 * WIDTH)) {
-					//if(temp.destX > 540) {
-						disappearPiece = temp;
-						everyBpToAnimate.remove(temp);
-						System.out.println("in >0");
-						disappearAnimation = true;
-						return;
-					}
-				}
-			}else {
-				animateRight(g, everyBpToAnimate);
-			}
+			applyMoveAnimationRight(g);
 		}
 		else if(moveDir.equals("left")) {
-			if(skip == false) {
-				everyBpToAnimate.clear();
-				piecesToAnimate = run.currentPlayer.leftCounter(chosenToken, game.getBoard());
-				if(piecesToAnimate == -1) {
-					disappearAnimation = true;
-					moveAnimation = false;
-					skip = false;
-					chosenToken = null;
-					return;
-				}
-				chosenToken.moveX = moveX;
-				chosenToken.moveY = moveY;
-				chosenToken.destX = chosenX - WIDTH;
-				everyBpToAnimate.add(chosenToken);
-				for(int i = piecesToAnimate; i > 0; i--) {
-					int row = getRow(chosenY);
-					int col = getCol(chosenX - (i*WIDTH));
-					BoardPiece bp = ((BoardPiece)game.getBoard().getBoard()[row][col]);
-					bp.moveX = chosenX - (i*WIDTH);
-					bp.moveY = chosenY;
-					bp.destX = chosenX - ((i+1) * WIDTH);
-					everyBpToAnimate.add(bp);
-					if((row == 0 && (col - 1) == 1 )|| (row == 1 && (col - 1) == 1)) {
-						everyBpToAnimate.remove(bp);
-						disappearPiece = bp;
-						disappearAnimation = true;
-						return;
-					}
-				}
-				if(piecesToAnimate == 0) {
-					int row = getRow(chosenY);
-					int col = getCol(chosenX);
-					if((row == 0 && (col - 1) == 1 )|| (row == 1 && (col - 1) == 1)) {
-						disappearPiece = chosenToken;
-						disappearAnimation = true;
-						moveAnimation = false;
-						return;
-					}
-				}
-				skip = true;
-				BoardPiece temp;
-				if(piecesToAnimate > 0) {
-					temp = everyBpToAnimate.get(1);
-					if(temp.destX < 0) {
-						disappearPiece = temp;
-						everyBpToAnimate.remove(temp);
-						disappearAnimation = true;
-						return;
-					}
-				}
-			}else {
-				animateLeft(g, everyBpToAnimate);
-			}
+			applyMoveAnimationLeft(g);
 		}
+	}
 
+	public void animateMove(Graphics2D g, BoardPiece bp) {
+		g.setColor(TOKEN_SQUARE);
+		g.fillRect(bp.moveX, moveY, WIDTH, WIDTH);
+		if(bp.getCol().equals("yellow")) {
+			g.setColor(Color.YELLOW);
+		}
+		else {
+			g.setColor(Color.GREEN);
+		}
+		g.fillOval(bp.moveX, moveY, WIDTH, HEIGHT);
+		g.setColor(Color.red);
+		g.setStroke(new BasicStroke(6));
+		drawToken(g, bp, bp.moveX, bp.moveY);
+		g.setStroke(new BasicStroke(0));
 	}
 
 	public void animateLeft(Graphics2D g, List<BoardPiece> toAnimate) {
@@ -1198,22 +1175,7 @@ public class BoardPanel extends JPanel {
 			if(bp == null) {
 				continue;
 			}
-			if(bp!=null) {
-			}
-
-			g.setColor(TOKEN_SQUARE);
-			g.fillRect(bp.moveX, moveY, WIDTH, WIDTH);
-			if(bp.getCol().equals("yellow")) {
-				g.setColor(Color.YELLOW);
-			}
-			else {
-				g.setColor(Color.GREEN);
-			}
-			g.fillOval(bp.moveX, moveY, WIDTH, HEIGHT);
-			g.setColor(Color.red);
-			g.setStroke(new BasicStroke(6));
-			drawToken(g, bp, bp.moveX, bp.moveY);
-			g.setStroke(new BasicStroke(0));
+			animateMove(g, bp);
 			if (bp.moveX > bp.destX) {
 				bp.moveX -= 2;
 			}
@@ -1223,13 +1185,7 @@ public class BoardPanel extends JPanel {
 				if(chosenToken!=null) {
 					letter = chosenToken.getName();
 					game.moveToken(run.currentPlayer, "move " + letter + " left");
-					if(game.getBoard().checkForReaction()) {
-						run.setBoardReactionsTrue();
-						run.buttonPanel.pass.setEnabled(false);
-					}else {
-						run.setBoardReactionsFalse();
-						run.buttonPanel.pass.setEnabled(true);
-					}
+					checkForMoreReactions();
 				}
 				chosenToken = null;
 			}
@@ -1244,19 +1200,7 @@ public class BoardPanel extends JPanel {
 			if(bp == null) {
 				continue;
 			}
-			g.setColor(TOKEN_SQUARE);
-			g.fillRect(bp.moveX, moveY, WIDTH, WIDTH);
-			if(bp.getCol().equals("yellow")) {
-				g.setColor(Color.YELLOW);
-			}
-			else {
-				g.setColor(Color.GREEN);
-			}
-			g.fillOval(bp.moveX, moveY, WIDTH, HEIGHT);
-			g.setColor(Color.red);
-			g.setStroke(new BasicStroke(6));
-			drawToken(g, bp, bp.moveX, bp.moveY);
-			g.setStroke(new BasicStroke(0));
+			animateMove(g, bp);
 			if (bp.moveX < bp.destX) {
 				bp.moveX += 2;
 			}
@@ -1281,20 +1225,7 @@ public class BoardPanel extends JPanel {
 			if(bp == null) {
 				continue;
 			}
-
-			g.setColor(TOKEN_SQUARE);
-			g.fillRect(moveX, bp.moveY, WIDTH, WIDTH);
-			if(bp.getCol().equals("yellow")) {
-				g.setColor(Color.YELLOW);
-			}
-			else {
-				g.setColor(Color.GREEN);
-			}
-			g.fillOval(moveX, bp.moveY, WIDTH, HEIGHT);
-			g.setColor(Color.red);
-			g.setStroke(new BasicStroke(6));
-			drawToken(g, bp, bp.moveX, bp.moveY);
-			g.setStroke(new BasicStroke(0));
+			animateMove(g, bp);
 			if (bp.moveY < bp.destY) {
 				bp.moveY += 2;
 			}
@@ -1319,19 +1250,7 @@ public class BoardPanel extends JPanel {
 			if(bp == null) {
 				continue;
 			}
-			g.setColor(TOKEN_SQUARE);
-			g.fillRect(moveX, bp.moveY, WIDTH, WIDTH);
-			if(bp.getCol().equals("yellow")) {
-				g.setColor(Color.YELLOW);
-			}
-			else {
-				g.setColor(Color.GREEN);
-			}
-			g.fillOval(moveX, bp.moveY, WIDTH, HEIGHT);
-			g.setColor(Color.red);
-			g.setStroke(new BasicStroke(6));
-			drawToken(g, bp, bp.moveX, bp.moveY);
-			g.setStroke(new BasicStroke(0));
+			animateMove(g, bp);
 			if (bp.moveY > bp.destY) {
 				bp.moveY -= 2;
 			}
