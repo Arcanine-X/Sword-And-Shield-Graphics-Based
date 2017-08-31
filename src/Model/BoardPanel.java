@@ -317,7 +317,6 @@ public class BoardPanel extends JPanel {
 				}
 
 			}else if(game.getDirectionOfAnimation(run.currentPlayer, p).equals("swordVElse")) {
-				System.out.println("in swordVElse");
 				number = game.findTokenToAnimate(run.currentPlayer, p);
 				if(number == -10) {
 					playDisappearSound();
@@ -390,7 +389,6 @@ public class BoardPanel extends JPanel {
 
 				}else {
 					for(int i = howManyToAnimate; i >= 0; i --) {
-						////////////
 						int row = getRow(p.getTwo().yLoc);
 						int col = getCol(p.getTwo().xLoc - (i*WIDTH));
 						BoardPiece bp = ((BoardPiece)game.getBoard().getBoard()[row][col]);
@@ -401,8 +399,6 @@ public class BoardPanel extends JPanel {
 						if(bp.equals(p.getTwo())) {
 							continue;
 						}
-						System.out.println("============================<----------------------------------------->=========================");
-
 						if((col!=0) && !(col == 2 && row == 0) && !(col==2 && row == 1)) {
 							bp.needToAnimate = true;
 							aList.add(bp);
@@ -410,12 +406,6 @@ public class BoardPanel extends JPanel {
 							reactionDisappear = bp;
 							playDisappearSound();
 						}
-						/*if(col != 0) {
-							aList.add(bp);
-						}else {
-							reactionDisappear = bp;
-							playDisappearSound();
-						}*/
 						activateAnimation = true;
 					}
 				}
@@ -479,7 +469,11 @@ public class BoardPanel extends JPanel {
 				}
 				g.setColor(TOKEN_SQUARE);
 				g.fillRect(bp.moveX, bp.moveY, WIDTH, WIDTH);
-				g.setColor(Color.YELLOW);
+				if(bp.getCol().equals("yellow")) {
+					g.setColor(Color.YELLOW);
+				}else {
+					g.setColor(Color.GREEN);
+				}
 				g.fillOval(bp.moveX, bp.moveY, WIDTH, HEIGHT);
 				g.setColor(Color.red);
 				g.setStroke(new BasicStroke(6));
@@ -536,9 +530,13 @@ public class BoardPanel extends JPanel {
 				if(bp == null) {
 					continue;
 				}
-				g.setColor(Color.DARK_GRAY);
+				g.setColor(TOKEN_SQUARE);
 				g.fillRect(bp.moveX, bp.moveY, WIDTH, WIDTH);
-				g.setColor(Color.YELLOW);
+				if(bp.getCol().equals("yellow")) {
+					g.setColor(Color.YELLOW);
+				}else {
+					g.setColor(Color.GREEN);
+				}
 				g.fillOval(bp.moveX, bp.moveY, WIDTH, HEIGHT);
 				g.setColor(Color.red);
 				g.setStroke(new BasicStroke(6));
@@ -595,9 +593,13 @@ public class BoardPanel extends JPanel {
 				if(bp == null) {
 					continue;
 				}
-				g.setColor(Color.DARK_GRAY);
+				g.setColor(TOKEN_SQUARE);
 				g.fillRect(bp.moveX, bp.moveY, WIDTH, WIDTH);
-				g.setColor(Color.YELLOW);
+				if(bp.getCol().equals("yellow")) {
+					g.setColor(Color.YELLOW);
+				}else {
+					g.setColor(Color.GREEN);
+				}
 				g.fillOval(bp.moveX, bp.moveY, WIDTH, HEIGHT);
 				g.setColor(Color.red);
 				g.setStroke(new BasicStroke(6));
@@ -657,9 +659,13 @@ public class BoardPanel extends JPanel {
 				if(bp == null) {
 					continue;
 				}
-				g.setColor(Color.DARK_GRAY);
+				g.setColor(TOKEN_SQUARE);
 				g.fillRect(bp.moveX, bp.moveY, WIDTH, WIDTH);
-				g.setColor(Color.YELLOW);
+				if(bp.getCol().equals("yellow")) {
+					g.setColor(Color.YELLOW);
+				}else {
+					g.setColor(Color.GREEN);
+				}
 				g.fillOval(bp.moveX, bp.moveY, WIDTH, HEIGHT);
 				g.setColor(Color.red);
 				g.setStroke(new BasicStroke(6));
