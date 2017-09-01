@@ -2,8 +2,14 @@ package Model;
 
 import java.awt.Rectangle;
 
-public class Reaction extends Rectangle{
+/**
+ * This is a helper class that contains all the information about a specific reaction. It is used to create a list of reactions,
+ * to find which reaction the user clicks on.
+ * @author patelchin1
+ *
+ */
 
+public class Reaction extends Rectangle{
 	public int x, y, width, height;
 	public BoardPiece one, two;
 	public String dir = "";
@@ -80,10 +86,4 @@ public class Reaction extends Rectangle{
 			return false;
 		return true;
 	}
-
-
-
-
-
-
 }

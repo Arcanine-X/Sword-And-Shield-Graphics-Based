@@ -6,7 +6,6 @@ import java.awt.Dimension;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -15,30 +14,35 @@ import java.util.Observer;
 import javax.swing.JPanel;
 
 import Controller.TokenController;
-
+/**
+ * This class represents the two token panels. It holds each of the players tokens,
+ * and is responsible for the player being able to choose and pick a token, to play
+ * on the board.
+ * @author Chin Patel
+ *
+ */
 public class TokenPanel extends JPanel implements Observer {
 	private static final Color TOKEN_SQUARE = new Color(179, 218, 255);
 	private static final int GAP = 8;
 	private static final int STROKE = 3;// stroke width /2
-	public int WIDTH = 60;
+	private int WIDTH = 60;
 	private int HEIGHT = 60;
 	private int x = GAP, y = GAP;
 	private int mouseX, mouseY;
+	private int toAnimateAcrossRotation;
+	private int alpha = 0;
+	private boolean animateCreation = false;
+	private boolean animateAcross = false;
 	private BoardPiece[][] tokens;
+	private BoardPiece clickedPiece = null;
+	private BoardPiece pieceToPlay;
+	private BoardPiece toAnimateAcross;
 	private SwordAndShieldGame game;
 	private Player player;
-	public BoardPiece clickedPiece = null;
-	private BoardPiece pieceToPlay;
 	private GameFrame run;
-	private boolean animateCreation = false;
 	private List<BoardPiece> clickedPieceRotations = new ArrayList<BoardPiece>();
 	private String create = "create";
-	private int alpha = 0;
 	private Color currentPlayerColor;
-
-	BoardPiece toFly;
-	int toFlyRot;
-	public boolean timeToFly = false;
 	private TokenController tokenController;
 
 	public TokenPanel(SwordAndShieldGame game, Player player, GameFrame run) {
@@ -51,21 +55,28 @@ public class TokenPanel extends JPanel implements Observer {
 		this.setMinimumSize(new Dimension(100, 220));
 	}
 
+	/**
+	 * Creates a token. This method is called from the glassPanel class after it has finished
+	 * animating the board pieces across panels.
+	 */
 	public void createToken() {
 		game.createToken(player, create);
 		clickedPiece = null;
 		if (game.getBoard().checkForReaction()) {
 			run.setBoardReactionsTrue();
-			run.buttonPanel.pass.setEnabled(false);
+			run.getButtonPanel().getPass().setEnabled(false);
 		} else {
 			run.setBoardReactionsFalse();
-			run.buttonPanel.pass.setEnabled(true);
+			run.getButtonPanel().getPass().setEnabled(true);
 		}
 		if (pieceToPlay != null) {
 			create = "";
 		}
 	}
 
+	/**
+	 * Sets the animation to fly across the panels to true, and plays the token if a token is clicked on.
+	 */
 	public void playToken() {
 		for (int i = 0; i < clickedPieceRotations.size(); i++) {
 			if (mouseX >= x && mouseX <= x + WIDTH && mouseY >= y && mouseY <= y + HEIGHT) {
@@ -74,9 +85,9 @@ public class TokenPanel extends JPanel implements Observer {
 				int rotation = i * 90;
 				create = "create " + letter + " " + rotation;
 				clickedPieceRotations.clear();
-				toFlyRot = rotation;
-				setPieceToFly(pieceToPlay);
-				timeToFly = true;
+				toAnimateAcrossRotation = rotation;
+				toAnimateAcross = pieceToPlay;
+				animateAcross = true;
 				break;
 			}
 			x += GAP;
@@ -85,17 +96,14 @@ public class TokenPanel extends JPanel implements Observer {
 		x = GAP;
 	}
 
-	public void setPieceToFly(BoardPiece bp) {
-		toFly = bp;
-	}
 
-	public BoardPiece getPieceToFly(BoardPiece bp) {
-		return bp;
-	}
-
+	/**
+	 * Displays the 4 rotations when a token is clicked on.
+	 * @param g
+	 */
 	private void displayClickedRotations(Graphics2D g) {
 		for (int i = 0; i < clickedPieceRotations.size(); i++) {
-			g.setColor(Color.BLACK);
+			g.setColor(TOKEN_SQUARE);
 			g.fillRect(x, y, WIDTH, WIDTH);
 			if (player.getName().equals("yellow")) {
 				g.setColor(Color.YELLOW);
@@ -112,7 +120,9 @@ public class TokenPanel extends JPanel implements Observer {
 		x = GAP;
 
 	}
-
+	/**
+	 * Creates all the possible reactions and adds them to a list to be drawn.
+	 */
 	public void getRotations() {
 		clickedPieceRotations.clear();
 		if (clickedPiece != null) {
@@ -137,6 +147,9 @@ public class TokenPanel extends JPanel implements Observer {
 		}
 	}
 
+	/**
+	 * Checks if the position the player has clicked on is on a token or something else.
+	 */
 	public void clicked() {
 		for (int row = 0; row < tokens.length; row++) {
 			for (int col = 0; col < tokens[0].length; col++) {
@@ -173,7 +186,11 @@ public class TokenPanel extends JPanel implements Observer {
 
 		}
 	}
-
+	/**
+	 * Applies the fade in animation when a token is clicked. This is done by increasing the alpha value
+	 * by a certain amount until a a certain threshold.
+	 * @param g
+	 */
 	private void applyAnimation(Graphics2D g) {
 		for (int i = 0; i < clickedPieceRotations.size(); i++) {
 			g.setColor(new Color(179, 218, 255, alpha));
@@ -191,8 +208,8 @@ public class TokenPanel extends JPanel implements Observer {
 			x += GAP;
 			x += WIDTH;
 		}
-		if (alpha < 255) {
-			alpha += 5;
+		if (alpha < 250) {
+			alpha += 10;
 			x = GAP;
 		} else {
 			animateCreation = false;
@@ -200,7 +217,10 @@ public class TokenPanel extends JPanel implements Observer {
 			x = GAP;
 		}
 	}
-
+	/**
+	 * Draws the token board by iterating through the players tokens.
+	 * @param g
+	 */
 	private void drawBoard(Graphics2D g) {
 		WIDTH = Math.min(getWidth(), getHeight()) / 7 - Math.min(getWidth(), getHeight()) / 60;
 		HEIGHT = Math.min(getWidth(), getHeight()) / 7 - Math.min(getWidth(), getHeight()) / 60;
@@ -234,6 +254,14 @@ public class TokenPanel extends JPanel implements Observer {
 		y = GAP;
 	}
 
+	/**
+	 * Draws the the token pieces swords and shields appropriately in the given x and y coordinates. The x
+	 * and y coordinates refer to point(0,0) of the board piece token square.
+	 * @param g
+	 * @param piece --- the piece whose swords and shields are being drawn
+	 * @param x --- x coordinate of the board piece square
+	 * @param y --- y coordinate of the board piece square
+	 */
 	private void drawToken(Graphics2D g, BoardPiece piece) {
 		if (piece.getNorth() == 1) {
 			g.drawLine(x + WIDTH / 2, y + STROKE, x + WIDTH / 2, y + HEIGHT / 2);
@@ -293,4 +321,27 @@ public class TokenPanel extends JPanel implements Observer {
 	public void setClickedPiece(BoardPiece clickedPiece) {
 		this.clickedPiece = clickedPiece;
 	}
+
+	public BoardPiece getToAnimateAcross() {
+		return toAnimateAcross;
+	}
+
+	public int getToAnimateAcrossRotation() {
+		return toAnimateAcrossRotation;
+	}
+
+	public boolean isAnimateAcross() {
+		return animateAcross;
+	}
+
+	public void setAnimateAcross(boolean animateAcross) {
+		this.animateAcross = animateAcross;
+	}
+
+	public int getWIDTH() {
+		return WIDTH;
+	}
+
+
+
 }

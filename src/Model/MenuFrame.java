@@ -6,35 +6,37 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
-
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-
-
+/**
+ * This class represents the frame for the menu. This menu consists of buttons, and when a button is pressed,
+ * it will dispose of this frame and create the frame accordingly.
+ * @author Chin Patel
+ *
+ */
 public class MenuFrame extends JFrame {
 	public MenuFrame() {
-	//	JPanel menuPanel = new JPanel();
+		//Create Buttons
 		JPanel buttons = new JPanel();
 		JButton start = new JButton("Start Game");
 		JButton information = new JButton("Information");
 		JButton quit = new JButton("Quit");
-//		menuPanel.setBackground(Color.white);
 		buttons.setBackground(Color.white);
+		//Add Buttons
 		buttons.add(start);
 		buttons.add(information);
 		buttons.add(quit);
 		this.setTitle("Menu");
 		this.setFocusable(true);
-	//	menuPanel.setLayout(new BorderLayout());
 		this.add(buttons, BorderLayout.NORTH);
-//		this.add(menuPanel);
 		this.add(new JLabel(new ImageIcon("editied.jpg")));
 		this.pack();
 		this.setVisible(true);
+		//Button action listeners
 		start.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -43,7 +45,6 @@ public class MenuFrame extends JFrame {
 
 			}
 		});
-
 		information.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -59,8 +60,8 @@ public class MenuFrame extends JFrame {
 			}
 		});
 	}
-
-	public Dimension getPreferredSize() {return new Dimension(800, 800);}
-
+	public Dimension getPreferredSize() {
+		return new Dimension(800, 800);
+	}
 
 }

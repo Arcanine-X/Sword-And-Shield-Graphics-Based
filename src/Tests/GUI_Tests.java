@@ -30,7 +30,7 @@ public class GUI_Tests {
 	@Test
 	public void validYellowCreation() throws InterruptedException {
 
-		SwordAndShieldGame game = new SwordAndShieldGame();
+		/*SwordAndShieldGame game = new SwordAndShieldGame();
 		gameFrame = new GameFrame();
 		new Timer(50, (e) -> {
 			gameFrame.repaint();
@@ -45,14 +45,14 @@ public class GUI_Tests {
 		if(game.getBoard().getBoard()[7][7] == null) {
 			System.out.println("wot");
 		}else{System.out.println("good");}
-		Thread.sleep(2000);
-		
+		Thread.sleep(2000);*/
+
 
 	}
-	
+
 	@Test
 	public void test() throws InterruptedException {
-	
+
 	}
 
 }

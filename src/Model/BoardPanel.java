@@ -35,7 +35,7 @@ public class BoardPanel extends JPanel {
 	public String moveDir = "";
 	private String letter = "";
 	private String animationDir = "";
-	public boolean moveAnimation = false, rotationAnimation = false;
+	private boolean moveAnimation = false, rotationAnimation = false;
 	private boolean skip = false;
 	private boolean disappearAnimation = false;
 	private boolean disappearSkip = false;
@@ -67,11 +67,11 @@ public class BoardPanel extends JPanel {
 	}
 
 	/**
-	 *
-	 * @param one
-	 * @param two
-	 * @param player
-	 * @return
+	 * Goes through the list of reactions and finds the pair specific pair of reaction
+	 * @param one --- board piece one involved in a reaction
+	 * @param two --- board piece two involved in a reaction
+	 * @param player --- player involved in reaction
+	 * @return --- a pair of reaction that conntains the parameters
 	 */
 	public Pair findPair(BoardPiece one, BoardPiece two, Player player) {
 		for(Pair p : game.getBoard().getReactions()) {
@@ -113,10 +113,10 @@ public class BoardPanel extends JPanel {
 	public void checkForMoreReactions() {
 		if(game.getBoard().checkForReaction()) {
 			run.setBoardReactionsTrue();
-			run.buttonPanel.pass.setEnabled(false);
+			run.getButtonPanel().getPass().setEnabled(false);
 		}else {
 			run.setBoardReactionsFalse();
-			run.buttonPanel.pass.setEnabled(true);
+			run.getButtonPanel().getPass().setEnabled(true);
 		}
 	}
 
@@ -138,7 +138,7 @@ public class BoardPanel extends JPanel {
 	 */
 	public void upReactionAnimation(Pair p, int howManyToAnimate) {
 		if(howManyToAnimate == 0 || howManyToAnimate == -1 || howManyToAnimate == -2) {
-			game.verticalReaction(run.currentPlayer, p);
+			game.verticalReaction(run.getCurrentPlayer(), p);
 		}else {
 			for(int i = howManyToAnimate; i >= 0; i --) {
 				int row = getRow(p.getTwo().yLoc - (i*HEIGHT));
@@ -168,17 +168,17 @@ public class BoardPanel extends JPanel {
 	 * @param p --- the two board pieces that are reacting together
 	 */
 	public void vertReactionSVE(Pair p) {
-		vertnumber = game.findTokenToAnimate(run.currentPlayer, p);
+		vertnumber = game.findTokenToAnimate(run.getCurrentPlayer(), p);
 		if(vertnumber == -10 || vertnumber == -11 || vertnumber == -12) {
 			playDisappearSound();
 			reactionPair = p;
 			SWEDisappear = true;
 		}else if(vertnumber == -13) {
 			playDisappearSound();
-			game.verticalReaction(run.currentPlayer, p);
+			game.verticalReaction(run.getCurrentPlayer(), p);
 		}else if(vertnumber == -14) {
 			playDisappearSound();
-			game.verticalReaction(run.currentPlayer, p);
+			game.verticalReaction(run.getCurrentPlayer(), p);
 		}else if(vertnumber == -15) {
 
 		}
@@ -191,7 +191,7 @@ public class BoardPanel extends JPanel {
 	 */
 	public void downReactionAnimation(Pair p, int howManyToAnimate) {
 		if(howManyToAnimate == 0 || howManyToAnimate == -1 || howManyToAnimate == -2) {
-			game.verticalReaction(run.currentPlayer, p);
+			game.verticalReaction(run.getCurrentPlayer(), p);
 		}else {
 			for(int i = 0; i <= howManyToAnimate; i ++) {
 				int row = getRow(p.getOne().yLoc + (i*HEIGHT));
@@ -222,7 +222,7 @@ public class BoardPanel extends JPanel {
 	 */
 	public void rightReactionAnimation(Pair p, int howManyToAnimate) {
 		if(howManyToAnimate == 0 || howManyToAnimate == -1 || howManyToAnimate == -2) {
-			game.horizontalReaction(run.currentPlayer, p);
+			game.horizontalReaction(run.getCurrentPlayer(), p);
 		}else {
 			for(int i = 0; i <= howManyToAnimate; i ++) {
 				int row = getRow(p.getOne().yLoc);
@@ -254,7 +254,7 @@ public class BoardPanel extends JPanel {
 	 */
 	public void leftReactionAnimation(Pair p, int howManyToAnimate) {
 		if(howManyToAnimate == 0 || howManyToAnimate == -1 || howManyToAnimate == -2) {
-			game.horizontalReaction(run.currentPlayer, p);
+			game.horizontalReaction(run.getCurrentPlayer(), p);
 		}else {
 			for(int i = howManyToAnimate; i >= 0; i --) {
 				int row = getRow(p.getTwo().yLoc);
@@ -285,7 +285,7 @@ public class BoardPanel extends JPanel {
 	 * @param p --- the two board pieces that are reacting together
 	 */
 	public void horiReactionSVE(Pair p) {
-		horiNumber = game.findTokenToAnimateHori(run.currentPlayer, p);
+		horiNumber = game.findTokenToAnimateHori(run.getCurrentPlayer(), p);
 		if(horiNumber == -20 || horiNumber == -21 || horiNumber == -22) {
 			playDisappearSound();
 			reactionPair = p;
@@ -293,12 +293,12 @@ public class BoardPanel extends JPanel {
 		}
 		else if(horiNumber == -23) {
 			playDisappearSound();
-			game.horizontalReaction(run.currentPlayer, p);
+			game.horizontalReaction(run.getCurrentPlayer(), p);
 		}else if(horiNumber == -24) {
 			playDisappearSound();
-			game.horizontalReaction(run.currentPlayer, p);
+			game.horizontalReaction(run.getCurrentPlayer(), p);
 		}else if(horiNumber == -25) {
-			game.horizontalReaction(run.currentPlayer, p);
+			game.horizontalReaction(run.getCurrentPlayer(), p);
 		}
 	}
 
@@ -309,33 +309,33 @@ public class BoardPanel extends JPanel {
 	public void tryReactionAnimation(Pair p) {
 		int howManyToAnimate;
 		if(p.getDir().equals("vert")) {
-			howManyToAnimate = game.verticalReactionAnimation(run.currentPlayer, p);
-			animationDir = game.getDirectionOfAnimation(run.currentPlayer, p);
-			if(game.getDirectionOfAnimation(run.currentPlayer, p).equals("up")) {
+			howManyToAnimate = game.verticalReactionAnimation(run.getCurrentPlayer(), p);
+			animationDir = game.getDirectionOfAnimation(run.getCurrentPlayer(), p);
+			if(game.getDirectionOfAnimation(run.getCurrentPlayer(), p).equals("up")) {
 				upReactionAnimation(p, howManyToAnimate);
 			}
-			else if(game.getDirectionOfAnimation(run.currentPlayer, p).equals("down")) {
+			else if(game.getDirectionOfAnimation(run.getCurrentPlayer(), p).equals("down")) {
 				downReactionAnimation(p, howManyToAnimate);
-			}else if(game.getDirectionOfAnimation(run.currentPlayer, p).equals("swordVElse")) {
+			}else if(game.getDirectionOfAnimation(run.getCurrentPlayer(), p).equals("swordVElse")) {
 				vertReactionSVE(p);
 			}
 			else {
-				game.verticalReaction(run.currentPlayer, p);
+				game.verticalReaction(run.getCurrentPlayer(), p);
 			}
 		}
 		if(p.getDir().equals("hori")) {
-			animationDir = game.getDirectionOfAnimation(run.currentPlayer, p);
-			howManyToAnimate = game.horizontalReactionAnimation(run.currentPlayer, p);
-			if(game.getDirectionOfAnimation(run.currentPlayer, p).equals("right")) {
+			animationDir = game.getDirectionOfAnimation(run.getCurrentPlayer(), p);
+			howManyToAnimate = game.horizontalReactionAnimation(run.getCurrentPlayer(), p);
+			if(game.getDirectionOfAnimation(run.getCurrentPlayer(), p).equals("right")) {
 				rightReactionAnimation(p, howManyToAnimate);
 			}
-			else if(game.getDirectionOfAnimation(run.currentPlayer, p).equals("left")) {
+			else if(game.getDirectionOfAnimation(run.getCurrentPlayer(), p).equals("left")) {
 				leftReactionAnimation(p, howManyToAnimate);
-			}else if(game.getDirectionOfAnimation(run.currentPlayer, p).equals("swordVElse")) {
+			}else if(game.getDirectionOfAnimation(run.getCurrentPlayer(), p).equals("swordVElse")) {
 				horiReactionSVE(p);
 			}
 			else {
-				game.horizontalReaction(run.currentPlayer, p);
+				game.horizontalReaction(run.getCurrentPlayer(), p);
 			}
 		}
 	}
@@ -360,14 +360,22 @@ public class BoardPanel extends JPanel {
 		g.setStroke(new BasicStroke(0));
 	}
 
+	/**
+	 * Displays the moving animation in reactions. Depending on the direction of the reaction, either moveY
+	 * or moveX is changed until the board piece reaches is destination value.
+	 * @param g
+	 * @param toAnimate --- List of board pieces being animated
+	 */
 	public void displayReactionAnimation(Graphics2D g, List<BoardPiece> toAnimate) {
 		if(toAnimate.isEmpty()) {
 			activateAnimation = false;
 		}
 		for(BoardPiece bp : toAnimate) {
 			if(bp == null) {
+				//Shouldn't ever be null
 				continue;
 			}
+			// draws the token at the drawX and drawY locations
 			drawAnimatingToken(g, bp);
 			if(animationDir.equals("up")) {
 				if (bp.moveY > bp.destY) {
@@ -408,10 +416,10 @@ public class BoardPanel extends JPanel {
 			reactions = false;
 			skip = false;
 			if(animationDir.equals("up") || animationDir.equals("down")) {
-				game.verticalReaction(run.currentPlayer, reactionPair);
+				game.verticalReaction(run.getCurrentPlayer(), reactionPair);
 
 			}else if(animationDir.equals("left") || animationDir.equals("right")) {
-				game.horizontalReaction(run.currentPlayer, reactionPair);
+				game.horizontalReaction(run.getCurrentPlayer(), reactionPair);
 
 			}
 			chosenToken = null;
@@ -447,7 +455,7 @@ public class BoardPanel extends JPanel {
 	 */
 	public void attemptClickMove() {
 		if (chosenToken != null) {
-			if(run.currentPlayer.getMovesSoFar().contains(chosenToken.getName())){
+			if(run.getCurrentPlayer().getMovesSoFar().contains(chosenToken.getName())){
 				return;
 			}
 			mouseClicks = 0;
@@ -531,15 +539,15 @@ public class BoardPanel extends JPanel {
 						chosenToken = (BoardPiece) board[row][col];
 						chosenX = moveX = col * WIDTH;
 						chosenY = moveY = row * HEIGHT;
-						if(run.currentPlayer.getEveryMovement().contains(chosenToken) || run.currentPlayer.getMovesSoFar().contains(chosenToken.getName())) {
+						if(run.getCurrentPlayer().getEveryMovement().contains(chosenToken) || run.getCurrentPlayer().getMovesSoFar().contains(chosenToken.getName())) {
 							chosenToken = null;
 							continue;
 						}
-						if (run.currentPlayer.getName().equals("yellow") && chosenToken.getCol().equals("yellow")) {
+						if (run.getCurrentPlayer().getName().equals("yellow") && chosenToken.getCol().equals("yellow")) {
 							mouseClicks++;
 							return;
 						}
-						if (run.currentPlayer.getName().equals("green") && chosenToken.getCol().equals("green")) {
+						if (run.getCurrentPlayer().getName().equals("green") && chosenToken.getCol().equals("green")) {
 							mouseClicks++;
 							return;
 						}
@@ -553,6 +561,10 @@ public class BoardPanel extends JPanel {
 		}
 	}
 
+	/**
+	 * Method checks for a winner. If one of the player locations is null, it must be dead
+	 * and there the game stops - checked after each reaction.
+	 */
 	public void checkForWinner() {
 		if(board[1][1] == null) {
 			//green wins
@@ -671,7 +683,7 @@ public class BoardPanel extends JPanel {
 			if(alpha < 250) {
 				alpha +=5;
 			}else {
-				game.verticalReaction(run.currentPlayer, reactionPair);
+				game.verticalReaction(run.getCurrentPlayer(), reactionPair);
 				doneDisappearAnimation();
 			}
 		}
@@ -681,7 +693,7 @@ public class BoardPanel extends JPanel {
 			if(alpha < 250) {
 				alpha +=5;
 			}else {
-				game.verticalReaction(run.currentPlayer, reactionPair);
+				game.verticalReaction(run.getCurrentPlayer(), reactionPair);
 				doneDisappearAnimation();
 			}
 		}else if (vertnumber == -12) {
@@ -690,7 +702,7 @@ public class BoardPanel extends JPanel {
 			if(alpha < 250) {
 				alpha +=5;
 			}else {
-				game.verticalReaction(run.currentPlayer, reactionPair);
+				game.verticalReaction(run.getCurrentPlayer(), reactionPair);
 				doneDisappearAnimation();
 			}
 		}else if (horiNumber == -20) {
@@ -701,7 +713,7 @@ public class BoardPanel extends JPanel {
 			if(alpha < 250) {
 				alpha +=5;
 			}else {
-				game.horizontalReaction(run.currentPlayer, reactionPair);
+				game.horizontalReaction(run.getCurrentPlayer(), reactionPair);
 				doneDisappearAnimation();
 			}
 		}else if (horiNumber == -21) {
@@ -710,7 +722,7 @@ public class BoardPanel extends JPanel {
 			if(alpha < 250) {
 				alpha +=5;
 			}else {
-				game.horizontalReaction(run.currentPlayer, reactionPair);
+				game.horizontalReaction(run.getCurrentPlayer(), reactionPair);
 				doneDisappearAnimation();
 			}
 		}else if (horiNumber == -22) {
@@ -719,7 +731,7 @@ public class BoardPanel extends JPanel {
 			if(alpha < 250) {
 				alpha +=5;
 			}else {
-				game.horizontalReaction(run.currentPlayer, reactionPair);
+				game.horizontalReaction(run.getCurrentPlayer(), reactionPair);
 				doneDisappearAnimation();
 			}
 		}
@@ -733,7 +745,7 @@ public class BoardPanel extends JPanel {
 		reactionOptions.clear();
 		List<Pair> reactions = game.getBoard().getReactions();
 		if(!reactions.isEmpty()) {
-			run.buttonPanel.pass.setEnabled(false);
+			run.getButtonPanel().getPass().setEnabled(false);
 		}
 		for(Pair p : reactions) {
 			if(p.getOne() instanceof BoardPiece && p.getTwo() instanceof BoardPiece) { // Check for boardpiece reactions
@@ -818,7 +830,7 @@ public class BoardPanel extends JPanel {
 	public void drawHugeToken(BoardPiece bp, Graphics2D g) {
 		g.setColor(Color.BLACK);
 		g.fillRect(WIDTH * 2, HEIGHT * 2, WIDTH*6, HEIGHT*6);
-		if(run.currentPlayer.getName().equals("yellow")) {
+		if(run.getCurrentPlayer().getName().equals("yellow")) {
 			g.setColor(Color.yellow);
 		}
 		else {
@@ -835,15 +847,8 @@ public class BoardPanel extends JPanel {
 				rotationCount = 0;
 			}
 		}else if(!(mouseX > WIDTH * 2 && mouseX < WIDTH * 2 + WIDTH*6 && mouseY > HEIGHT * 2 && mouseY < HEIGHT * 2 + HEIGHT*6) && mouseX > 0 && mouseY > 0) {
-			game.rotateToken(run.currentPlayer, "rotate " + hugeToken.getName() + " " + 0);
-			if(game.getBoard().checkForReaction()) {
-				run.setBoardReactionsTrue();
-				run.buttonPanel.pass.setEnabled(false);
-			}else {
-				run.setBoardReactionsFalse();
-				run.buttonPanel.pass.setEnabled(true);
-
-			}
+			game.rotateToken(run.getCurrentPlayer(), "rotate " + hugeToken.getName() + " " + 0);
+			checkForMoreReactions();
 			rotationCount = 0;
 			rotationAnimation = false;
 			chosenToken = null;
@@ -955,23 +960,17 @@ public class BoardPanel extends JPanel {
 				}
 				singleMove = false;
 				if(moveDir.equals("up")) {
-					game.moveToken(run.currentPlayer, "move " + toMove.getName() + " up");
+					game.moveToken(run.getCurrentPlayer(), "move " + toMove.getName() + " up");
 				}else if(moveDir.equals("down")) {
-					game.moveToken(run.currentPlayer, "move " + toMove.getName() + " down");
+					game.moveToken(run.getCurrentPlayer(), "move " + toMove.getName() + " down");
 				}
 				else if(moveDir.equals("right")) {
-					game.moveToken(run.currentPlayer, "move " + toMove.getName() + " right");
+					game.moveToken(run.getCurrentPlayer(), "move " + toMove.getName() + " right");
 				}
 				else if(moveDir.equals("left")) {
-					game.moveToken(run.currentPlayer, "move " + toMove.getName() + " left");
+					game.moveToken(run.getCurrentPlayer(), "move " + toMove.getName() + " left");
 				}
-				if(game.getBoard().checkForReaction()) {
-					run.setBoardReactionsTrue();
-					run.buttonPanel.pass.setEnabled(false);
-				}else {
-					run.setBoardReactionsFalse();
-					run.buttonPanel.pass.setEnabled(true);
-				}
+				checkForMoreReactions();
 			}
 		}
 	}
@@ -998,7 +997,7 @@ public class BoardPanel extends JPanel {
 	public void applyMoveAnimationUp(Graphics2D g) {
 		if(skip == false) {
 			everyBpToAnimate.clear();
-			piecesToAnimate = run.currentPlayer.upCounter(chosenToken, game.getBoard());
+			piecesToAnimate = run.getCurrentPlayer().upCounter(chosenToken, game.getBoard());
 			if(piecesToAnimate == -1) {
 				negativeOne();
 			}
@@ -1058,7 +1057,7 @@ public class BoardPanel extends JPanel {
 	public void applyMoveAnimationDown(Graphics2D g) {
 		if(skip == false) {
 			everyBpToAnimate.clear();
-			piecesToAnimate = run.currentPlayer.downCounter(chosenToken, game.getBoard());
+			piecesToAnimate = run.getCurrentPlayer().downCounter(chosenToken, game.getBoard());
 			if(piecesToAnimate == -1) {
 				negativeOne();
 			}
@@ -1117,7 +1116,7 @@ public class BoardPanel extends JPanel {
 	public void applyMoveAnimationLeft(Graphics2D g) {
 		if(skip == false) {
 			everyBpToAnimate.clear();
-			piecesToAnimate = run.currentPlayer.leftCounter(chosenToken, game.getBoard());
+			piecesToAnimate = run.getCurrentPlayer().leftCounter(chosenToken, game.getBoard());
 			if(piecesToAnimate == -1) {
 				negativeOne();
 			}
@@ -1176,7 +1175,7 @@ public class BoardPanel extends JPanel {
 	public void applyMoveAnimationRight(Graphics2D g) {
 		if(skip == false) {
 			everyBpToAnimate.clear();
-			piecesToAnimate = run.currentPlayer.rightCounter(chosenToken, game.getBoard());
+			piecesToAnimate = run.getCurrentPlayer().rightCounter(chosenToken, game.getBoard());
 			if(piecesToAnimate == -1) {
 				negativeOne();
 			}
@@ -1285,7 +1284,7 @@ public class BoardPanel extends JPanel {
 				skip = false;
 				if(chosenToken!=null) {
 					letter = chosenToken.getName();
-					game.moveToken(run.currentPlayer, "move " + letter + " left");
+					game.moveToken(run.getCurrentPlayer(), "move " + letter + " left");
 					checkForMoreReactions();
 				}
 				chosenToken = null;
@@ -1316,7 +1315,7 @@ public class BoardPanel extends JPanel {
 				skip = false;
 				if(chosenToken!=null) {
 					letter = chosenToken.getName();
-					game.moveToken(run.currentPlayer, "move " + letter + " right");
+					game.moveToken(run.getCurrentPlayer(), "move " + letter + " right");
 					checkForMoreReactions();
 				}
 				chosenToken = null;
@@ -1347,7 +1346,7 @@ public class BoardPanel extends JPanel {
 				skip = false;
 				if(chosenToken!=null) {
 					letter = chosenToken.getName();
-					game.moveToken(run.currentPlayer, "move " + letter + " down");
+					game.moveToken(run.getCurrentPlayer(), "move " + letter + " down");
 					checkForMoreReactions();
 				}
 				chosenToken = null;
@@ -1378,7 +1377,7 @@ public class BoardPanel extends JPanel {
 				skip = false;
 				if(chosenToken!=null) {
 					letter = chosenToken.getName();
-					game.moveToken(run.currentPlayer, "move " + letter + " up");
+					game.moveToken(run.getCurrentPlayer(), "move " + letter + " up");
 					checkForMoreReactions();
 				}
 				chosenToken = null;
@@ -1413,7 +1412,7 @@ public class BoardPanel extends JPanel {
 				} else if (row == 2 && col == 2) {
 					if (board[row][col] instanceof BoardPiece) {
 						if((((BoardPiece)board[row][col]).equals(chosenToken)&&moveAnimation)) {
-							g.setColor(new Color(144, 238, 144));
+							g.setColor(GREEN_CREATION);
 							g.fillRect(col * WIDTH, row * HEIGHT, WIDTH, HEIGHT);
 							continue;
 						}
@@ -1451,7 +1450,6 @@ public class BoardPanel extends JPanel {
 							g.fillRect(col * WIDTH, row * HEIGHT, WIDTH, HEIGHT);
 							continue;
 						}
-
 						BoardPiece temp = (BoardPiece) board[row][col];
 
 						if(temp.needToAnimate) {
@@ -1679,4 +1677,27 @@ public class BoardPanel extends JPanel {
 	public Dimension getPreferredSize() {
 		return new Dimension(1000, 640);
 	}
+
+	public boolean isDisappearAnimation() {
+		return disappearAnimation;
+	}
+
+	public boolean isSWEDisappear() {
+		return SWEDisappear;
+	}
+
+	public boolean isMoveAnimation() {
+		return moveAnimation;
+	}
+
+	public boolean isRotationAnimation() {
+		return rotationAnimation;
+	}
+
+	public void setMoveAnimation(boolean moveAnimation) {
+		this.moveAnimation = moveAnimation;
+	}
+
+
+
 }

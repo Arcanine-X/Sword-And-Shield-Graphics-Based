@@ -153,6 +153,12 @@ public class Player implements Token {
 		}
 	}
 
+	/**
+	 * Calculates and returns the number of adjacent tiles to the right of the board piece given.
+	 * @param token --- The board piece being counted across from
+	 * @param board --- the current game state
+	 * @return --- the number of adjacent tiles
+	 */
 	public int rightCounter(BoardPiece token, Board board) {
 		int c = board.getX(token.getName());
 		int r = board.getY(token.getName());
@@ -171,6 +177,12 @@ public class Player implements Token {
 		return count;
 	}
 
+	/**
+	 * Calculates and returns the number of adjacent tiles to the left of the board piece given.
+	 * @param token --- The board piece being counted across from
+	 * @param board --- the current game state
+	 * @return --- the number of adjacent tiles
+	 */
 	public int leftCounter(BoardPiece token, Board board) {
 		int c = board.getX(token.getName());
 		int r = board.getY(token.getName());
@@ -189,6 +201,12 @@ public class Player implements Token {
 		return count;
 	}
 
+	/**
+	 * Calculates and returns the number of adjacent tiles above the board piece given.
+	 * @param token --- The board piece being counted up from
+	 * @param board --- the current game state
+	 * @return --- the number of adjacent tiles
+	 */
 	public int upCounter(BoardPiece token, Board board) {
 		int c = board.getX(token.getName());
 		int r = board.getY(token.getName());
@@ -208,7 +226,12 @@ public class Player implements Token {
 		return count;
 	}
 
-
+	/**
+	 * Calculates and returns the number of adjacent tiles below the board piece given.
+	 * @param token --- The board piece being counted down from
+	 * @param board --- the current game state
+	 * @return --- the number of adjacent tiles
+	 */
 	public int downCounter(BoardPiece token, Board board) {
 		int c = board.getX(token.getName());
 		int r = board.getY(token.getName());
@@ -475,8 +498,8 @@ public class Player implements Token {
 			}
 		}
 	}
-	
-	
+
+
 
 	/**
 	 * Clears the grave yards by setting everything in it to null.

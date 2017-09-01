@@ -19,8 +19,8 @@ public class GraveyardPanel extends JPanel {
 	private int HEIGHT = 60;
 	private static final int GAP = 8; // Gap between the tokens
 	private static final int STROKE = 3; // new BasicStroke() / 2
-	int x = GAP;
-	int y = GAP;
+	private int x = GAP;
+	private int y = GAP;
 	private SwordAndShieldGame game;
 	private Player player;
 	private GameFrame run;

@@ -5,11 +5,14 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
 
-
+/**
+ * This class represents the information frame. 
+ * @author patelchin1
+ *
+ */
 public class InformationFrame extends JFrame{
 	private StringBuilder sb;
 	public InformationFrame() {
@@ -31,7 +34,8 @@ public class InformationFrame extends JFrame{
 		this.pack();
 		this.setVisible(true);
 	}
-
+	
+	
 	private void displayInfo() {
 		sb = new StringBuilder();
 		sb.append("Sword and shield is a two player game of pure skill, with no element of luck.");

@@ -45,11 +45,11 @@ public class GlassPanel extends JPanel {
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		if (run.currentPlayer.getName().equals("yellow")) {
-			if (tokenPanelY.timeToFly && run.currentPlayer.getName().equals("yellow")) {
+		if (run.getCurrentPlayer().getName().equals("yellow")) {
+			if (tokenPanelY.isAnimateAcross() && run.getCurrentPlayer().getName().equals("yellow")) {
 				if (!doOnce) {
 					x = tokenPanelG.getWidth() + DIVIDER + boardPanel.getWidth() + DIVIDER + 8
-							+ (tokenPanelY.toFlyRot / 90) * tokenPanelY.WIDTH + (tokenPanelY.toFlyRot / 90) * 8;
+							+ (tokenPanelY.getToAnimateAcrossRotation() / 90) * tokenPanelY.getWIDTH() + (tokenPanelY.getToAnimateAcrossRotation() / 90) * 8;
 					y = buttonPanel.getHeight() + 8;
 					destinationX = tokenPanelG.getWidth() + DIVIDER + (7 * boardPanel.WIDTH);
 					destinationY = buttonPanel.getHeight() + DIVIDER + (7 * boardPanel.HEIGHT);
@@ -72,16 +72,16 @@ public class GlassPanel extends JPanel {
 				if (!(drawY >= destinationY) || !(drawX <= destinationX)) {
 					animateYellow((Graphics2D) g); //Keep animating until its at the destination
 				} else {
-					tokenPanelY.timeToFly = false;
+					tokenPanelY.setAnimateAcross(false);
 					doOnce = false;
 					tokenPanelY.createToken();
 				}
 			}
 		}
-		if (run.currentPlayer.getName().equals("green")) {
-			if (tokenPanelG.timeToFly && run.currentPlayer.getName().equals("green")) {
+		if (run.getCurrentPlayer().getName().equals("green")) {
+			if (tokenPanelG.isAnimateAcross() && run.getCurrentPlayer().getName().equals("green")) {
 				if (!doOnce) {
-					x = 8 + (tokenPanelG.toFlyRot / 90) * tokenPanelG.WIDTH + (tokenPanelG.toFlyRot / 90) * 8;
+					x = 8 + (tokenPanelG.getToAnimateAcrossRotation() / 90) * tokenPanelG.getWIDTH() + (tokenPanelG.getToAnimateAcrossRotation() / 90) * 8;
 					y = buttonPanel.getHeight() + 8;
 					destinationX = tokenPanelG.getWidth() + DIVIDER + (2 * boardPanel.WIDTH);
 					destinationY = buttonPanel.getHeight() + DIVIDER + (2 * boardPanel.HEIGHT);
@@ -104,7 +104,7 @@ public class GlassPanel extends JPanel {
 				if (!(drawY >= destinationY) || !(drawX >= destinationX)) {
 					animateGreen((Graphics2D) g); //Keep animating until its at the destination
 				} else {
-					tokenPanelG.timeToFly = false;
+					tokenPanelG.setAnimateAcross(false);
 					doOnce = false;
 					tokenPanelG.createToken();
 				}
@@ -121,7 +121,7 @@ public class GlassPanel extends JPanel {
 		g.fillOval(drawX, drawY, WIDTH - 5, HEIGHT - 5);
 		g.setColor(Color.red);
 		g.setStroke(new BasicStroke(6));
-		drawToken(g, tokenPanelG.toFly, drawX, drawY);
+		drawToken(g, tokenPanelG.getToAnimateAcross(), drawX, drawY);
 		g.setStroke(new BasicStroke(1));
 	}
 
@@ -134,7 +134,7 @@ public class GlassPanel extends JPanel {
 		g.fillOval(drawX, drawY, WIDTH - 5, HEIGHT - 5);
 		g.setColor(Color.red);
 		g.setStroke(new BasicStroke(6));
-		drawToken(g, tokenPanelY.toFly, drawX, drawY);
+		drawToken(g, tokenPanelY.getToAnimateAcross(), drawX, drawY);
 		g.setStroke(new BasicStroke(1));
 	}
 

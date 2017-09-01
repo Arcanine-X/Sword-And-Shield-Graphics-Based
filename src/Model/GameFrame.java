@@ -1,15 +1,11 @@
 package Model;
 
-import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Observable;
 import java.util.Observer;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
 import javax.swing.JOptionPane;
@@ -20,30 +16,23 @@ import javax.swing.WindowConstants;
 import Controller.TokenController;
 
 /**
- * This class main game is the main jFrame and holds all the components of the game. It consists of the various panels in which other game
- * logic is contained.
+ * This class main game is the main jFrame and holds all the components of the game. It consists of the various panels
+ * in which other game logic is contained.
  * @author Chin Patel
  *
  */
 public class GameFrame extends JFrame implements Observer {
-	SwordAndShieldGame game;
-	ButtonPanel buttonPanel;
-	public BoardPanel boardPanel;
-	public TokenPanel tokenPanelY;
-	TokenPanel tokenPanelG;
-	GraveyardPanel graveyardY;
-	GraveyardPanel graveyardG;
-	boolean yellowTurn = true;
-	boolean greenTurn = false;
-	public boolean pastCreation = false;
-	public boolean disableBoard = false;
-	public BoardPiece creationPiece = null;
-	public boolean deadOnce = false;
-	public Player currentPlayer;
-	JLayeredPane layer = new JLayeredPane();
-	int turn = 1;
-	GlassPanel glassPanel;
-	TokenController tokenController;
+	private SwordAndShieldGame game;
+	private ButtonPanel buttonPanel;
+	private BoardPanel boardPanel;
+	private TokenPanel tokenPanelY;
+	private TokenPanel tokenPanelG;
+	private GraveyardPanel graveyardY;
+	private GraveyardPanel graveyardG;
+	private GlassPanel glassPanel;
+	private Player currentPlayer;
+	private JLayeredPane layer = new JLayeredPane();
+	private int turn = 1;
 	public GameFrame() {
 		game = new SwordAndShieldGame();
 		this.setTitle("~~Sword And Shiled Game~~");
@@ -160,4 +149,28 @@ public class GameFrame extends JFrame implements Observer {
 		repaint();
 	}
 
+	public SwordAndShieldGame getGame() {
+		return game;
+	}
+
+	public Player getCurrentPlayer() {
+		return currentPlayer;
+	}
+
+	public int getTurn() {
+		return turn;
+	}
+
+	public void setTurn(int turn) {
+		this.turn = turn;
+	}
+
+	public ButtonPanel getButtonPanel() {
+		return buttonPanel;
+	}
+
+
+	public BoardPanel getBoardPanel() {
+		return boardPanel;
+	}
 }

@@ -8,7 +8,7 @@ import Model.SwordAndShieldGame;
 import Model.TokenPanel;
 
 /**
- * This class 
+ * This class
  * @author Chin Patel
  *
  */
@@ -32,7 +32,7 @@ public class TokenController implements MouseListener{
 			if(tokenPanel.getClickedPiece()==null) {
 				tokenPanel.clicked();
 				if(tokenPanel.getClickedPiece()!=null) {
-					if(!tokenPanel.getClickedPiece().getCol().equals(run.currentPlayer.getName())) {
+					if(!tokenPanel.getClickedPiece().getCol().equals(run.getCurrentPlayer().getName())) {
 						tokenPanel.setClickedPiece(null);
 						return;
 					}

@@ -27,7 +27,7 @@ public class Board {
 	private static final String INVALID_SQUARE = "|:::::"; // The three out of bounds areas behind each player
 
 	/**
-	 * Initisalises the board to nulls
+	 * Initalises the board to nulls
 	 */
 	public void initialise() {
 		for (int r = 0; r < board.length; r++) {
@@ -337,6 +337,7 @@ public class Board {
 			addPlayers(green, yellow);
 		}
 		addInvalidSquares();
+		//Uncomment temp and drawGraveYard to draw text based version of the game
 		//temp();
 		// Update grave yards and draw them
 		green.getDifferences().clear();
