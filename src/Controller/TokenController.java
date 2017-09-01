@@ -7,6 +7,11 @@ import Model.GameFrame;
 import Model.SwordAndShieldGame;
 import Model.TokenPanel;
 
+/**
+ * This class 
+ * @author Chin Patel
+ *
+ */
 public class TokenController implements MouseListener{
 	SwordAndShieldGame game;
 	GameFrame run;

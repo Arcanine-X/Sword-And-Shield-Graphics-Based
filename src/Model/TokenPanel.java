@@ -1,59 +1,45 @@
 package Model;
+
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
-
-import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
 import Controller.TokenController;
 
-public class TokenPanel extends JPanel implements Observer{
+public class TokenPanel extends JPanel implements Observer {
 	private static final Color TOKEN_SQUARE = new Color(179, 218, 255);
-	public int WIDTH = 60;
-	private int HEIGHT = 60;
 	private static final int GAP = 8;
 	private static final int STROKE = 3;// stroke width /2
-	BoardPiece[][] tokens;
-	private int x = GAP;
-	private int y = GAP;
-	private int mouseX;
-	private int mouseY;
-	SwordAndShieldGame game;
-	public Player player;
+	public int WIDTH = 60;
+	private int HEIGHT = 60;
+	private int x = GAP, y = GAP;
+	private int mouseX, mouseY;
+	private BoardPiece[][] tokens;
+	private SwordAndShieldGame game;
+	private Player player;
 	public BoardPiece clickedPiece = null;
-	BoardPiece pieceToPlay;
-	GameFrame run;
-	boolean animateCreation = false;
-	List<BoardPiece> clickedPieceRotations = new ArrayList<BoardPiece>();
-	public String create = "create";
+	private BoardPiece pieceToPlay;
+	private GameFrame run;
+	private boolean animateCreation = false;
+	private List<BoardPiece> clickedPieceRotations = new ArrayList<BoardPiece>();
+	private String create = "create";
 	private int alpha = 0;
-	Color currentPlayerColor;
-	int scaleToken;
-	int tokenSize;
+	private Color currentPlayerColor;
+
 	BoardPiece toFly;
 	int toFlyRot;
 	public boolean timeToFly = false;
-	TokenController tokenController;
-    Image token = Toolkit.getDefaultToolkit().getImage("token.png");
-
-
+	private TokenController tokenController;
 
 	public TokenPanel(SwordAndShieldGame game, Player player, GameFrame run) {
 		this.game = game;
@@ -62,33 +48,30 @@ public class TokenPanel extends JPanel implements Observer{
 		this.run = run;
 		tokenController = new TokenController(game, run, this);
 		this.addMouseListener(tokenController);
-		this.setMinimumSize(new Dimension(100,220));
+		this.setMinimumSize(new Dimension(100, 220));
 	}
-
 
 	public void createToken() {
 		game.createToken(player, create);
 		clickedPiece = null;
-		if(game.getBoard().checkForReaction()) {
+		if (game.getBoard().checkForReaction()) {
 			run.setBoardReactionsTrue();
 			run.buttonPanel.pass.setEnabled(false);
-		}else {
+		} else {
 			run.setBoardReactionsFalse();
 			run.buttonPanel.pass.setEnabled(true);
 		}
-		if(pieceToPlay!=null) {
-			System.out.println("create is : ");
-			System.out.println(create);
+		if (pieceToPlay != null) {
 			create = "";
 		}
 	}
 
 	public void playToken() {
-		for(int i = 0; i < clickedPieceRotations.size(); i++) {
-			if(mouseX >=x && mouseX <= x+WIDTH && mouseY >= y && mouseY <= y+HEIGHT) {
+		for (int i = 0; i < clickedPieceRotations.size(); i++) {
+			if (mouseX >= x && mouseX <= x + WIDTH && mouseY >= y && mouseY <= y + HEIGHT) {
 				pieceToPlay = clickedPieceRotations.get(i);
 				String letter = pieceToPlay.getName();
-				int rotation = i*90;
+				int rotation = i * 90;
 				create = "create " + letter + " " + rotation;
 				clickedPieceRotations.clear();
 				toFlyRot = rotation;
@@ -110,10 +93,8 @@ public class TokenPanel extends JPanel implements Observer{
 		return bp;
 	}
 
-
-
-	public void displayClickedRotations(Graphics2D g) {
-		for(int i = 0; i < clickedPieceRotations.size(); i++) {
+	private void displayClickedRotations(Graphics2D g) {
+		for (int i = 0; i < clickedPieceRotations.size(); i++) {
 			g.setColor(Color.BLACK);
 			g.fillRect(x, y, WIDTH, WIDTH);
 			if (player.getName().equals("yellow")) {
@@ -134,21 +115,24 @@ public class TokenPanel extends JPanel implements Observer{
 
 	public void getRotations() {
 		clickedPieceRotations.clear();
-		if(clickedPiece!=null)
-		System.out.println("Now in here");{
-			//0
-			BoardPiece one = new BoardPiece(clickedPiece.getName(), clickedPiece.getNorth(), clickedPiece.getEast(), clickedPiece.getSouth(), clickedPiece.getWest(), clickedPiece.getCol());
+		if (clickedPiece != null) {
+			// 0
+			BoardPiece one = new BoardPiece(clickedPiece.getName(), clickedPiece.getNorth(), clickedPiece.getEast(),
+					clickedPiece.getSouth(), clickedPiece.getWest(), clickedPiece.getCol());
 			game.rotator(clickedPiece);
-			//90
-			BoardPiece two = new BoardPiece(clickedPiece.getName(), clickedPiece.getNorth(), clickedPiece.getEast(), clickedPiece.getSouth(), clickedPiece.getWest(), clickedPiece.getCol());
+			// 90
+			BoardPiece two = new BoardPiece(clickedPiece.getName(), clickedPiece.getNorth(), clickedPiece.getEast(),
+					clickedPiece.getSouth(), clickedPiece.getWest(), clickedPiece.getCol());
 			game.rotator(clickedPiece);
-			//180
-			BoardPiece three = new BoardPiece(clickedPiece.getName(), clickedPiece.getNorth(), clickedPiece.getEast(), clickedPiece.getSouth(), clickedPiece.getWest(), clickedPiece.getCol());
+			// 180
+			BoardPiece three = new BoardPiece(clickedPiece.getName(), clickedPiece.getNorth(), clickedPiece.getEast(),
+					clickedPiece.getSouth(), clickedPiece.getWest(), clickedPiece.getCol());
 			game.rotator(clickedPiece);
-			//270
-			BoardPiece four = new BoardPiece(clickedPiece.getName(), clickedPiece.getNorth(), clickedPiece.getEast(), clickedPiece.getSouth(), clickedPiece.getWest(), clickedPiece.getCol());
+			// 270
+			BoardPiece four = new BoardPiece(clickedPiece.getName(), clickedPiece.getNorth(), clickedPiece.getEast(),
+					clickedPiece.getSouth(), clickedPiece.getWest(), clickedPiece.getCol());
 			game.rotator(clickedPiece); // back to original
-			clickedPieceRotations.addAll(Arrays.asList(one,two,three,four));
+			clickedPieceRotations.addAll(Arrays.asList(one, two, three, four));
 			animateCreation = true;
 		}
 	}
@@ -156,10 +140,9 @@ public class TokenPanel extends JPanel implements Observer{
 	public void clicked() {
 		for (int row = 0; row < tokens.length; row++) {
 			for (int col = 0; col < tokens[0].length; col++) {
-				if(tokens[row][col] instanceof BoardPiece) {
-					if(mouseX >=x && mouseX <= x+WIDTH && mouseY >= y && mouseY <= y+HEIGHT) {
-						clickedPiece = (BoardPiece)tokens[row][col];
-						System.out.println("Found " + clickedPiece.getName());
+				if (tokens[row][col] instanceof BoardPiece) {
+					if (mouseX >= x && mouseX <= x + WIDTH && mouseY >= y && mouseY <= y + HEIGHT) {
+						clickedPiece = (BoardPiece) tokens[row][col];
 					} // TODO - else null and set put break in and reset x and
 				}
 				x += GAP;
@@ -176,57 +159,51 @@ public class TokenPanel extends JPanel implements Observer{
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D _g = (Graphics2D) g;
-		GradientPaint blackToGray = new GradientPaint(0, 0, Color.BLACK,
-                0, this.getHeight(), TOKEN_SQUARE);
-     _g.setPaint(blackToGray);
-     _g.fillRect(0, 0, this.getWidth(), this.getHeight());
-		if(!clickedPieceRotations.isEmpty()) {
-			if(animateCreation) {
+		GradientPaint blackToGray = new GradientPaint(0, 0, Color.BLACK, 0, this.getHeight(), TOKEN_SQUARE);
+		_g.setPaint(blackToGray);
+		_g.fillRect(0, 0, this.getWidth(), this.getHeight());
+		if (!clickedPieceRotations.isEmpty()) {
+			if (animateCreation) {
 				applyAnimation(_g);
-			}else {
+			} else {
 				displayClickedRotations(_g);
 			}
-		}else {
+		} else {
 			drawBoard(_g);
 
 		}
 	}
 
-	public void applyAnimation(Graphics2D g) {
-		for(int i = 0; i < clickedPieceRotations.size(); i++) {
-			g.setColor(new Color(179, 218, 255,alpha));
+	private void applyAnimation(Graphics2D g) {
+		for (int i = 0; i < clickedPieceRotations.size(); i++) {
+			g.setColor(new Color(179, 218, 255, alpha));
 			g.fillRect(x, y, WIDTH, WIDTH);
 			if (player.getName().equals("yellow")) {
-				currentPlayerColor = new Color(255,255,0,alpha);
+				currentPlayerColor = new Color(255, 255, 0, alpha);
 			} else {
-				currentPlayerColor = new Color(0,255,0,alpha);
+				currentPlayerColor = new Color(0, 255, 0, alpha);
 			}
 			g.setColor(currentPlayerColor);
 			g.fillOval(x, y, WIDTH, HEIGHT);
-			g.setColor(new Color(255,0,0,alpha));
+			g.setColor(new Color(255, 0, 0, alpha));
 			g.setStroke(new BasicStroke(6));
-			drawToken(g,clickedPieceRotations.get(i));
+			drawToken(g, clickedPieceRotations.get(i));
 			x += GAP;
 			x += WIDTH;
 		}
-		if(alpha < 255) {
-			alpha+=5;
+		if (alpha < 255) {
+			alpha += 5;
 			x = GAP;
-		}
-		else {
+		} else {
 			animateCreation = false;
 			alpha = 0;
 			x = GAP;
 		}
 	}
 
-
-	public void drawBoard(Graphics2D g) {
-
-		WIDTH = Math.min(getWidth(), getHeight())/7 - Math.min(getWidth(), getHeight())/60;
-		HEIGHT = Math.min(getWidth(), getHeight())/7 - Math.min(getWidth(), getHeight())/60;
-		BufferedImage imgY =new ImgUtils().scaleImage(WIDTH,HEIGHT,"tokenY.png");
-
+	private void drawBoard(Graphics2D g) {
+		WIDTH = Math.min(getWidth(), getHeight()) / 7 - Math.min(getWidth(), getHeight()) / 60;
+		HEIGHT = Math.min(getWidth(), getHeight()) / 7 - Math.min(getWidth(), getHeight()) / 60;
 		for (int row = 0; row < tokens.length; row++) {
 			for (int col = 0; col < tokens[0].length; col++) {
 				if (tokens[row][col] instanceof BoardPiece) {
@@ -237,14 +214,12 @@ public class TokenPanel extends JPanel implements Observer{
 					} else {
 						g.setColor(Color.GREEN);
 					}
-					//g.drawImage(imgY,x,y, this);
 					g.fillOval(x, y, WIDTH, HEIGHT);
 					g.setColor(Color.red);
 					g.setStroke(new BasicStroke(6));
 					BoardPiece piece = (BoardPiece) tokens[row][col];
 					drawToken(g, piece);
-				}
-				else {
+				} else {
 					g.setColor(Color.GRAY);
 					g.fillOval(x, y, WIDTH, HEIGHT);
 				}
@@ -318,6 +293,4 @@ public class TokenPanel extends JPanel implements Observer{
 	public void setClickedPiece(BoardPiece clickedPiece) {
 		this.clickedPiece = clickedPiece;
 	}
-
-
 }

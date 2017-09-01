@@ -3,30 +3,33 @@ package Model;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
-
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+/**
+ * This class represents the panel for the grave yard. The purpose it is to
+ * override the paint component to draw the grave yard, and allow for resizing.
+ *
+ * @author Chin Patel
+ *
+ */
 public class GraveyardPanel extends JPanel {
-
 	private int WIDTH = 60;
 	private int HEIGHT = 60;
-	private static final int GAP = 8;
-	private static final int STROKE = 3;
-	int x = (this.getWidth()/2)-(8*60);
+	private static final int GAP = 8; // Gap between the tokens
+	private static final int STROKE = 3; // new BasicStroke() / 2
+	int x = GAP;
 	int y = GAP;
-	SwordAndShieldGame game;
-	Player player;
+	private SwordAndShieldGame game;
+	private Player player;
+	private GameFrame run;
 
-	public GraveyardPanel(SwordAndShieldGame game, Player player) {
+	public GraveyardPanel(SwordAndShieldGame game, Player player, GameFrame run) {
 		this.game = game;
 		this.player = player;
+		this.run = run;
+		this.setMinimumSize(new Dimension(300, 150));
 	}
 
 	@Override
@@ -36,9 +39,14 @@ public class GraveyardPanel extends JPanel {
 		drawGrave(_g);
 	}
 
+	/**
+	 * Draws the grave yard by going through each players grave yard and drawing the appropriate token.
+	 * It uses the helper drawToken to draw the board pieces swords and shields.
+	 * @param g
+	 */
 	public void drawGrave(Graphics2D g) {
-		WIDTH = Math.min(getWidth(), getHeight())/5 - Math.min(getWidth(), getHeight())/60;
-		HEIGHT = Math.min(getWidth(), getHeight())/5 - Math.min(getWidth(), getHeight())/60;
+		WIDTH = Math.min(getWidth(), getHeight()) / 5 - Math.min(getWidth(), getHeight()) / 60;
+		HEIGHT = Math.min(getWidth(), getHeight()) / 5 - Math.min(getWidth(), getHeight()) / 60;
 		BoardPiece[][] graveYard = player.getGraveYard();
 		for (int row = 0; row < graveYard.length; row++) {
 			for (int col = 0; col < graveYard[0].length; col++) {
@@ -55,8 +63,7 @@ public class GraveyardPanel extends JPanel {
 					g.setStroke(new BasicStroke(6));
 					drawToken(g, piece);
 					g.setStroke(new BasicStroke(0));
-				}
-				else {
+				} else {
 					g.setColor(Color.BLACK);
 					g.drawRect(x, y, WIDTH, HEIGHT);
 				}
@@ -70,6 +77,19 @@ public class GraveyardPanel extends JPanel {
 		y = GAP;
 	}
 
+	/**
+	 * Draws the the board pieces swords and shields appropriately in the given x
+	 * and y coordinates. The x and y coordinates refer to point(0,0) of the board
+	 * piece token square.
+	 *
+	 * @param g
+	 * @param piece
+	 *            --- the piece whose swords and shields are being drawn
+	 * @param x
+	 *            --- x coordinate of the board piece square
+	 * @param y
+	 *            --- y coordinate of the board piece square
+	 */
 	private void drawToken(Graphics2D g, BoardPiece piece) {
 		if (piece.getNorth() == 1) {
 			g.drawLine(x + WIDTH / 2, y + STROKE, x + WIDTH / 2, y + HEIGHT / 2);
@@ -96,10 +116,4 @@ public class GraveyardPanel extends JPanel {
 		}
 
 	}
-
-	/*@Override
-	public Dimension getPreferredSize() {
-		return new Dimension(400,400);
-	}
-*/
 }

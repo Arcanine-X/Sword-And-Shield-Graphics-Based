@@ -19,60 +19,42 @@ import Controller.BoardController;
 public class BoardPanel extends JPanel {
 	private static final Color TOKEN_SQUARE = new Color(179, 218, 255);
 	private static final Color YELLOW_CREATION = new Color(255, 250, 205);
+	private static final Color GREEN_CREATION = new Color(204, 255, 204);
+	private static final int STROKE = 3;
 	public int WIDTH = 60;
 	public int HEIGHT = 60;
-	private static final int STROKE = 3;
-	public int mouseX;
-	public int mouseY;
-	private int chosenX;
-	private int chosenY;
-	private int moveY;
-	private int moveX;
-	private SwordAndShieldGame game;
-	public BoardPiece chosenToken;
-	private Token[][] board;
-	private GameFrame run;
-	public boolean moveAnimation = false;
-	public boolean rotationAnimation = false;
-	public String moveDir = "";
-	private boolean skip = false;
-	private List<BoardPiece> everyBpToAnimate = new ArrayList<BoardPiece>();
-	private String letter = "";
-	public boolean disappearAnimation = false;
-	private boolean disappearSkip = false;
-	private int disappearCol, disapppearRow;
-	private BoardPiece disappearPiece;
-	private int alpha = 0;
-	private boolean singleMove = false;
-	int piecesToAnimate;
+	public int mouseX, mouseY;
 	public int mouseClicks;
-	int rotationCount = 0;
-	BoardPiece hugeToken;
-	public boolean reactionMoveAnimation = false;
+	private int chosenX, chosenY;
+	private int moveX, moveY;
+	private int disappearCol, disapppearRow;
+	private int vertnumber, horiNumber;
+	private int alpha = 0;
+	private int piecesToAnimate;
+	private int rotationCount = 0;
+	public String moveDir = "";
+	private String letter = "";
+	private String animationDir = "";
+	public boolean moveAnimation = false, rotationAnimation = false;
+	private boolean skip = false;
+	private boolean disappearAnimation = false;
+	private boolean disappearSkip = false;
+	private boolean singleMove = false;
+	private boolean SWEDisappear;
+	private boolean activateAnimation = false;
 	public boolean reactions = false;
-	List<Reaction> reactionOptions = new ArrayList<Reaction>();
-	List<Rectangle> reactionBoundingBoxes = new ArrayList<Rectangle>();
-	List<BoardPiece> hugeTokenRotations = new ArrayList<BoardPiece>();
-	List<BoardPiece> reactionMoves = new ArrayList<BoardPiece>();
-	boolean reactionMoveSkip = false;
-	boolean reactionDisappearSkip = false;
-	List<BoardPiece> toDisappear = new ArrayList<BoardPiece>();
-	Pair reactionPiece;
-	public boolean doOnce = false;
-	boolean reactionDisappearAnimation = false;
-	public List<BoardPiece> aList = new ArrayList<BoardPiece>();
-	Pair pairToDisappear;
+	private List<BoardPiece> everyBpToAnimate = new ArrayList<BoardPiece>();
+	private List<Reaction> reactionOptions = new ArrayList<Reaction>();
+	private List<BoardPiece> aList = new ArrayList<BoardPiece>();
 	public BoardPiece reactionDisappear;
-	public boolean activateAnimation = false;
-	String animationDir = "";
-	BoardPiece SDisappearPiece;
-	public boolean SWEDisappear;
-	public boolean pairDisappear;
-	Pair reactionPair;
-	int number;
-	int horiNumber;
-	BoardController boardController;
-	ReactionAnimation reactionAnimation;
+	private BoardPiece disappearPiece;
+	public BoardPiece chosenToken;
+	private BoardPiece hugeToken;
+	private SwordAndShieldGame game;
+	private Pair reactionPair;
+	private GameFrame run;
+	private Token[][] board;
+	private BoardController boardController;
 
 	public BoardPanel(SwordAndShieldGame game, GameFrame run) {
 		this.game = game;
@@ -81,10 +63,16 @@ public class BoardPanel extends JPanel {
 		this.addMouseListener(boardController);
 		this.addKeyListener(boardController);
 		board = game.getBoard().getBoard();
-		this.setMinimumSize(new Dimension(200,200));
-		reactionAnimation = new ReactionAnimation(game, run, this);
+		this.setMinimumSize(new Dimension(300,300));
 	}
 
+	/**
+	 *
+	 * @param one
+	 * @param two
+	 * @param player
+	 * @return
+	 */
 	public Pair findPair(BoardPiece one, BoardPiece two, Player player) {
 		for(Pair p : game.getBoard().getReactions()) {
 			if(player!=null) {
@@ -100,6 +88,9 @@ public class BoardPanel extends JPanel {
 		return null;
 	}
 
+	/**
+	 * Finds the reaction that the user has clicked on
+	 */
 	public void findChosenReaction() {
 		for(Reaction r : reactionOptions) {
 			Pair p;
@@ -115,6 +106,10 @@ public class BoardPanel extends JPanel {
 		}
 	}
 
+	/**
+	 * Checks if there are any more reactions. If there are than it will disable the pass button
+	 * to force the player to complete all the reactions.
+	 */
 	public void checkForMoreReactions() {
 		if(game.getBoard().checkForReaction()) {
 			run.setBoardReactionsTrue();
@@ -125,10 +120,9 @@ public class BoardPanel extends JPanel {
 		}
 	}
 
-
 	public void doReaction(Pair p) {
 		if(p.getDir().equals("hori") || p.getDir().equals("vert")) {
-			reactionPiece = p;
+			reactionPair = p;
 			tryReactionAnimation(p);
 		}
 		checkForWinner();
@@ -137,8 +131,12 @@ public class BoardPanel extends JPanel {
 		chosenToken = null;
 	}
 
+	/**
+	 * Sets all all the destinations of the board pieces that need to be animated upwards
+	 * @param p --- the board pieces reacting together
+	 * @param howManyToAnimate --- the amount of board pieces needing to be animated
+	 */
 	public void upReactionAnimation(Pair p, int howManyToAnimate) {
-		System.out.println("bloop " + howManyToAnimate);
 		if(howManyToAnimate == 0 || howManyToAnimate == -1 || howManyToAnimate == -2) {
 			game.verticalReaction(run.currentPlayer, p);
 		}else {
@@ -164,23 +162,33 @@ public class BoardPanel extends JPanel {
 		}
 	}
 
+	/**
+	 * Method does the appropriate reaction in the case that it is a sword vs anything thats
+	 * not a shield, in the vertical direction
+	 * @param p --- the two board pieces that are reacting together
+	 */
 	public void vertReactionSVE(Pair p) {
-		number = game.findTokenToAnimate(run.currentPlayer, p);
-		if(number == -10 || number == -11 || number == -12) {
+		vertnumber = game.findTokenToAnimate(run.currentPlayer, p);
+		if(vertnumber == -10 || vertnumber == -11 || vertnumber == -12) {
 			playDisappearSound();
 			reactionPair = p;
 			SWEDisappear = true;
-		}else if(number == -13) {
+		}else if(vertnumber == -13) {
 			playDisappearSound();
 			game.verticalReaction(run.currentPlayer, p);
-		}else if(number == -14) {
+		}else if(vertnumber == -14) {
 			playDisappearSound();
 			game.verticalReaction(run.currentPlayer, p);
-		}else if(number == -15) {
+		}else if(vertnumber == -15) {
 
 		}
 	}
 
+	/**
+	 * Sets all all the destinations of the board pieces that need to be animated downwards
+	 * @param p --- the board pieces reacting together
+	 * @param howManyToAnimate --- the amount of board pieces needing to be animated
+	 */
 	public void downReactionAnimation(Pair p, int howManyToAnimate) {
 		if(howManyToAnimate == 0 || howManyToAnimate == -1 || howManyToAnimate == -2) {
 			game.verticalReaction(run.currentPlayer, p);
@@ -207,6 +215,11 @@ public class BoardPanel extends JPanel {
 		}
 	}
 
+	/**
+	 * Sets all all the destinations of the board pieces that need to be animated to the right
+	 * @param p --- the board pieces reacting together
+	 * @param howManyToAnimate --- the amount of board pieces needing to be animated
+	 */
 	public void rightReactionAnimation(Pair p, int howManyToAnimate) {
 		if(howManyToAnimate == 0 || howManyToAnimate == -1 || howManyToAnimate == -2) {
 			game.horizontalReaction(run.currentPlayer, p);
@@ -234,6 +247,11 @@ public class BoardPanel extends JPanel {
 		}
 	}
 
+	/**
+	 * Sets all all the destinations of the board pieces that need to be animated to the left
+	 * @param p --- the board pieces reacting together
+	 * @param howManyToAnimate --- the amount of board pieces needing to be animated
+	 */
 	public void leftReactionAnimation(Pair p, int howManyToAnimate) {
 		if(howManyToAnimate == 0 || howManyToAnimate == -1 || howManyToAnimate == -2) {
 			game.horizontalReaction(run.currentPlayer, p);
@@ -261,6 +279,11 @@ public class BoardPanel extends JPanel {
 		}
 	}
 
+	/**
+	 * Method does the appropriate reaction in the case that it is a sword vs anything thats
+	 * not a shield, in the horizontal direction
+	 * @param p --- the two board pieces that are reacting together
+	 */
 	public void horiReactionSVE(Pair p) {
 		horiNumber = game.findTokenToAnimateHori(run.currentPlayer, p);
 		if(horiNumber == -20 || horiNumber == -21 || horiNumber == -22) {
@@ -279,8 +302,11 @@ public class BoardPanel extends JPanel {
 		}
 	}
 
+	/**
+	 * Method calls the appropriate animation to occur based on the reaction.
+	 * @param p --- the pair of the board pieces reacting
+	 */
 	public void tryReactionAnimation(Pair p) {
-		System.out.println(p.getDir());
 		int howManyToAnimate;
 		if(p.getDir().equals("vert")) {
 			howManyToAnimate = game.verticalReactionAnimation(run.currentPlayer, p);
@@ -314,6 +340,11 @@ public class BoardPanel extends JPanel {
 		}
 	}
 
+	/**
+	 * Method draws the animating token depending on the tokens moveX and moveY value.
+	 * @param g
+	 * @param bp --- token being animated
+	 */
 	public void drawAnimatingToken(Graphics2D g, BoardPiece bp) {
 		g.setColor(TOKEN_SQUARE);
 		g.fillRect(bp.moveX, bp.moveY, WIDTH, WIDTH);
@@ -377,10 +408,10 @@ public class BoardPanel extends JPanel {
 			reactions = false;
 			skip = false;
 			if(animationDir.equals("up") || animationDir.equals("down")) {
-				game.verticalReaction(run.currentPlayer, reactionPiece);
+				game.verticalReaction(run.currentPlayer, reactionPair);
 
 			}else if(animationDir.equals("left") || animationDir.equals("right")) {
-				game.horizontalReaction(run.currentPlayer, reactionPiece);
+				game.horizontalReaction(run.currentPlayer, reactionPair);
 
 			}
 			chosenToken = null;
@@ -393,6 +424,10 @@ public class BoardPanel extends JPanel {
 		}
 	}
 
+	/**
+	 * This method creates the rotation bounding box. It sents the mouseX and mouseY to zero to ensure
+	 * that it doesn't rotate as soon as you click on the rotation phase.
+	 */
 	public void attemptRotation() {
 		if(chosenToken != null) {
 			Rectangle boundingBox = new Rectangle(moveX+ WIDTH / 4, moveY + HEIGHT / 4,WIDTH / 2, HEIGHT / 2);
@@ -406,6 +441,10 @@ public class BoardPanel extends JPanel {
 		}
 	}
 
+	/**
+	 * Method deals with the click to move a token. It finds what side is clicked and
+	 * and moves triggers the movement animation.
+	 */
 	public void attemptClickMove() {
 		if (chosenToken != null) {
 			if(run.currentPlayer.getMovesSoFar().contains(chosenToken.getName())){
@@ -417,23 +456,15 @@ public class BoardPanel extends JPanel {
 			Rectangle moveRight = new Rectangle(chosenX + (WIDTH / 4) * 3, chosenY, WIDTH / 4, HEIGHT);
 			Rectangle moveDown = new Rectangle(chosenX, chosenY + (HEIGHT / 4) * 3, WIDTH, HEIGHT / 4);
 			if (moveUp.contains(mouseX, mouseY)) {
-				String letter = chosenToken.getName();
-				System.out.println("move " + letter + " up");
 				moveAnimation = true;
 				moveDir = "up";
 			} else if (moveRight.contains(mouseX, mouseY)) {
-				String letter = chosenToken.getName();
-				System.out.println("move " + letter + " right");
 				moveAnimation = true;
 				moveDir = "right";
 			} else if (moveDown.contains(mouseX, mouseY)) {
-				String letter = chosenToken.getName();
-				System.out.println("move " + letter + " down");
 				moveAnimation = true;
 				moveDir = "down";
 			} else if (moveLeft.contains(mouseX, mouseY)) {
-				String letter = chosenToken.getName();
-				System.out.println("move " + letter + " left");
 				moveAnimation = true;
 				moveDir = "left";
 			} else {
@@ -441,6 +472,9 @@ public class BoardPanel extends JPanel {
 		}
 	}
 
+	/**
+	 * This method plays the sound, and is called whenever a token dies.
+	 */
 	public void playDisappearSound() {
 		File sound = new File("editedFalling.wav");
 		try {
@@ -450,6 +484,10 @@ public class BoardPanel extends JPanel {
 		} catch (Exception e) {}
 	}
 
+	/**
+	 * Highlights the chosen token.
+	 * @param g
+	 */
 	public void highlightSelectedToken(Graphics2D g) {
 		if (chosenToken != null) {
 			g.setColor(Color.BLUE.darker());
@@ -473,14 +511,17 @@ public class BoardPanel extends JPanel {
 		}
 	}
 
+	/**
+	 * Finds the clicked token and sets that token to the chosen token.
+	 * This method ensures you have to click on a token twice to move it, and that you can only
+	 * click on a token that hasn't been moved, rotated and is yours.
+	 */
 	public void findClickedToken() {
-		System.out.println("In here");
 		for (int row = 0; row < board.length; row++) {
 			for (int col = 0; col < board[0].length; col++) {
 				if (board[row][col] instanceof BoardPiece && board[row][col] != null && game.getBoard().getUndoStack().size() != 1) {
 					if ((mouseX >= col * WIDTH) && (mouseX <= col * WIDTH + WIDTH) && (mouseY >= row * HEIGHT)
 							&& (mouseY <= row * HEIGHT + WIDTH)) {
-						System.out.println("Found Tokens");
 						BoardPiece temp = (BoardPiece) board[row][col];
 						if(chosenToken!=null && temp.getName().equals(chosenToken.getName())) {
 							mouseClicks++;
@@ -490,7 +531,6 @@ public class BoardPanel extends JPanel {
 						chosenToken = (BoardPiece) board[row][col];
 						chosenX = moveX = col * WIDTH;
 						chosenY = moveY = row * HEIGHT;
-						System.out.println(chosenToken.toString());
 						if(run.currentPlayer.getEveryMovement().contains(chosenToken) || run.currentPlayer.getMovesSoFar().contains(chosenToken.getName())) {
 							chosenToken = null;
 							continue;
@@ -561,6 +601,10 @@ public class BoardPanel extends JPanel {
 		}
 	}
 
+	/**
+	 * Does the disappear animation on the reactionDisappear board piece
+	 * @param g
+	 */
 	public void reactionDisappear(Graphics2D g){
 		if(reactionDisappear!=null) {
 			if((getCol(reactionDisappear.xLoc) + getRow(reactionDisappear.yLoc)) % 2 != 1) {
@@ -597,6 +641,9 @@ public class BoardPanel extends JPanel {
 		}
 	}
 
+	/**
+	 * Helper method to set everything back to false
+	 */
 	public void doneDisappearAnimation() {
 		alpha = 0;
 		reactionDisappear = null;
@@ -605,13 +652,18 @@ public class BoardPanel extends JPanel {
 		chosenToken = null;
 		activateAnimation = false;
 		SWEDisappear = false;
-		number = -1000;
+		vertnumber = -1000;
 		horiNumber = -1000;
 		checkForMoreReactions();
 	}
 
+	/**
+	 * Does the appropriate reaction depending on reaction they pick. This method deals with anything
+	 * where a sword isn't up against a shield.
+	 * @param g
+	 */
 	public void reactionDisappearSVE(Graphics2D g){
-		if(number == -10) { // both die
+		if(vertnumber == -10) { // both die
 			g.setColor(getCorrectColorPairOne(reactionPair));
 			g.fillRect(reactionPair.getOne().xLoc, reactionPair.getOne().yLoc, WIDTH, HEIGHT);
 			g.setColor(getCorrectColorPairTwo(reactionPair));
@@ -623,7 +675,7 @@ public class BoardPanel extends JPanel {
 				doneDisappearAnimation();
 			}
 		}
-		else if(number == -11) {
+		else if(vertnumber == -11) {
 			g.setColor(getCorrectColorPairTwo(reactionPair));
 			g.fillRect(reactionPair.getTwo().xLoc, reactionPair.getTwo().yLoc, WIDTH, HEIGHT);
 			if(alpha < 250) {
@@ -632,7 +684,7 @@ public class BoardPanel extends JPanel {
 				game.verticalReaction(run.currentPlayer, reactionPair);
 				doneDisappearAnimation();
 			}
-		}else if (number == -12) {
+		}else if (vertnumber == -12) {
 			g.setColor(getCorrectColorPairOne(reactionPair));
 			g.fillRect(reactionPair.getOne().xLoc, reactionPair.getOne().yLoc, WIDTH, HEIGHT);
 			if(alpha < 250) {
@@ -649,8 +701,8 @@ public class BoardPanel extends JPanel {
 			if(alpha < 250) {
 				alpha +=5;
 			}else {
-				doneDisappearAnimation();
 				game.horizontalReaction(run.currentPlayer, reactionPair);
+				doneDisappearAnimation();
 			}
 		}else if (horiNumber == -21) {
 			g.setColor(getCorrectColorPairTwo(reactionPair));
@@ -658,8 +710,8 @@ public class BoardPanel extends JPanel {
 			if(alpha < 250) {
 				alpha +=5;
 			}else {
-				doneDisappearAnimation();
 				game.horizontalReaction(run.currentPlayer, reactionPair);
+				doneDisappearAnimation();
 			}
 		}else if (horiNumber == -22) {
 			g.fillRect(reactionPair.getOne().xLoc, reactionPair.getOne().yLoc, WIDTH, HEIGHT);
@@ -673,25 +725,10 @@ public class BoardPanel extends JPanel {
 		}
 	}
 
-	public void reactionDisappearPair(Graphics2D g){
-		if(reactionDisappear!=null) {
-			if((getCol(reactionDisappear.xLoc) + getRow(reactionDisappear.yLoc)) % 2 != 1) {
-				g.setColor(new Color(255,255,255,alpha)); // white
-			}
-			else {
-				g.setColor(new Color(0,0,0,alpha));
-			}
-			g.fillRect(reactionDisappear.xLoc, reactionDisappear.yLoc, WIDTH, HEIGHT);
-			if(alpha < 250) {
-				alpha +=5;
-			}else {
-				alpha = 0;
-				reactionDisappear = null;
-			}
-		}
-	}
-
-
+	/**
+	 * Draws the purple boxes to indicate reactions, and adds it to a list of reaction options.
+	 * @param g
+	 */
 	public void drawReactions(Graphics2D g) {
 		reactionOptions.clear();
 		List<Pair> reactions = game.getBoard().getReactions();
@@ -761,12 +798,23 @@ public class BoardPanel extends JPanel {
 		}
 	}
 
+	/**
+	 * Method applies the rotation animation, by graying out the board
+	 * and drawing the huge token.
+	 * @param g
+	 */
 	public void applyRotationAnimation(Graphics2D g) {
 		g.setColor(new Color(175,179,177,150));
 		g.fillRect(0, 0, (WIDTH * 10), (HEIGHT * 10));
 		drawHugeToken(hugeToken, g);
 	}
 
+	/**
+	 * Draws a large token and deals checks if the mouse clicks are within this token, or outside of it.
+	 * If the mouse is within this token, it will rotate it, otherwise exit out of the rotation mode
+	 * @param bp --- token being rotated
+	 * @param g
+	 */
 	public void drawHugeToken(BoardPiece bp, Graphics2D g) {
 		g.setColor(Color.BLACK);
 		g.fillRect(WIDTH * 2, HEIGHT * 2, WIDTH*6, HEIGHT*6);
@@ -803,16 +851,30 @@ public class BoardPanel extends JPanel {
 
 	}
 
+	/**
+	 * Rotates the large rotation token. Sets the mouseX and mouseY to unrealistic values
+	 * to stop it from continuously rotating.
+	 */
 	public void switchRotationImages(){
 		game.rotator(hugeToken);
 		mouseX = -500;
 		mouseY = -500;
 	}
 
+	/**
+	 * Gets the row from dividing the value --- value should correspond to the y value of a token
+	 * @param value --- y value of the token
+	 * @return
+	 */
 	public int getRow(int value) {
 		return value/WIDTH;
 	}
 
+	/**
+	 * Gets the col from dividing the value --- value should correspond to the x value of a token
+	 * @param value --- x value of the token
+	 * @return
+	 */
 	public int getCol(int value) {
 		return value/HEIGHT;
 	}
@@ -914,6 +976,9 @@ public class BoardPanel extends JPanel {
 		}
 	}
 
+	/**
+	 * Helper method to turn on and off animations
+	 */
 	public void negativeOne() {
 		disappearAnimation = true;
 		moveAnimation = false;
@@ -923,6 +988,13 @@ public class BoardPanel extends JPanel {
 	}
 
 
+	/**
+	 * Counts the tiles above the one moving. If there are lots of adjacent tiles it will put them in a list,
+	 * and update their destination values depending on the row the piece is in. It will then keep animating
+	 * until it has reached its destination. If the piece is being pushed into a out of bounds area it will apply
+	 * the disappear animation on that token first.
+	 * @param g
+	 */
 	public void applyMoveAnimationUp(Graphics2D g) {
 		if(skip == false) {
 			everyBpToAnimate.clear();
@@ -941,7 +1013,7 @@ public class BoardPanel extends JPanel {
 				bp.needToAnimate = true;
 				bp.moveX = chosenX;
 				bp.moveY = chosenY - (i * HEIGHT);
-				bp.destY = chosenY -((i+1) * HEIGHT);
+				bp.destY = chosenY - ((i+1) * HEIGHT);
 				everyBpToAnimate.add(bp);
 
 				if(((row-1) == 1 && col == 0 )|| ((row-1)==1 && col ==1)) {
@@ -976,6 +1048,13 @@ public class BoardPanel extends JPanel {
 		}
 	}
 
+	/**
+	 * Counts the tiles below the one moving. If there are lots of adjacent tiles it will put them in a list,
+	 * and update their destination values depending on the row the piece is in. It will then keep animating
+	 * until it has reached its destination. If the piece is being pushed into a out of bounds area it will apply
+	 * the disappear animation on that token first.
+	 * @param g
+	 */
 	public void applyMoveAnimationDown(Graphics2D g) {
 		if(skip == false) {
 			everyBpToAnimate.clear();
@@ -1028,6 +1107,13 @@ public class BoardPanel extends JPanel {
 		}
 	}
 
+	/**
+	 * Counts the tiles to the left of the one moving. If there are lots of adjacent tiles it will put them in a list,
+	 * and update their destination values depending on the row the piece is in. It will then keep animating
+	 * until it has reached its destination. If the piece is being pushed into a out of bounds area it will apply
+	 * the disappear animation on that token first.
+	 * @param g
+	 */
 	public void applyMoveAnimationLeft(Graphics2D g) {
 		if(skip == false) {
 			everyBpToAnimate.clear();
@@ -1080,6 +1166,13 @@ public class BoardPanel extends JPanel {
 		}
 	}
 
+	/**
+	 * Counts the tiles to the right of the one moving. If there are lots of adjacent tiles it will put them in a list,
+	 * and update their destination values depending on the row the piece is in. It will then keep animating
+	 * until it has reached its destination. If the piece is being pushed into a out of bounds area it will apply
+	 * the disappear animation on that token first.
+	 * @param g
+	 */
 	public void applyMoveAnimationRight(Graphics2D g) {
 		if(skip == false) {
 			everyBpToAnimate.clear();
@@ -1095,12 +1188,11 @@ public class BoardPanel extends JPanel {
 				int row = getRow(chosenY);
 				int col = getCol(chosenX + (i*WIDTH));
 				BoardPiece bp = ((BoardPiece)game.getBoard().getBoard()[row][col]);
-
 				bp.moveX = chosenX + (i*WIDTH);
 				bp.moveY = chosenY;
 				bp.destX = chosenX +((i+1) * WIDTH);
 				everyBpToAnimate.add(bp);
-				if((row == 8 && (col + 1) == 8 )|| (row == 9 && (col + 1) == 8)) {
+				if((row == 8 && (col + 1) == 8 ) || (row == 9 && (col + 1) == 8)) {
 					everyBpToAnimate.remove(bp);
 					disappearPiece = bp;
 					disappearAnimation = true;
@@ -1134,14 +1226,11 @@ public class BoardPanel extends JPanel {
 
 	}
 
+	/**
+	 * Calls the appropriate method - to animate in the according direction.
+	 * @param g
+	 */
 	public void applyMoveAnimation(Graphics2D g) {
-		/*
-		 * Moving up works by counting number of tiles above it that need to be pushed aswell
-		 * From create a list containing all the those board pieces by doing some maths and finding the the rows and columns
-		 * Update those tokens x and y, and their destanations (ie how much they need to be moved)
-		 * Keep animating untill theyve arrived to their destination
-		 * Once they have arrived set of boolean to turn of move animation, and actually move the piece to create the illusion
-		 */
 		if (moveDir.equals("up")) {
 			applyMoveAnimationUp(g);
 		}else if(moveDir.equals("down")) {
@@ -1154,22 +1243,34 @@ public class BoardPanel extends JPanel {
 		}
 	}
 
+	/**
+	 * Draws the token in location of moveX and moveY which are constantly changing.
+	 * @param g
+	 * @param bp --- board piece being animated
+	 */
 	public void animateMove(Graphics2D g, BoardPiece bp) {
 		g.setColor(TOKEN_SQUARE);
-		g.fillRect(bp.moveX, moveY, WIDTH, WIDTH);
+		g.fillRect(bp.moveX, bp.moveY, WIDTH, WIDTH);
 		if(bp.getCol().equals("yellow")) {
 			g.setColor(Color.YELLOW);
 		}
 		else {
 			g.setColor(Color.GREEN);
 		}
-		g.fillOval(bp.moveX, moveY, WIDTH, HEIGHT);
+		g.fillOval(bp.moveX, bp.moveY, WIDTH, HEIGHT);
 		g.setColor(Color.red);
 		g.setStroke(new BasicStroke(6));
 		drawToken(g, bp, bp.moveX, bp.moveY);
 		g.setStroke(new BasicStroke(0));
 	}
 
+
+	/**
+	 * Animates the tokens in the given list right. The x value of the tokens keep decreasing until
+	 * a certain value which is their destination.
+	 * @param g
+	 * @param toAnimate --- list of tokens to be animated
+	 */
 	public void animateLeft(Graphics2D g, List<BoardPiece> toAnimate) {
 		for(BoardPiece bp : toAnimate) {
 			if(bp == null) {
@@ -1195,6 +1296,12 @@ public class BoardPanel extends JPanel {
 		}
 	}
 
+	/**
+	 * Animates the tokens in the given list right. The x value of the tokens keep increasing until
+	 * a certain value which is their destination.
+	 * @param g
+	 * @param toAnimate --- list of tokens to be animated
+	 */
 	public void animateRight(Graphics2D g, List<BoardPiece> toAnimate) {
 		for(BoardPiece bp : toAnimate) {
 			if(bp == null) {
@@ -1220,6 +1327,12 @@ public class BoardPanel extends JPanel {
 		}
 	}
 
+	/**
+	 * Animates the tokens in the given list down. The y value of the tokens keep increasing until
+	 * a certain value which is their destination.
+	 * @param g
+	 * @param toAnimate --- list of tokens to be animated
+	 */
 	public void animateDown(Graphics2D g, List<BoardPiece> toAnimate) {
 		for(BoardPiece bp : toAnimate) {
 			if(bp == null) {
@@ -1245,6 +1358,12 @@ public class BoardPanel extends JPanel {
 		}
 	}
 
+	/**
+	 * Animates the tokens in the given list up. The y value of the tokens keep decreasing until
+	 * a certain value which is their destination.
+	 * @param g
+	 * @param toAnimate --- list of tokens to be animated
+	 */
 	public void animateUp(Graphics2D g, List<BoardPiece> toAnimate) {
 		for(BoardPiece bp : toAnimate) {
 			if(bp == null) {
@@ -1322,7 +1441,7 @@ public class BoardPanel extends JPanel {
 						g.setStroke(new BasicStroke(0));
 						drawLetter(g, temp, row, col);
 					} else {
-						g.setColor(YELLOW_CREATION);
+						g.setColor(GREEN_CREATION);
 						g.fillRect(col * WIDTH, row * HEIGHT, WIDTH, HEIGHT);
 					}
 				} else if (row == 7 && col == 7) {
@@ -1437,8 +1556,21 @@ public class BoardPanel extends JPanel {
 		}
 	}
 
+	/**
+	 * Method draws either a 'M' or an 'R' depending on if its been rotated or moved.
+	 * It draws in a white color 1 pixel to the left, right, up and down from the destination
+	 * x and y, and then drawing the letter in the middle in black. This gives it the effect of
+	 * the letter having a white outline.
+	 * @param g
+	 * @param temp --- the board piece to draw on
+	 * @param row --- the row of the board piece
+	 * @param col --- the column of the board pirce
+	 */
 	public void drawLetter(Graphics2D g, BoardPiece temp, int row, int col) {
-		g.setFont(new Font("Serif", Font.BOLD, 16));
+		WIDTH = Math.min(getWidth(), getHeight())/10 - Math.min(getWidth(), getHeight())/60;
+		HEIGHT = Math.min(getWidth(), getHeight())/10 - Math.min(getWidth(), getHeight())/60;
+		int size = (16*(WIDTH+40))/100;
+		g.setFont(new Font("Serif", Font.BOLD, size));
 		if (game.getYellow().getMovesSoFar().contains(temp.getName())) {
 			g.setColor(Color.WHITE);
 			g.drawString("M", col * WIDTH - 1, row * HEIGHT + 1 + HEIGHT/4);
@@ -1477,7 +1609,14 @@ public class BoardPanel extends JPanel {
 		}
 	}
 
-
+	/**
+	 * Draws the the board pieces swords and shields appropriately in the given x and y coordinates. The x
+	 * and y coordinates refer to point(0,0) of the board piece token square.
+	 * @param g
+	 * @param piece --- the piece whose swords and shields are being drawn
+	 * @param x --- x coordinate of the board piece square
+	 * @param y --- y coordinate of the board piece square
+	 */
 	private void drawToken(Graphics2D g, BoardPiece piece, int x, int y) {
 		if (piece.getNorth() == 1) {
 			g.drawLine(x + WIDTH / 2, y + STROKE, x + WIDTH / 2, y + HEIGHT / 2);
@@ -1504,6 +1643,15 @@ public class BoardPanel extends JPanel {
 		}
 	}
 
+	/**
+	 * Draws the the board pieces swords and shields appropriately in the given x and y coordinates. The x
+	 * and y coordinates refer to point(0,0) of the board piece token square. The difference with this method
+	 * is that the width and height are larger.
+	 * @param g
+	 * @param piece --- the piece whose swords and shields are being drawn
+	 * @param x --- x coordinate of the board piece square
+	 * @param y --- y coordinate of the board piece square
+	 */
 	private void drawHugeTokenParts(Graphics2D g, BoardPiece piece, int x, int y) {
 		if (piece.getNorth() == 1) {
 			g.drawLine(x + WIDTH*6 / 2, y + STROKE, x + WIDTH*6 / 2, y + HEIGHT*6 / 2);

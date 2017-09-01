@@ -670,10 +670,12 @@ public class SwordAndShieldGame {
 	public int horizontalReactionAnimation(Player player, Pair p) {
 		BoardPiece one = p.getOne();
 		BoardPiece two = p.getTwo();
-		if (one.getEast() == 1 && two.getWest() == 2) { // sword - shield
-			return tryPushLeftAnimation(two.getName());
-		}else if (one.getEast() == 2 && two.getWest() == 1) {// shield - sword
-			return tryPushRightAnimation(one.getName());
+		if(two!=null) {
+			if (one.getEast() == 1 && two.getWest() == 2) { // sword - shield
+				return tryPushLeftAnimation(two.getName());
+			}else if (one.getEast() == 2 && two.getWest() == 1) {// shield - sword
+				return tryPushRightAnimation(one.getName());
+			}
 		}
 		return -2;
 	}
@@ -706,7 +708,6 @@ public class SwordAndShieldGame {
 				return tryPushUpAnimation(two.getName());
 			} else if (one.getSouth() == 2 && two.getNorth() == 1) { // shield - sword
 				return tryPushDownAnimation(one.getName());
-				//tryPushDown(one.getName());
 			} else {
 				System.out.println("Invalid Pair");
 			}

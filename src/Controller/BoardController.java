@@ -22,10 +22,10 @@ public class BoardController implements KeyListener, MouseListener{
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		//if(boardPanel.moveAnimation || boardPanel.rotationAnimation || boardPanel.SWEDisappear || boardPanel.disappearAnimation) {
+		//if(boardPanel.moveAnimation || boardPanel.SWEDisappear || boardPanel.disappearAnimation) {
 		//	return;
 		//}
-		
+
 		boardPanel.mouseX = e.getX();
 		boardPanel.mouseY = e.getY();
 		if(!boardPanel.reactions) {
@@ -61,30 +61,22 @@ public class BoardController implements KeyListener, MouseListener{
 		}
 		if (key == KeyEvent.VK_UP) {
 			if (boardPanel.chosenToken != null) {
-				String letter = boardPanel.chosenToken.getName();
-				System.out.println("move " + letter + " up");
 				boardPanel.moveAnimation = true;
 				boardPanel.moveDir = "up";
 			}
 		} else if (key == KeyEvent.VK_RIGHT) {
 			if (boardPanel.chosenToken != null) {
-				String letter = boardPanel.chosenToken.getName();
-				System.out.println("move " + letter + " right");
 				boardPanel.moveAnimation = true;
 				boardPanel.moveDir = "right";
 			}
 		} else if (key == KeyEvent.VK_LEFT) {
 			if (boardPanel.chosenToken != null) {
-				String letter = boardPanel.chosenToken.getName();
-				System.out.println("move " + letter + " left");
 				boardPanel.moveAnimation = true;
 				boardPanel.moveDir = "left";
 
 			}
 		} else if (key == KeyEvent.VK_DOWN) {
 			if (boardPanel.chosenToken != null) {
-				String letter = boardPanel.chosenToken.getName();
-				System.out.println("move " + letter + " down");
 				boardPanel.moveAnimation = true;
 				boardPanel.moveDir = "down";
 			}

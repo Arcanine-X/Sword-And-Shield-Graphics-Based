@@ -51,8 +51,8 @@ public class GameFrame extends JFrame implements Observer {
 		boardPanel = new BoardPanel(game, this);
 		tokenPanelY = new TokenPanel(game, game.getYellow(), this);
 		tokenPanelG = new TokenPanel(game, game.getGreen(), this);
-		graveyardY = new GraveyardPanel(game, game.getYellow());
-		graveyardG = new GraveyardPanel(game, game.getGreen());
+		graveyardY = new GraveyardPanel(game, game.getYellow(), this);
+		graveyardG = new GraveyardPanel(game, game.getGreen(), this);
 		buttonPanel = new ButtonPanel(game, this);
 		//Board panel needs focusable for mouse listeners
 		boardPanel.setFocusable(true);
