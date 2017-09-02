@@ -6,10 +6,10 @@ import javax.swing.Timer;
 
 import org.junit.Test;
 
-import Model.BoardPanel;
 import Model.BoardPiece;
-import Model.GameFrame;
 import Model.SwordAndShieldGame;
+import View.BoardPanel;
+import View.GameFrame;
 
 public class GUI_Tests {
 

@@ -3,9 +3,9 @@ package Controller;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-import Model.GameFrame;
 import Model.SwordAndShieldGame;
-import Model.TokenPanel;
+import View.GameFrame;
+import View.TokenPanel;
 
 /**
  * This class is the controller for the token panels. It sets the values in token panel according to what is the controller is used to click on.

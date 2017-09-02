@@ -5,9 +5,9 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-import Model.BoardPanel;
-import Model.GameFrame;
 import Model.SwordAndShieldGame;
+import View.BoardPanel;
+import View.GameFrame;
 
 /**
  * This class represents the controller for the board panel. It sets all the values in the boardPanel
