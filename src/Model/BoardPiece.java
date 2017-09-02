@@ -133,4 +133,24 @@ public class BoardPiece implements Token {
 		this.west = west;
 	}
 
+	public int getMoveX() {
+		return moveX;
+	}
+
+	public void setMoveX(int moveX) {
+		this.moveX = moveX;
+	}
+
+	public int getMoveY() {
+		return moveY;
+	}
+
+	public void setMoveY(int moveY) {
+		this.moveY = moveY;
+	}
+
+
+
+
+
 }

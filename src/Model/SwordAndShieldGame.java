@@ -22,7 +22,6 @@ public class SwordAndShieldGame {
 	private static final Set<Integer> rotations = new HashSet<Integer>(Arrays.asList(0, 90, 180, 270)); // Set that contains all possible rotations
 	private boolean firstCreation = true; // Keeps track of only being able to create one token per turn
 	private boolean gameEnd = false; // Keeps track of the game state
-	public boolean passed = false;
 
 	public SwordAndShieldGame() {
 		green = new Player("green");
@@ -294,19 +293,18 @@ public class SwordAndShieldGame {
 		if (player.getSetterCount() > player.getOriginalCount()) {
 			firstCreation = true;
 		}
-		//if(reactionsAreActive == false) {
-			if (!player.getMovesSoFar().isEmpty()) {
-				for(String s : player.getMovesSoFar()) {
-					System.out.println("bloop ::: " + s.toString());
-				}
-				player.getMovesSoFar().remove(player.getMovesSoFar().size() - 1);
+		if (!player.getMovesSoFar().isEmpty()) {
+			for(String s : player.getMovesSoFar()) {
+				System.out.println("bloop ::: " + s.toString());
 			}
-			if (!player.getEveryMovement().isEmpty()) {
+			player.getMovesSoFar().remove(player.getMovesSoFar().size() - 1);
+		}
+		if (!player.getEveryMovement().isEmpty()) {
 
-				player.getEveryMovement().remove(player.getEveryMovement().size() - 1);
+			player.getEveryMovement().remove(player.getEveryMovement().size() - 1);
 
-			}
-		//}
+		}
+
 		if (board.checkForReaction()) {
 			board.redraw();
 			return;
@@ -365,7 +363,6 @@ public class SwordAndShieldGame {
 		green.createRecord();
 		yellow.createRecord();
 		board.createRecord();
-	    passed = true;
 	}
 
 	/**
@@ -646,6 +643,12 @@ public class SwordAndShieldGame {
 		}
 	}
 
+	/**
+	 * Returns the direction of the animation. It is used to find what direction to animate the tokens in
+	 * @param player --- current player
+	 * @param p --- pair of reactions
+	 * @return --- direction of the reaction
+	 */
 	public String getDirectionOfAnimation(Player player, Pair p) {
 		BoardPiece one = p.getOne();
 		BoardPiece two = p.getTwo();
@@ -660,17 +663,23 @@ public class SwordAndShieldGame {
 			}else if (one.getEast() == 2 && two.getWest() == 1 && p.getDir().equals("hori")) { // shield - sword
 				return "right";
 			}else {
-				//return "error";
 				return "swordVElse";
 			}
 		}
 		return "swordVElse";
 	}
 
+	/**
+	 * This method returns the amount the tokens needed to animate in a horizontal sword v shield / shield v sword
+	 * push back scenario.
+	 * @param player --- The player whose turn it is
+	 * @param p --- the pair of reactions
+	 * @return --- number of tokens to animate
+	 */
 	public int horizontalReactionAnimation(Player player, Pair p) {
 		BoardPiece one = p.getOne();
 		BoardPiece two = p.getTwo();
-		if(two!=null) {
+		if(two!=null) { // if two doesn't equal null, then the player ins't involved
 			if (one.getEast() == 1 && two.getWest() == 2) { // sword - shield
 				return tryPushLeftAnimation(two.getName());
 			}else if (one.getEast() == 2 && two.getWest() == 1) {// shield - sword
@@ -680,6 +689,35 @@ public class SwordAndShieldGame {
 		return -2;
 	}
 
+	/**
+	 * This method returns the amount the tokens needed to animate in a vertical sword v shield / shield v sword
+	 * push back scenario.
+	 * @param player --- The player whose turn it is
+	 * @param p --- the pair of reactions
+	 * @return --- number of tokens to animate
+	 */
+	public int verticalReactionAnimation(Player player, Pair p) {
+		BoardPiece one = p.getOne();
+		BoardPiece two = p.getTwo();
+		Player play = p.getPlayer();
+		if(two!=null) { // if two doesn't equal null, then the player ins't involved
+			if (one.getSouth() == 1 && two.getNorth() == 2) { // sword - shield
+				return tryPushUpAnimation(two.getName());
+			} else if (one.getSouth() == 2 && two.getNorth() == 1) { // shield - sword
+				return tryPushDownAnimation(one.getName());
+			}
+		}
+		return -2;
+	}
+
+	/**
+	 * This method is used in reactions. It takes name of the pusher, which is the token
+	 * which has the shield. It finds the number of adjacent tiles
+	 * of the tile that is being pushed. With this number it can loop through backwards, so from the
+	 * col + number of adjacent tiles, off setting each tile by + 1 column.
+	 * @param pusher --- name of the token with the shield pushing the sword token
+	 * @return --- number of tokens to animate
+	 */
 	public int tryPushRightAnimation(String pusher) {
 		int c = board.getX(pusher);
 		int r = board.getY(pusher);
@@ -696,25 +734,14 @@ public class SwordAndShieldGame {
 		}
 	}
 
-
-
-	public int verticalReactionAnimation(Player player, Pair p) {
-		// Five possible reactions, sword - sword, sword - nothing, nothing - sword, shield - sword, sword - shield
-		BoardPiece one = p.getOne();
-		BoardPiece two = p.getTwo();
-		Player play = p.getPlayer();
-		if(two!=null) { // if two doesn't equal null, then the player ins't involved
-			if (one.getSouth() == 1 && two.getNorth() == 2) { // sword - shield
-				return tryPushUpAnimation(two.getName());
-			} else if (one.getSouth() == 2 && two.getNorth() == 1) { // shield - sword
-				return tryPushDownAnimation(one.getName());
-			} else {
-				System.out.println("Invalid Pair");
-			}
-		}
-		return -2;
-	}
-
+	/**
+	 * This method is used in reaction animations. It takes name of the pusher, which is the token
+	 * which has the shield. It finds the number of adjacent tiles
+	 * of the tile that is being pushed. With this number it can loop through backwards, so from the
+	 * col - number of adjacent tiles, off setting each tile by - 1 column. his is used to calculate the number of tokens to animate.
+	 * @param pusher --- name of the token with the shield pushing the sword token
+	 * @return --- number of tokens to animate
+	 */
 	public int tryPushLeftAnimation(String pusher) {
 		int c = board.getX(pusher);
 		int r = board.getY(pusher);
@@ -733,6 +760,14 @@ public class SwordAndShieldGame {
 		}
 	}
 
+	/**
+	 * This method is used in reaction animations. It takes name of the pusher, which is the token
+	 * which has the shield. It finds the number of adjacent tiles
+	 * of the tile that is being pushed. With this number it can loop through backwards, so from the
+	 * row + number of adjacent tiles, off setting each tile by + 1 row. This is used to calculate the number of tokens to animate.
+	 * @param pusher --- name of the token with the shield pushing the sword token
+	 * @return --- number of tokens to animate
+	 */
 	public int tryPushDownAnimation(String pusher) {
 		int c = board.getX(pusher);
 		int r = board.getY(pusher);
@@ -750,8 +785,14 @@ public class SwordAndShieldGame {
 		}
 	}
 
-
-
+	/**
+	 * This method is used in reaction animations. It takes name of the pusher, which is the token
+	 * which has the shield. It finds the number of adjacent tiles
+	 * of the tile that is being pushed. With this number it can loop through backwards, so from the
+	 * row - number of adjacent tiles, off setting each tile by - 1 row. This is used to calculate the number of tokens to animate.
+	 * @param pusher --- name of the token with the shield pushing the sword token
+	 * @return --- number of tokens to animate
+	 */
 	public int tryPushUpAnimation(String pusher) {
 		int c = board.getX(pusher);
 		int r = board.getY(pusher);
@@ -768,8 +809,16 @@ public class SwordAndShieldGame {
 		}
 	}
 
-	public int findTokenToAnimate(Player player, Pair p) {
-		// Five possible reactions, sword - sword, sword - nothing, nothing - sword, shield - sword, sword - shield
+	/**
+	 * Vertical Reactions
+	 * Every reaction that doesn't require a shield is a disappearing animation. This means that they all need a different return type
+	 * to figure out what to animate. This method returns different values depending on the pair of reactions. Note that it doesn't
+	 * return anything for a reaction that consists a shield as thats already been checked for earlier.
+	 * @param player --- current player
+	 * @param p --- the pair of reactions
+	 * @return --- a value depending on what reaction it is
+	 */
+	public int findTokenToAnimateVert(Player player, Pair p) {
 		BoardPiece one = p.getOne();
 		BoardPiece two = p.getTwo();
 		Player play = p.getPlayer();
@@ -795,6 +844,15 @@ public class SwordAndShieldGame {
 		return -15;
 	}
 
+	/**
+	 * Horizontal Reactions
+	 * Every reaction that doesn't require a shield is a disappearing animation. This means that they all need a different return type
+	 * to figure out what to animate. This method returns different values depending on the pair of reactions. Note that it doesn't
+	 * return anything for a reaction that consists a shield as thats already been checked for earlier.
+	 * @param player --- current player
+	 * @param p --- the pair of reactions
+	 * @return --- a value depending on what reaction it is
+	 */
 	public int findTokenToAnimateHori(Player player, Pair p) {
 		BoardPiece one = p.getOne();
 		BoardPiece two = p.getTwo();
@@ -817,8 +875,6 @@ public class SwordAndShieldGame {
 				return -23;
 			}else if(one.getWest() == 1 && play!=null && play.getName().equals("green")){ // sword - green player
 				return -24;
-			}else {
-				System.out.println("Invalid Pair");
 			}
 		}
 		return -25;
