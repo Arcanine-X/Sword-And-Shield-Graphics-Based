@@ -65,6 +65,7 @@ public class TokenPanel extends JPanel implements Observer {
 	public void createToken() {
 		game.createToken(player, create);
 		clickedPiece = null;
+		//Check for reactions and accordingly set pass button
 		if (game.getBoard().checkForReaction()) {
 			run.setBoardReactionsTrue();
 			run.getButtonPanel().getPass().setEnabled(false);
@@ -91,11 +92,13 @@ public class TokenPanel extends JPanel implements Observer {
 				clickedPieceRotations.clear();
 				toAnimateAcrossRotation = rotation;
 				toAnimateAcross = pieceToPlay;
+				//if the creation spots aren't take then animate
 				if(run.getCurrentPlayer().getName().equals("yellow") && run.yellowCreationSpotValid()) {
 					animateAcross = true;
 				}else if(run.getCurrentPlayer().getName().equals("green") && run.greenCreationSpotValid()) {
 					animateAcross = true;
 				}else {
+					//If creation spots are taken remove the rotations and display all tokens
 					clickedPieceRotations.clear();
 					clickedPiece = null;
 				}
@@ -119,6 +122,7 @@ public class TokenPanel extends JPanel implements Observer {
 	 * @param g
 	 */
 	private void displayClickedRotations(Graphics2D g) {
+		// loop through and draw the four rotations
 		for (int i = 0; i < clickedPieceRotations.size(); i++) {
 			g.setColor(TOKEN_SQUARE);
 			g.fillRect(x, y, WIDTH, WIDTH);
@@ -188,6 +192,7 @@ public class TokenPanel extends JPanel implements Observer {
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
+		//Scale the width and height
 		WIDTH = Math.min(getWidth(), getHeight()) / 7 - Math.min(getWidth(), getHeight()) / 60;
 		HEIGHT = Math.min(getWidth(), getHeight()) / 7 - Math.min(getWidth(), getHeight()) / 60;
 		Graphics2D _g = (Graphics2D) g;
@@ -210,6 +215,7 @@ public class TokenPanel extends JPanel implements Observer {
 	 * @param g
 	 */
 	private void applyAnimation(Graphics2D g) {
+		//loop through the 4 rotations of the piece and make them all 'fade' in
 		for (int i = 0; i < clickedPieceRotations.size(); i++) {
 			g.setColor(new Color(179, 218, 255, alpha));
 			g.fillRect(x, y, WIDTH, WIDTH);
@@ -226,10 +232,12 @@ public class TokenPanel extends JPanel implements Observer {
 			x += GAP;
 			x += WIDTH;
 		}
+		//keep increasing alpha until it reaches 250 to create fade in effect
 		if (alpha < 250) {
 			alpha += 10;
 			x = GAP;
 		} else {
+			// make sure to turn boolean to false to stop entering this animation
 			animateCreation = false;
 			alpha = 0;
 			x = GAP;
@@ -256,6 +264,7 @@ public class TokenPanel extends JPanel implements Observer {
 					g.setColor(Color.red);
 					g.setStroke(new BasicStroke(6));
 					BoardPiece piece = (BoardPiece) tokens[row][col];
+					//draw the pieces swords and shields
 					drawToken(g, piece);
 				} else {
 					g.setColor(Color.GRAY);
@@ -358,5 +367,25 @@ public class TokenPanel extends JPanel implements Observer {
 
 	public int getWIDTH() {
 		return WIDTH;
+	}
+
+	public BoardPiece[][] getTokens() {
+		return tokens;
+	}
+
+	public BoardPiece getPieceToPlay() {
+		return pieceToPlay;
+	}
+
+	public void setPieceToPlay(BoardPiece pieceToPlay) {
+		this.pieceToPlay = pieceToPlay;
+	}
+
+	public boolean isAnimateCreation() {
+		return animateCreation;
+	}
+
+	public void setAnimateCreation(boolean animateCreation) {
+		this.animateCreation = animateCreation;
 	}
 }

@@ -29,15 +29,19 @@ public class TokenController implements MouseListener{
 		tokenPanel.setMouseY(e.getY());
 		if(game.getBoard().getUndoStack().size() == 1) {
 			if(tokenPanel.getClickedPiece()==null) {
+				//If clicked piece is null then let the player select a token
 				tokenPanel.clicked();
 				if(tokenPanel.getClickedPiece()!=null) {
+					//Ensure that they dont click on the other players tokens --- if so return
 					if(!tokenPanel.getClickedPiece().getCol().equals(run.getCurrentPlayer().getName())) {
 						tokenPanel.setClickedPiece(null);
 						return;
 					}
+					//Display the rotations of the clicked token
 					tokenPanel.getRotations();
 				}
 			}else {
+				//Play that token
 				tokenPanel.playToken();
 			}
 		}

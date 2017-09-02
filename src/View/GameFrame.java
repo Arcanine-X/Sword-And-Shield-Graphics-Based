@@ -12,9 +12,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JSplitPane;
 import javax.swing.Timer;
 import javax.swing.WindowConstants;
-
-import Controller.TokenController;
-import Model.BoardPiece;
 import Model.Player;
 import Model.SwordAndShieldGame;
 
@@ -122,17 +119,21 @@ public class GameFrame extends JFrame implements Observer {
 		}
 	}
 
+	/**
+	 * Check if yellow creation grid is occupied
+	 * @return --- status of yellows creation grid
+	 */
 	public boolean yellowCreationSpotValid() {
 		if(game.getBoard().getBoard()[7][7]!=null) {
-			System.out.println("returning false");
-			BoardPiece temp = (BoardPiece)game.getBoard().getBoard()[7][7];
-			System.out.println(temp.toString());
 			return false;
 		}
-		System.out.println("returning true");
 		return true;
 	}
 
+	/**
+	 * Check if green creation spot is occupied
+	 * @return --- status of greens creation grid
+	 */
 	public boolean greenCreationSpotValid() {
 		if(game.getBoard().getBoard()[2][2]!=null) {
 			return false;
@@ -143,6 +144,7 @@ public class GameFrame extends JFrame implements Observer {
 	@Override
 	public void paintComponents(Graphics g) {
 		super.paintComponents(g);
+		System.out.println("hello");
 		Graphics2D _g = (Graphics2D) g;
 	}
 
@@ -193,5 +195,25 @@ public class GameFrame extends JFrame implements Observer {
 
 	public BoardPanel getBoardPanel() {
 		return boardPanel;
+	}
+
+
+	public GraveyardPanel getGraveyardY() {
+		return graveyardY;
+	}
+
+
+	public GraveyardPanel getGraveyardG() {
+		return graveyardG;
+	}
+
+
+	public TokenPanel getTokenPanelY() {
+		return tokenPanelY;
+	}
+
+
+	public TokenPanel getTokenPanelG() {
+		return tokenPanelG;
 	}
 }

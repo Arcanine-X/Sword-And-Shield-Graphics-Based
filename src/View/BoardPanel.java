@@ -191,17 +191,17 @@ public class BoardPanel extends JPanel {
 	public void vertReactionSVE(Pair p) {
 		vertnumber = game.findTokenToAnimateVert(run.getCurrentPlayer(), p);
 		if (vertnumber == -10 || vertnumber == -11 || vertnumber == -12) {
-			playDisappearSound();
+			playSwordFightSound();
 			reactionPair = p;
 			SWEDisappear = true;
 		} else if (vertnumber == -13) {
-			playDisappearSound();
+			playVictorySound();
 			game.verticalReaction(run.getCurrentPlayer(), p);
 		} else if (vertnumber == -14) {
-			playDisappearSound();
+			playVictorySound();
 			game.verticalReaction(run.getCurrentPlayer(), p);
 		} else if (vertnumber == -15) {
-
+			game.verticalReaction(run.getCurrentPlayer(), p);
 		}
 	}
 
@@ -322,14 +322,14 @@ public class BoardPanel extends JPanel {
 	public void horiReactionSVE(Pair p) {
 		horiNumber = game.findTokenToAnimateHori(run.getCurrentPlayer(), p);
 		if (horiNumber == -20 || horiNumber == -21 || horiNumber == -22) {
-			playDisappearSound();
+			playSwordFightSound();
 			reactionPair = p;
 			SWEDisappear = true;
 		} else if (horiNumber == -23) {
-			playDisappearSound();
+			playVictorySound();
 			game.horizontalReaction(run.getCurrentPlayer(), p);
 		} else if (horiNumber == -24) {
-			playDisappearSound();
+			playVictorySound();
 			game.horizontalReaction(run.getCurrentPlayer(), p);
 		} else if (horiNumber == -25) {
 			game.horizontalReaction(run.getCurrentPlayer(), p);
@@ -516,7 +516,7 @@ public class BoardPanel extends JPanel {
 	}
 
 	/**
-	 * This method plays the sound, and is called whenever a token dies.
+	 * This method plays the falling of the board sound
 	 */
 	public void playDisappearSound() {
 		try {
@@ -529,6 +529,39 @@ public class BoardPanel extends JPanel {
 		} catch (Exception e) {
 		}
 	}
+
+	/**
+	 * Plays this sound when theres a sword involved in a reaction excluding sword v shields
+	 */
+	public void playSwordFightSound() {
+		try {
+			Clip clip = AudioSystem.getClip();
+			AudioInputStream inputStream = AudioSystem
+					.getAudioInputStream(getClass().getResource("/Resources/swordsClashing.wav"));
+			clip = AudioSystem.getClip();
+			clip.open(inputStream);
+			clip.start();
+		} catch (Exception e) {
+		}
+	}
+
+	/**
+	 * Plays this sound when a player kills the opponent
+	 */
+	public void playVictorySound() {
+		try {
+			Clip clip = AudioSystem.getClip();
+			AudioInputStream inputStream = AudioSystem
+					.getAudioInputStream(getClass().getResource("/Resources/victory.wav"));
+			clip = AudioSystem.getClip();
+			clip.open(inputStream);
+			clip.start();
+		} catch (Exception e) {
+		}
+	}
+
+
+
 
 	/**
 	 * Highlights the chosen token.
@@ -597,7 +630,6 @@ public class BoardPanel extends JPanel {
 						chosenToken = null;
 						continue;
 					} else {
-						// chosenToken = null;
 					}
 				}
 			}
@@ -1061,7 +1093,6 @@ public class BoardPanel extends JPanel {
 		moveAnimation = false;
 		skip = false;
 		chosenToken = null;
-		return;
 	}
 
 	/**
@@ -1079,6 +1110,7 @@ public class BoardPanel extends JPanel {
 			piecesToAnimate = run.getCurrentPlayer().upCounter(chosenToken, game.getBoard());
 			if (piecesToAnimate == -1) {
 				negativeOne();
+				return;
 			}
 			chosenToken.setMoveX(moveX);
 			chosenToken.setMoveY(moveY);
@@ -1140,6 +1172,7 @@ public class BoardPanel extends JPanel {
 			piecesToAnimate = run.getCurrentPlayer().downCounter(chosenToken, game.getBoard());
 			if (piecesToAnimate == -1) {
 				negativeOne();
+				return;
 			}
 			chosenToken.setMoveX(moveX);
 			chosenToken.setMoveY(moveY);
@@ -1201,6 +1234,7 @@ public class BoardPanel extends JPanel {
 			piecesToAnimate = run.getCurrentPlayer().leftCounter(chosenToken, game.getBoard());
 			if (piecesToAnimate == -1) {
 				negativeOne();
+				return;
 			}
 			chosenToken.setMoveX(moveX);
 			chosenToken.setMoveY(moveY);
@@ -1262,6 +1296,7 @@ public class BoardPanel extends JPanel {
 			piecesToAnimate = run.getCurrentPlayer().rightCounter(chosenToken, game.getBoard());
 			if (piecesToAnimate == -1) {
 				negativeOne();
+				return;
 			}
 			chosenToken.setMoveX(moveX);
 			chosenToken.setMoveY(moveY);

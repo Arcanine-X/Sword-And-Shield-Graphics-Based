@@ -51,10 +51,14 @@ public class GlassPanel extends JPanel {
 		if (run.getCurrentPlayer().getName().equals("yellow")) {
 			if (tokenPanelY.isAnimateAcross() && run.getCurrentPlayer().getName().equals("yellow")) {
 				if (!doOnce) {
+					// calculate x location of the token moving
 					x = tokenPanelG.getWidth() + DIVIDER + boardPanel.getWidth() + DIVIDER + 8
 							+ (tokenPanelY.getToAnimateAcrossRotation() / 90) * tokenPanelY.getWIDTH() + (tokenPanelY.getToAnimateAcrossRotation() / 90) * 8;
+					//calculate y location of the token moving
 					y = buttonPanel.getHeight() + 8;
+					//calculate destination x value of the token moving
 					destinationX = tokenPanelG.getWidth() + DIVIDER + (7 * boardPanel.WIDTH);
+					//calculate destination y value of the token moving
 					destinationY = buttonPanel.getHeight() + DIVIDER + (7 * boardPanel.HEIGHT);
 					drawX = x;
 					drawY = y;
@@ -66,6 +70,7 @@ public class GlassPanel extends JPanel {
 						destinationY++;
 					}
 				}
+				//keep moving until its reached its destination
 				if (drawX > destinationX) {
 					drawX -= 12;
 				}
@@ -84,9 +89,13 @@ public class GlassPanel extends JPanel {
 		if (run.getCurrentPlayer().getName().equals("green")) {
 			if (tokenPanelG.isAnimateAcross() && run.getCurrentPlayer().getName().equals("green")) {
 				if (!doOnce) {
+					// calculate x location of the token moving
 					x = 8 + (tokenPanelG.getToAnimateAcrossRotation() / 90) * tokenPanelG.getWIDTH() + (tokenPanelG.getToAnimateAcrossRotation() / 90) * 8;
+					//calculate y location of the token moving
 					y = buttonPanel.getHeight() + 8;
+					//calculate destination x value of the token moving
 					destinationX = tokenPanelG.getWidth() + DIVIDER + (2 * boardPanel.WIDTH);
+					//calculate destination y value of the token moving
 					destinationY = buttonPanel.getHeight() + DIVIDER + (2 * boardPanel.HEIGHT);
 					drawX = x;
 					drawY = y;
@@ -98,6 +107,7 @@ public class GlassPanel extends JPanel {
 						destinationY++;
 					}
 				}
+				//keep moving until its reached its destination
 				if (drawX < destinationX) {
 					drawX += 8;
 				}

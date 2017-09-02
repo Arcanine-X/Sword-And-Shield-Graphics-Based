@@ -265,15 +265,12 @@ public class Player implements Token {
 		int r = board.getY(token.getName());
 		int count = 0;
 		if (r - 1 < 0) { // of the board
-			System.out.println("in if statement");
 			board.getBoard()[r][c] = null;
-		} else if (!(board.getBoard()[r - 1][c] instanceof BoardPiece) && !(r - 1 < 0)) { // movin by its self
-			System.out.println("in else if statement");
+		} else if (!(board.getBoard()[r - 1][c] instanceof BoardPiece) && !(r - 1 < 0)) { // moving by its self
 			board.getBoard()[r][c] = null;
 			r--;
 			board.getBoard()[r][c] = token;
 		} else { // requires shifting
-			System.out.println("in else statement");
 			for (int i = r - 1, j = 0; i >= 0; i--, j++) {
 				if (board.getBoard()[i][c] instanceof BoardPiece && count == j) { //calculate number of adjacent tiles going from the the tile being pushed
 					count++;
@@ -306,14 +303,14 @@ public class Player implements Token {
 		int c = board.getX(token.getName());
 		int r = board.getY(token.getName());
 		int count = 0;
-		if (r + 1 > 9) {
+		if (r + 1 > 9) { // piece is going of the board
 			board.getBoard()[r][c] = null;
-		} else if (!(board.getBoard()[r + 1][c] instanceof BoardPiece) && !(r + 1 > 9)) {
+		} else if (!(board.getBoard()[r + 1][c] instanceof BoardPiece) && !(r + 1 > 9)) { // normal movement
 			board.getBoard()[r][c] = null;
 			r++;
 			board.getBoard()[r][c] = token;
 		} else {
-			for (int i = r + 1, j = 0; i < board.getBoard().length; i++, j++) {
+			for (int i = r + 1, j = 0; i < board.getBoard().length; i++, j++) { // requires shifting
 				if (board.getBoard()[i][c] instanceof BoardPiece && count == j) {// calculate number of adjacent tiles to the tile being pushed
 					count++;
 				}
@@ -345,13 +342,13 @@ public class Player implements Token {
 		int c = board.getX(token.getName());
 		int r = board.getY(token.getName());
 		int count = 0;
-		if (c + 1 > 9) {
+		if (c + 1 > 9) { // piece is going of the board
 			board.getBoard()[r][c] = null;
-		} else if (!(board.getBoard()[r][c + 1] instanceof BoardPiece) && !(c + 1 > 9)) {
+		} else if (!(board.getBoard()[r][c + 1] instanceof BoardPiece) && !(c + 1 > 9)) { // normal movement
 			board.getBoard()[r][c] = null;
 			c++;
 			board.getBoard()[r][c] = token;
-		} else {
+		} else { // requires shifting
 			for (int i = c + 1, j = 0; i < board.getBoard().length; i++, j++) {
 				if (board.getBoard()[r][i] instanceof BoardPiece && count == j) {// calculate number of adjacent tiles to the tile being pushed
 					count++;
@@ -384,14 +381,14 @@ public class Player implements Token {
 		int c = board.getX(token.getName());
 		int r = board.getY(token.getName());
 		int count = 0;
-		if (c - 1 < 0) {
+		if (c - 1 < 0) { // piece is going of the board
 			board.getBoard()[r][c] = null;
-		} else if (!(board.getBoard()[r][c - 1] instanceof BoardPiece) && !(c - 1 < 0)) {
+		} else if (!(board.getBoard()[r][c - 1] instanceof BoardPiece) && !(c - 1 < 0)) { // normal movement
 			board.getBoard()[r][c] = null;
 			c--;
 			board.getBoard()[r][c] = token;
 		} else {
-			for (int i = c - 1, j = 0; i >= 0; i--, j++) {
+			for (int i = c - 1, j = 0; i >= 0; i--, j++) { // requires shifting
 				if (board.getBoard()[r][i] instanceof BoardPiece && count == j) {// calculate number of adjacent tiles to the tile being pushed
 					count++;
 				}

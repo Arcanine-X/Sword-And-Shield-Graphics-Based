@@ -43,7 +43,7 @@ public class BoardController implements KeyListener, MouseListener{
 		if(!boardPanel.reactions) {
 			boardPanel.findClickedToken();
 		}
-		System.out.println(boardPanel.mouseClicks);
+		//Check if mouse clicks are greater than two, inorder to make the player select the token they want to move
 		if (boardPanel.chosenToken != null && boardPanel.mouseClicks >=2 && !boardPanel.isRotationAnimation() && boardPanel.reactions == false) {
 			boardPanel.attemptRotation();
 			boardPanel.attemptClickMove();

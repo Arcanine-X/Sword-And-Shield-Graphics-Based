@@ -3,6 +3,7 @@ package View;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,6 +15,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.border.Border;
 
 /**
  * This class represents the frame for the menu. This menu consists of buttons, and when a button is pressed,
@@ -36,10 +38,8 @@ public class MenuFrame extends JFrame {
 		this.setTitle("Menu");
 		this.setFocusable(true);
 		this.add(buttons, BorderLayout.NORTH);
-		URL url = MenuFrame.class.getResource("/Resources/menuImage.jpg");
-		ImageIcon icon = new ImageIcon(url);
-		this.add(new JLabel(icon));
-		//this.add(new JLabel(new ImageIcon("/images/editied.jpg")));
+		MenuPanel menuPanel = new MenuPanel();
+		this.add(menuPanel, BorderLayout.CENTER);
 		this.pack();
 		this.setVisible(true);
 		//Button action listeners
@@ -66,8 +66,11 @@ public class MenuFrame extends JFrame {
 			}
 		});
 	}
+
+	
 	public Dimension getPreferredSize() {
-		return new Dimension(800, 800);
+		Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
+		return new Dimension((int) dimension.getWidth(), 1000);
 	}
 
 }

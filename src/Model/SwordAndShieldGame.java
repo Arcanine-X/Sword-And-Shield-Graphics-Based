@@ -826,13 +826,13 @@ public class SwordAndShieldGame {
 			if (one.getSouth() == 1 && two.getNorth() == 1) { // sword - sword
 				return -10;
 			} else if (one.getSouth() == 1 && two.getNorth() == 2) { // sword - shield
-				//already done
+				//already checked for
 			} else if (one.getSouth() == 1 && two.getNorth() == 0) { // sword - nothing
 				return -11;
 			} else if (one.getSouth() == 0 && two.getNorth() == 1) { // nothing - sword
 				return -12;
 			} else if (one.getSouth() == 2 && two.getNorth() == 1) { // shield - sword
-				//already done
+				//already checked for
 			}
 		}else { //do the player vs board piece reactions
 			if(one.getSouth()==1 && play!=null && play.getName().equals("yellow")) { // sword - yellow player
@@ -863,11 +863,11 @@ public class SwordAndShieldGame {
 			} else if (one.getEast() == 1 && two.getWest() == 0) { // sword - nothing
 				return -21;
 			} else if (one.getEast() == 1 && two.getWest() == 2) { // sword - shield
-				//done
+				//already checked for
 			} else if (one.getEast() == 0 && two.getWest() == 1) { // nothing - sword
 				return -22;
 			} else if (one.getEast() == 2 && two.getWest() == 1) { // shield - sword
-				//done
+				//already checked for
 			}
 		}else { //do the player vs board piece reactions
 			if(one.getEast() == 1 && play!=null && play.getName().equals("yellow")) { // sword - yellow player
