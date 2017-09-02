@@ -119,6 +119,24 @@ public class GameFrame extends JFrame implements Observer {
 		}
 	}
 
+	public boolean yellowCreationSpotValid() {
+		if(game.getBoard().getBoard()[7][7]!=null) {
+			System.out.println("returning false");
+			BoardPiece temp = (BoardPiece)game.getBoard().getBoard()[7][7];
+			System.out.println(temp.toString());
+			return false;
+		}
+		System.out.println("returning true");
+		return true;
+	}
+
+	public boolean greenCreationSpotValid() {
+		if(game.getBoard().getBoard()[2][2]!=null) {
+			return false;
+		}
+		return true;
+	}
+
 	@Override
 	public void paintComponents(Graphics g) {
 		super.paintComponents(g);

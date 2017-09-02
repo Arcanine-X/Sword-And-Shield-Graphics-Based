@@ -36,7 +36,6 @@ public class TokenController implements MouseListener{
 						return;
 					}
 					tokenPanel.getRotations();
-
 				}
 			}else {
 				tokenPanel.playToken();

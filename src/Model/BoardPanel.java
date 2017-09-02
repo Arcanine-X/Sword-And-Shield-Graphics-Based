@@ -937,7 +937,11 @@ public class BoardPanel extends JPanel {
 	public int getCol(int value) {
 		return value / HEIGHT;
 	}
-
+	
+	/**
+	 * Finds what piece has died and applies the disappearing effect on it.
+	 * @param g
+	 */
 	public void applyDisappearAnimation(Graphics2D g) {
 		if (moveDir.equals("up") || moveDir.equals("down")) {
 			if (disappearSkip == false) {
@@ -956,10 +960,10 @@ public class BoardPanel extends JPanel {
 				disappearPiece = (BoardPiece) board[disapppearRow][disappearCol];
 				disappearSkip = true;
 				playDisappearSound();
-				applyHoudiniEffect(g, disappearPiece);
+				applyDisappearEffect(g, disappearPiece);
 			} else {
 				if (disappearPiece != null) {
-					applyHoudiniEffect(g, disappearPiece);
+					applyDisappearEffect(g, disappearPiece);
 				}
 			}
 		} else if (moveDir.equals("right") || moveDir.equals("left")) {
@@ -979,16 +983,21 @@ public class BoardPanel extends JPanel {
 				disappearPiece = (BoardPiece) board[disapppearRow][disappearCol];
 				disappearSkip = true;
 				playDisappearSound();
-				applyHoudiniEffect(g, disappearPiece);
+				applyDisappearEffect(g, disappearPiece);
 			} else {
 				if (disappearPiece != null) {
-					applyHoudiniEffect(g, disappearPiece);
+					applyDisappearEffect(g, disappearPiece);
 				}
 			}
 		}
 	}
 
-	public void applyHoudiniEffect(Graphics2D g, BoardPiece toAnimate) {
+	/**
+	 * Applies the disappear effect to the given boardPiece. A increasing opacity rectangle is drawn over it, until a certain threshold.
+	 * @param g
+	 * @param toAnimate --- board piece to disappear / has died
+	 */
+	public void applyDisappearEffect(Graphics2D g, BoardPiece toAnimate) {
 		if (toAnimate != null) {
 			if ((disappearCol + disapppearRow) % 2 != 1) {
 				g.setColor(new Color(255, 255, 255, alpha)); // white
@@ -1429,7 +1438,7 @@ public class BoardPanel extends JPanel {
 			}
 			animateMove(g, bp);
 			if (bp.getMoveY() > bp.getDestY()) {
-				bp.setMoveY(bp.getMoveY() - 1);
+				bp.setMoveY(bp.getMoveY() - 2);
 			} else {
 				moveAnimation = false;
 				skip = false;

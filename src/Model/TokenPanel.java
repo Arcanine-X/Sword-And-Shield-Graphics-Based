@@ -76,6 +76,7 @@ public class TokenPanel extends JPanel implements Observer {
 
 	/**
 	 * Sets the animation to fly across the panels to true, and plays the token if a token is clicked on.
+	 * If the area clicked on isn't a token, it will allow the player to re choose.
 	 */
 	public void playToken() {
 		for (int i = 0; i < clickedPieceRotations.size(); i++) {
@@ -87,8 +88,21 @@ public class TokenPanel extends JPanel implements Observer {
 				clickedPieceRotations.clear();
 				toAnimateAcrossRotation = rotation;
 				toAnimateAcross = pieceToPlay;
-				animateAcross = true;
+				if(run.getCurrentPlayer().getName().equals("yellow") && run.yellowCreationSpotValid()) {
+					animateAcross = true;
+				}else if(run.getCurrentPlayer().getName().equals("green") && run.greenCreationSpotValid()) {
+					animateAcross = true;
+				}else {
+					clickedPieceRotations.clear();
+					clickedPiece = null;
+				}
 				break;
+			}else {
+				if(mouseX > ((WIDTH * 4) + (4 * GAP)) || mouseY > ((HEIGHT) + (GAP ))) {
+					x = GAP;
+					clickedPieceRotations.clear();
+					clickedPiece = null;
+				}
 			}
 			x += GAP;
 			x += WIDTH;
@@ -156,7 +170,7 @@ public class TokenPanel extends JPanel implements Observer {
 				if (tokens[row][col] instanceof BoardPiece) {
 					if (mouseX >= x && mouseX <= x + WIDTH && mouseY >= y && mouseY <= y + HEIGHT) {
 						clickedPiece = (BoardPiece) tokens[row][col];
-					} // TODO - else null and set put break in and reset x and
+					} 
 				}
 				x += GAP;
 				x += WIDTH;
@@ -171,6 +185,8 @@ public class TokenPanel extends JPanel implements Observer {
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
+		WIDTH = Math.min(getWidth(), getHeight()) / 7 - Math.min(getWidth(), getHeight()) / 60;
+		HEIGHT = Math.min(getWidth(), getHeight()) / 7 - Math.min(getWidth(), getHeight()) / 60;
 		Graphics2D _g = (Graphics2D) g;
 		GradientPaint blackToGray = new GradientPaint(0, 0, Color.BLACK, 0, this.getHeight(), TOKEN_SQUARE);
 		_g.setPaint(blackToGray);
@@ -183,7 +199,6 @@ public class TokenPanel extends JPanel implements Observer {
 			}
 		} else {
 			drawBoard(_g);
-
 		}
 	}
 	/**
