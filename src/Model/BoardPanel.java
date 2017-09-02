@@ -150,17 +150,17 @@ public class BoardPanel extends JPanel {
 			game.verticalReaction(run.getCurrentPlayer(), p);
 		} else {
 			for (int i = howManyToAnimate; i >= 0; i--) {
-				int row = getRow(p.getTwo().yLoc - (i * HEIGHT));
-				int col = getCol(p.getTwo().xLoc);
+				int row = getRow(p.getTwo().getyLoc() - (i * HEIGHT));
+				int col = getCol(p.getTwo().getxLoc());
 				BoardPiece bp = ((BoardPiece) game.getBoard().getBoard()[row][col]);
-				bp.destY = bp.yLoc - HEIGHT;
-				bp.moveY = bp.yLoc;
-				bp.moveX = bp.xLoc;
+				bp.setDestY(bp.getyLoc() - HEIGHT);
+				bp.moveY = bp.getyLoc();
+				bp.moveX = bp.getxLoc();
 				if (bp.equals(p.getTwo())) {
 					continue;
 				}
 				if ((row != 0) && !(col == 0 && row == 2) && !(col == 1 && row == 2)) {
-					bp.needToAnimate = true;
+					bp.setNeedToAnimate(true);
 					aList.add(bp);
 				} else {
 					reactionDisappear = bp;
@@ -209,17 +209,17 @@ public class BoardPanel extends JPanel {
 			game.verticalReaction(run.getCurrentPlayer(), p);
 		} else {
 			for (int i = 0; i <= howManyToAnimate; i++) {
-				int row = getRow(p.getOne().yLoc + (i * HEIGHT));
-				int col = getCol(p.getOne().xLoc);
+				int row = getRow(p.getOne().getyLoc() + (i * HEIGHT));
+				int col = getCol(p.getOne().getxLoc());
 				BoardPiece bp = ((BoardPiece) game.getBoard().getBoard()[row][col]);
-				bp.destY = bp.yLoc + HEIGHT;
-				bp.moveY = bp.yLoc;
-				bp.moveX = bp.xLoc;
+				bp.setDestY(bp.getyLoc() + HEIGHT);
+				bp.moveY = bp.getyLoc();
+				bp.moveX = bp.getxLoc();
 				if (bp.equals(p.getOne())) {
 					continue;
 				}
 				if ((row != 9) && !(col == 8 && row == 7) && !(col == 9 && row == 7)) {
-					bp.needToAnimate = true;
+					bp.setNeedToAnimate(true);
 					aList.add(bp);
 				} else {
 					reactionDisappear = bp;
@@ -244,18 +244,18 @@ public class BoardPanel extends JPanel {
 			game.horizontalReaction(run.getCurrentPlayer(), p);
 		} else {
 			for (int i = 0; i <= howManyToAnimate; i++) {
-				int row = getRow(p.getOne().yLoc);
-				int col = getCol(p.getOne().xLoc + (i * WIDTH));
+				int row = getRow(p.getOne().getyLoc());
+				int col = getCol(p.getOne().getxLoc() + (i * WIDTH));
 				BoardPiece bp = ((BoardPiece) game.getBoard().getBoard()[row][col]);
-				bp.destY = bp.yLoc;
-				bp.moveY = bp.yLoc;
-				bp.moveX = bp.xLoc;
-				bp.destX = bp.xLoc + WIDTH;
+				bp.setDestY(bp.getyLoc());
+				bp.moveY = bp.getyLoc();
+				bp.moveX = bp.getxLoc();
+				bp.setDestX(bp.getxLoc() + WIDTH);
 				if (bp.equals(p.getOne())) {
 					continue;
 				}
 				if ((col != 9) && !(col == 7 && row == 8) && !(col == 7 && row == 9)) {
-					bp.needToAnimate = true;
+					bp.setNeedToAnimate(true);
 					aList.add(bp);
 				} else {
 					reactionDisappear = bp;
@@ -280,18 +280,18 @@ public class BoardPanel extends JPanel {
 			game.horizontalReaction(run.getCurrentPlayer(), p);
 		} else {
 			for (int i = howManyToAnimate; i >= 0; i--) {
-				int row = getRow(p.getTwo().yLoc);
-				int col = getCol(p.getTwo().xLoc - (i * WIDTH));
+				int row = getRow(p.getTwo().getyLoc());
+				int col = getCol(p.getTwo().getxLoc() - (i * WIDTH));
 				BoardPiece bp = ((BoardPiece) game.getBoard().getBoard()[row][col]);
-				bp.destY = bp.yLoc;
-				bp.moveY = bp.yLoc;
-				bp.moveX = bp.xLoc;
-				bp.destX = bp.xLoc - WIDTH;
+				bp.setDestY(bp.getyLoc());
+				bp.moveY = bp.getyLoc();
+				bp.moveX = bp.getxLoc();
+				bp.setDestX(bp.getxLoc() - WIDTH);
 				if (bp.equals(p.getTwo())) {
 					continue;
 				}
 				if ((col != 0) && !(col == 2 && row == 0) && !(col == 2 && row == 1)) {
-					bp.needToAnimate = true;
+					bp.setNeedToAnimate(true);
 					aList.add(bp);
 				} else {
 					reactionDisappear = bp;
@@ -406,26 +406,26 @@ public class BoardPanel extends JPanel {
 			// draws the token at the drawX and drawY locations
 			drawAnimatingToken(g, bp);
 			if (animationDir.equals("up")) {
-				if (bp.moveY > bp.destY) {
+				if (bp.moveY > bp.getDestY()) {
 					bp.moveY -= 2;
 				} else {
 					activateAnimation = false;
 				}
 			} else if (animationDir.equals("down")) {
-				if (bp.moveY < bp.destY) {
+				if (bp.moveY < bp.getDestY()) {
 					bp.moveY += 2;
 				} else {
 					activateAnimation = false;
 				}
 
 			} else if (animationDir.equals("left")) {
-				if (bp.moveX > bp.destX) {
+				if (bp.moveX > bp.getDestX()) {
 					bp.moveX -= 2;
 				} else {
 					activateAnimation = false;
 				}
 			} else if (animationDir.equals("right")) {
-				if (bp.moveX < bp.destX) {
+				if (bp.moveX < bp.getDestX()) {
 					bp.moveX += 2;
 				} else {
 					activateAnimation = false;
@@ -435,7 +435,7 @@ public class BoardPanel extends JPanel {
 		}
 		if (activateAnimation == false) {
 			for (BoardPiece bp : toAnimate) {
-				bp.needToAnimate = false;
+				bp.setNeedToAnimate(false);
 			}
 			reactions = false;
 			skip = false;
@@ -647,12 +647,12 @@ public class BoardPanel extends JPanel {
 	 */
 	public void reactionDisappear(Graphics2D g) {
 		if (reactionDisappear != null) {
-			if ((getCol(reactionDisappear.xLoc) + getRow(reactionDisappear.yLoc)) % 2 != 1) {
+			if ((getCol(reactionDisappear.getxLoc()) + getRow(reactionDisappear.getyLoc())) % 2 != 1) {
 				g.setColor(new Color(255, 255, 255, alpha)); // white
 			} else {
 				g.setColor(new Color(0, 0, 0, alpha));
 			}
-			g.fillRect(reactionDisappear.xLoc, reactionDisappear.yLoc, WIDTH, HEIGHT);
+			g.fillRect(reactionDisappear.getxLoc(), reactionDisappear.getyLoc(), WIDTH, HEIGHT);
 			if (alpha < 250) {
 				alpha += 5;
 			} else {
@@ -663,7 +663,7 @@ public class BoardPanel extends JPanel {
 	}
 
 	public Color getCorrectColorPairOne(Pair p) {
-		if ((getCol(reactionPair.getOne().xLoc) + getRow(reactionPair.getOne().yLoc)) % 2 != 1) {
+		if ((getCol(reactionPair.getOne().getxLoc()) + getRow(reactionPair.getOne().getyLoc())) % 2 != 1) {
 			return (new Color(255, 255, 255, alpha)); // white
 		} else {
 			return (new Color(0, 0, 0, alpha)); // black
@@ -671,7 +671,7 @@ public class BoardPanel extends JPanel {
 	}
 
 	public Color getCorrectColorPairTwo(Pair p) {
-		if ((getCol(reactionPair.getTwo().xLoc) + getRow(reactionPair.getTwo().yLoc)) % 2 != 1) {
+		if ((getCol(reactionPair.getTwo().getxLoc()) + getRow(reactionPair.getTwo().getyLoc())) % 2 != 1) {
 			return (new Color(255, 255, 255, alpha)); // white
 		} else {
 			return (new Color(0, 0, 0, alpha));
@@ -703,9 +703,9 @@ public class BoardPanel extends JPanel {
 	public void reactionDisappearSVE(Graphics2D g) {
 		if (vertnumber == -10) { // both die
 			g.setColor(getCorrectColorPairOne(reactionPair));
-			g.fillRect(reactionPair.getOne().xLoc, reactionPair.getOne().yLoc, WIDTH, HEIGHT);
+			g.fillRect(reactionPair.getOne().getxLoc(), reactionPair.getOne().getyLoc(), WIDTH, HEIGHT);
 			g.setColor(getCorrectColorPairTwo(reactionPair));
-			g.fillRect(reactionPair.getTwo().xLoc, reactionPair.getTwo().yLoc, WIDTH, HEIGHT);
+			g.fillRect(reactionPair.getTwo().getxLoc(), reactionPair.getTwo().getyLoc(), WIDTH, HEIGHT);
 			if (alpha < 250) {
 				alpha += 5;
 			} else {
@@ -714,7 +714,7 @@ public class BoardPanel extends JPanel {
 			}
 		} else if (vertnumber == -11) {
 			g.setColor(getCorrectColorPairTwo(reactionPair));
-			g.fillRect(reactionPair.getTwo().xLoc, reactionPair.getTwo().yLoc, WIDTH, HEIGHT);
+			g.fillRect(reactionPair.getTwo().getxLoc(), reactionPair.getTwo().getyLoc(), WIDTH, HEIGHT);
 			if (alpha < 250) {
 				alpha += 5;
 			} else {
@@ -723,7 +723,7 @@ public class BoardPanel extends JPanel {
 			}
 		} else if (vertnumber == -12) {
 			g.setColor(getCorrectColorPairOne(reactionPair));
-			g.fillRect(reactionPair.getOne().xLoc, reactionPair.getOne().yLoc, WIDTH, HEIGHT);
+			g.fillRect(reactionPair.getOne().getxLoc(), reactionPair.getOne().getyLoc(), WIDTH, HEIGHT);
 			if (alpha < 250) {
 				alpha += 5;
 			} else {
@@ -732,9 +732,9 @@ public class BoardPanel extends JPanel {
 			}
 		} else if (horiNumber == -20) {
 			g.setColor(getCorrectColorPairOne(reactionPair));
-			g.fillRect(reactionPair.getOne().xLoc, reactionPair.getOne().yLoc, WIDTH, HEIGHT);
+			g.fillRect(reactionPair.getOne().getxLoc(), reactionPair.getOne().getyLoc(), WIDTH, HEIGHT);
 			g.setColor(getCorrectColorPairTwo(reactionPair));
-			g.fillRect(reactionPair.getTwo().xLoc, reactionPair.getTwo().yLoc, WIDTH, HEIGHT);
+			g.fillRect(reactionPair.getTwo().getxLoc(), reactionPair.getTwo().getyLoc(), WIDTH, HEIGHT);
 			if (alpha < 250) {
 				alpha += 5;
 			} else {
@@ -743,7 +743,7 @@ public class BoardPanel extends JPanel {
 			}
 		} else if (horiNumber == -21) {
 			g.setColor(getCorrectColorPairTwo(reactionPair));
-			g.fillRect(reactionPair.getTwo().xLoc, reactionPair.getTwo().yLoc, WIDTH, HEIGHT);
+			g.fillRect(reactionPair.getTwo().getxLoc(), reactionPair.getTwo().getyLoc(), WIDTH, HEIGHT);
 			if (alpha < 250) {
 				alpha += 5;
 			} else {
@@ -752,7 +752,7 @@ public class BoardPanel extends JPanel {
 			}
 		} else if (horiNumber == -22) {
 			g.setColor(getCorrectColorPairOne(reactionPair));
-			g.fillRect(reactionPair.getOne().xLoc, reactionPair.getOne().yLoc, WIDTH, HEIGHT);
+			g.fillRect(reactionPair.getOne().getxLoc(), reactionPair.getOne().getyLoc(), WIDTH, HEIGHT);
 			if (alpha < 250) {
 				alpha += 5;
 			} else {
@@ -779,9 +779,9 @@ public class BoardPanel extends JPanel {
 																						// reactions
 				if (p.getDir().equals("vert")) {
 					g.setColor(new Color(108, 50, 180, 250));
-					Rectangle rect = new Rectangle(p.getOne().xLoc + WIDTH / 6, p.getOne().yLoc + HEIGHT - HEIGHT / 6,
+					Rectangle rect = new Rectangle(p.getOne().getxLoc() + WIDTH / 6, p.getOne().getyLoc() + HEIGHT - HEIGHT / 6,
 							WIDTH - WIDTH / 6 * 2, (HEIGHT / 6) * 2);
-					Reaction reaction = new Reaction(p.getOne().xLoc + WIDTH / 6, p.getOne().yLoc + HEIGHT - HEIGHT / 6,
+					Reaction reaction = new Reaction(p.getOne().getxLoc() + WIDTH / 6, p.getOne().getyLoc() + HEIGHT - HEIGHT / 6,
 							WIDTH - WIDTH / 6 * 2, (HEIGHT / 6) * 2, p.getOne(), p.getTwo(), p.getDir(), rect, null);
 					if (!reactionOptions.contains(reaction)) {
 						reactionOptions.add(reaction);
@@ -790,9 +790,9 @@ public class BoardPanel extends JPanel {
 				}
 				if (p.getDir().equals("hori")) {
 					g.setColor(new Color(108, 50, 180, 250));
-					Rectangle rect = new Rectangle(p.getOne().xLoc + WIDTH - WIDTH / 6, p.getOne().yLoc + HEIGHT / 6,
+					Rectangle rect = new Rectangle(p.getOne().getxLoc() + WIDTH - WIDTH / 6, p.getOne().getyLoc() + HEIGHT / 6,
 							(WIDTH / 6) * 2, HEIGHT - HEIGHT / 6 * 2);
-					Reaction reaction = new Reaction(p.getOne().xLoc + WIDTH - WIDTH / 6, p.getOne().yLoc + HEIGHT / 6,
+					Reaction reaction = new Reaction(p.getOne().getxLoc() + WIDTH - WIDTH / 6, p.getOne().getyLoc() + HEIGHT / 6,
 							(WIDTH / 6) * 2, HEIGHT - HEIGHT / 6 * 2, p.getOne(), p.getTwo(), p.getDir(), rect, null);
 					if (!reactionOptions.contains(reaction)) {
 						reactionOptions.add(reaction);
@@ -803,9 +803,9 @@ public class BoardPanel extends JPanel {
 					&& p.getPlayer().getName().equals("yellow")) { // reaction with player
 				if (p.getDir().equals("vert")) {
 					g.setColor(new Color(108, 50, 180, 250));
-					Rectangle rect = new Rectangle(p.getOne().xLoc + WIDTH / 6, p.getOne().yLoc + HEIGHT - HEIGHT / 6,
+					Rectangle rect = new Rectangle(p.getOne().getxLoc() + WIDTH / 6, p.getOne().getyLoc() + HEIGHT - HEIGHT / 6,
 							WIDTH - WIDTH / 6 * 2, (HEIGHT / 6) * 2);
-					Reaction reaction = new Reaction(p.getOne().xLoc + WIDTH / 6, p.getOne().yLoc + HEIGHT - HEIGHT / 6,
+					Reaction reaction = new Reaction(p.getOne().getxLoc() + WIDTH / 6, p.getOne().getyLoc() + HEIGHT - HEIGHT / 6,
 							WIDTH - WIDTH / 6 * 2, (HEIGHT / 6) * 2, p.getOne(), null, p.getDir(), rect, p.getPlayer());
 					if (!reactionOptions.contains(reaction)) {
 						reactionOptions.add(reaction);
@@ -814,9 +814,9 @@ public class BoardPanel extends JPanel {
 				}
 				if (p.getDir().equals("hori")) {
 					g.setColor(new Color(108, 50, 180, 250));
-					Rectangle rect = new Rectangle(p.getOne().xLoc + WIDTH - WIDTH / 6, p.getOne().yLoc + HEIGHT / 6,
+					Rectangle rect = new Rectangle(p.getOne().getxLoc() + WIDTH - WIDTH / 6, p.getOne().getyLoc() + HEIGHT / 6,
 							(WIDTH / 6) * 2, HEIGHT - HEIGHT / 6 * 2);
-					Reaction reaction = new Reaction(p.getOne().xLoc + WIDTH - WIDTH / 6, p.getOne().yLoc + HEIGHT / 6,
+					Reaction reaction = new Reaction(p.getOne().getxLoc() + WIDTH - WIDTH / 6, p.getOne().getyLoc() + HEIGHT / 6,
 							(WIDTH / 6) * 2, HEIGHT - HEIGHT / 6 * 2, p.getOne(), null, p.getDir(), rect,
 							p.getPlayer());
 					if (!reactionOptions.contains(reaction)) {
@@ -828,9 +828,9 @@ public class BoardPanel extends JPanel {
 					&& p.getPlayer().getName().equals("green")) {
 				if (p.getDir().equals("vert")) {
 					g.setColor(new Color(108, 50, 180, 250));
-					Rectangle rect = new Rectangle(p.getOne().xLoc + WIDTH / 6, p.getOne().yLoc - HEIGHT / 6,
+					Rectangle rect = new Rectangle(p.getOne().getxLoc() + WIDTH / 6, p.getOne().getyLoc() - HEIGHT / 6,
 							(WIDTH / 6) * 4, (HEIGHT / 6) * 2);
-					Reaction reaction = new Reaction(p.getOne().xLoc + WIDTH / 6, p.getOne().yLoc - HEIGHT / 6,
+					Reaction reaction = new Reaction(p.getOne().getxLoc() + WIDTH / 6, p.getOne().getyLoc() - HEIGHT / 6,
 							(WIDTH / 6) * 4, (HEIGHT / 6) * 2, p.getOne(), null, p.getDir(), rect, p.getPlayer());
 					if (!reactionOptions.contains(reaction)) {
 						reactionOptions.add(reaction);
@@ -839,9 +839,9 @@ public class BoardPanel extends JPanel {
 				}
 				if (p.getDir().equals("hori")) {
 					g.setColor(new Color(108, 50, 180, 250));
-					Rectangle rect = new Rectangle(p.getOne().xLoc - WIDTH / 6, p.getOne().yLoc + HEIGHT / 6,
+					Rectangle rect = new Rectangle(p.getOne().getxLoc() - WIDTH / 6, p.getOne().getyLoc() + HEIGHT / 6,
 							(WIDTH / 6) * 2, (HEIGHT / 6) * 4);
-					Reaction reaction = new Reaction(p.getOne().xLoc - WIDTH / 6, p.getOne().yLoc + HEIGHT / 6,
+					Reaction reaction = new Reaction(p.getOne().getxLoc() - WIDTH / 6, p.getOne().getyLoc() + HEIGHT / 6,
 							(WIDTH / 6) * 2, (HEIGHT / 6) * 4, p.getOne(), null, p.getDir(), rect, p.getPlayer());
 					if (!reactionOptions.contains(reaction)) {
 						reactionOptions.add(reaction);
@@ -1052,16 +1052,15 @@ public class BoardPanel extends JPanel {
 			}
 			chosenToken.moveX = moveX;
 			chosenToken.moveY = moveY;
-			chosenToken.destY = chosenY - HEIGHT;
+			chosenToken.setDestY(chosenY - HEIGHT);
 			everyBpToAnimate.add(chosenToken);
 			for (int i = piecesToAnimate; i > 0; i--) {
 				int row = getRow(chosenY - (i * HEIGHT));
 				int col = getCol(chosenX);
 				BoardPiece bp = ((BoardPiece) game.getBoard().getBoard()[row][col]);
-				bp.needToAnimate = true;
 				bp.moveX = chosenX;
 				bp.moveY = chosenY - (i * HEIGHT);
-				bp.destY = chosenY - ((i + 1) * HEIGHT);
+				bp.setDestY(chosenY - ((i + 1) * HEIGHT));
 				everyBpToAnimate.add(bp);
 
 				if (((row - 1) == 1 && col == 0) || ((row - 1) == 1 && col == 1)) {
@@ -1084,7 +1083,7 @@ public class BoardPanel extends JPanel {
 			BoardPiece temp;
 			if (piecesToAnimate > 0) {
 				temp = everyBpToAnimate.get(1);
-				if (temp.destY < 0) {
+				if (temp.getDestY() < 0) {
 					disappearPiece = temp;
 					everyBpToAnimate.remove(temp);
 					disappearAnimation = true;
@@ -1114,7 +1113,7 @@ public class BoardPanel extends JPanel {
 			}
 			chosenToken.moveX = moveX;
 			chosenToken.moveY = moveY;
-			chosenToken.destY = chosenY + HEIGHT;
+			chosenToken.setDestY(chosenY + HEIGHT);
 			everyBpToAnimate.add(chosenToken);
 			for (int i = piecesToAnimate; i > 0; i--) {
 				int row = getRow(chosenY + (i * HEIGHT));
@@ -1122,7 +1121,7 @@ public class BoardPanel extends JPanel {
 				BoardPiece bp = ((BoardPiece) game.getBoard().getBoard()[row][col]);
 				bp.moveX = chosenX;
 				bp.moveY = chosenY + (i * HEIGHT);
-				bp.destY = chosenY + ((i + 1) * HEIGHT);
+				bp.setDestY(chosenY + ((i + 1) * HEIGHT));
 				everyBpToAnimate.add(bp);
 				if (((row + 1) == 8 && col == 8) || ((row + 1) == 8 && col == 9)) {
 					everyBpToAnimate.remove(bp);
@@ -1145,7 +1144,7 @@ public class BoardPanel extends JPanel {
 			BoardPiece temp;
 			if (piecesToAnimate > 0) {
 				temp = everyBpToAnimate.get(1);
-				if (temp.destY > (9 * HEIGHT)) {
+				if (temp.getDestY() > (9 * HEIGHT)) {
 					disappearPiece = temp;
 					everyBpToAnimate.remove(temp);
 					disappearAnimation = true;
@@ -1175,7 +1174,7 @@ public class BoardPanel extends JPanel {
 			}
 			chosenToken.moveX = moveX;
 			chosenToken.moveY = moveY;
-			chosenToken.destX = chosenX - WIDTH;
+			chosenToken.setDestX(chosenX - WIDTH);
 			everyBpToAnimate.add(chosenToken);
 			for (int i = piecesToAnimate; i > 0; i--) {
 				int row = getRow(chosenY);
@@ -1183,7 +1182,7 @@ public class BoardPanel extends JPanel {
 				BoardPiece bp = ((BoardPiece) game.getBoard().getBoard()[row][col]);
 				bp.moveX = chosenX - (i * WIDTH);
 				bp.moveY = chosenY;
-				bp.destX = chosenX - ((i + 1) * WIDTH);
+				bp.setDestX(chosenX - ((i + 1) * WIDTH));
 				everyBpToAnimate.add(bp);
 				if ((row == 0 && (col - 1) == 1) || (row == 1 && (col - 1) == 1)) {
 					everyBpToAnimate.remove(bp);
@@ -1206,7 +1205,7 @@ public class BoardPanel extends JPanel {
 			BoardPiece temp;
 			if (piecesToAnimate > 0) {
 				temp = everyBpToAnimate.get(1);
-				if (temp.destX < 0) {
+				if (temp.getDestX() < 0) {
 					disappearPiece = temp;
 					everyBpToAnimate.remove(temp);
 					disappearAnimation = true;
@@ -1236,7 +1235,7 @@ public class BoardPanel extends JPanel {
 			}
 			chosenToken.moveX = moveX;
 			chosenToken.moveY = moveY;
-			chosenToken.destX = chosenX + WIDTH;
+			chosenToken.setDestX(chosenX + WIDTH);
 			everyBpToAnimate.add(chosenToken);
 			for (int i = piecesToAnimate; i > 0; i--) {
 				int row = getRow(chosenY);
@@ -1244,7 +1243,7 @@ public class BoardPanel extends JPanel {
 				BoardPiece bp = ((BoardPiece) game.getBoard().getBoard()[row][col]);
 				bp.moveX = chosenX + (i * WIDTH);
 				bp.moveY = chosenY;
-				bp.destX = chosenX + ((i + 1) * WIDTH);
+				bp.setDestX(chosenX + ((i + 1) * WIDTH));
 				everyBpToAnimate.add(bp);
 				if ((row == 8 && (col + 1) == 8) || (row == 9 && (col + 1) == 8)) {
 					everyBpToAnimate.remove(bp);
@@ -1267,7 +1266,7 @@ public class BoardPanel extends JPanel {
 			BoardPiece temp;
 			if (piecesToAnimate > 0) {
 				temp = everyBpToAnimate.get(1);
-				if (temp.destX > (9 * WIDTH)) {
+				if (temp.getDestX() > (9 * WIDTH)) {
 					disappearPiece = temp;
 					everyBpToAnimate.remove(temp);
 					disappearAnimation = true;
@@ -1333,7 +1332,7 @@ public class BoardPanel extends JPanel {
 				continue;
 			}
 			animateMove(g, bp);
-			if (bp.moveX > bp.destX) {
+			if (bp.moveX > bp.getDestX()) {
 				bp.moveX -= 2;
 			} else {
 				moveAnimation = false;
@@ -1365,7 +1364,7 @@ public class BoardPanel extends JPanel {
 				continue;
 			}
 			animateMove(g, bp);
-			if (bp.moveX < bp.destX) {
+			if (bp.moveX < bp.getDestX()) {
 				bp.moveX += 2;
 			} else {
 				moveAnimation = false;
@@ -1397,7 +1396,7 @@ public class BoardPanel extends JPanel {
 				continue;
 			}
 			animateMove(g, bp);
-			if (bp.moveY < bp.destY) {
+			if (bp.moveY < bp.getDestY()) {
 				bp.moveY += 2;
 			} else {
 				moveAnimation = false;
@@ -1429,7 +1428,7 @@ public class BoardPanel extends JPanel {
 				continue;
 			}
 			animateMove(g, bp);
-			if (bp.moveY > bp.destY) {
+			if (bp.moveY > bp.getDestY()) {
 				bp.moveY -= 2;
 			} else {
 				moveAnimation = false;
@@ -1444,7 +1443,7 @@ public class BoardPanel extends JPanel {
 		}
 		if (skip == false) {
 			for (BoardPiece bp : toAnimate) {
-				bp.needToAnimate = false;
+				bp.setNeedToAnimate(false);
 			}
 			everyBpToAnimate.clear();
 		}
@@ -1474,7 +1473,7 @@ public class BoardPanel extends JPanel {
 							continue;
 						}
 						BoardPiece temp = (BoardPiece) board[row][col];
-						if (temp.needToAnimate) {
+						if (temp.isNeedToAnimate()) {
 							g.setColor(new Color(144, 238, 144));
 							g.fillRect(col * WIDTH, row * HEIGHT, WIDTH, HEIGHT);
 							continue;
@@ -1491,8 +1490,8 @@ public class BoardPanel extends JPanel {
 						g.setColor(Color.red);
 						g.setStroke(new BasicStroke(6));
 
-						temp.xLoc = col * WIDTH;
-						temp.yLoc = row * HEIGHT;
+						temp.setxLoc(col * WIDTH);
+						temp.setyLoc(row * HEIGHT);
 						drawToken(g, (BoardPiece) board[row][col], col * WIDTH, row * HEIGHT);
 						g.setStroke(new BasicStroke(0));
 						drawLetter(g, temp, row, col);
@@ -1509,7 +1508,7 @@ public class BoardPanel extends JPanel {
 						}
 						BoardPiece temp = (BoardPiece) board[row][col];
 
-						if (temp.needToAnimate) {
+						if (temp.isNeedToAnimate()) {
 							g.setColor(new Color(255, 250, 205));
 							g.fillRect(col * WIDTH, row * HEIGHT, WIDTH, HEIGHT);
 							continue;
@@ -1526,8 +1525,8 @@ public class BoardPanel extends JPanel {
 						g.setColor(Color.red);
 						g.setStroke(new BasicStroke(6));
 
-						temp.xLoc = col * WIDTH;
-						temp.yLoc = row * HEIGHT;
+						temp.setxLoc(col * WIDTH);
+						temp.setyLoc(row * HEIGHT);
 						drawToken(g, (BoardPiece) board[row][col], col * WIDTH, row * HEIGHT);
 						g.setStroke(new BasicStroke(0));
 						drawLetter(g, temp, row, col);
@@ -1539,7 +1538,7 @@ public class BoardPanel extends JPanel {
 					g.setColor(TOKEN_SQUARE);
 					g.fillRect(col * WIDTH, row * HEIGHT, WIDTH, WIDTH);
 					BoardPiece temp = (BoardPiece) board[row][col];
-					if (temp.needToAnimate) {
+					if (temp.isNeedToAnimate()) {
 						g.setColor(getColor(row, col));
 						g.fillRect(col * WIDTH, row * HEIGHT, WIDTH, HEIGHT);
 						continue;
@@ -1549,14 +1548,8 @@ public class BoardPanel extends JPanel {
 						g.fillRect(col * WIDTH, row * HEIGHT, WIDTH, HEIGHT);
 						continue;
 					}
-					temp.xLoc = col * WIDTH;
-					temp.yLoc = row * HEIGHT;
-					if ((row + col) % 2 != 1) {
-						temp.color = Color.BLACK;
-					} else {
-						temp.color = Color.WHITE;
-					}
-
+					temp.setxLoc(col * WIDTH);
+					temp.setyLoc(row * HEIGHT);
 					if (temp.getCol().equals("yellow")) {
 						g.setColor(Color.YELLOW);
 					} else {

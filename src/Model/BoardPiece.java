@@ -17,10 +17,9 @@ public class BoardPiece implements Token {
 	private int south;
 	private int west;
 	int moveX, moveY;
-	boolean needToAnimate = false;
-	int destX, destY;
-	int xLoc, yLoc;
-	Color color;
+	private boolean needToAnimate = false;
+	private int destX, destY;
+	private int xLoc, yLoc;
 
 	// 0 for nothing, 1 for sword, 2 for shield
 	public BoardPiece(String name, int north, int east, int south, int west, String col) {
@@ -148,6 +147,47 @@ public class BoardPiece implements Token {
 	public void setMoveY(int moveY) {
 		this.moveY = moveY;
 	}
+
+	public boolean isNeedToAnimate() {
+		return needToAnimate;
+	}
+
+	public void setNeedToAnimate(boolean needToAnimate) {
+		this.needToAnimate = needToAnimate;
+	}
+
+	public int getxLoc() {
+		return xLoc;
+	}
+
+	public void setxLoc(int xLoc) {
+		this.xLoc = xLoc;
+	}
+
+	public int getyLoc() {
+		return yLoc;
+	}
+
+	public void setyLoc(int yLoc) {
+		this.yLoc = yLoc;
+	}
+
+	public int getDestY() {
+		return destY;
+	}
+
+	public void setDestY(int destY) {
+		this.destY = destY;
+	}
+
+	public int getDestX() {
+		return destX;
+	}
+
+	public void setDestX(int destX) {
+		this.destX = destX;
+	}
+
 
 
 
