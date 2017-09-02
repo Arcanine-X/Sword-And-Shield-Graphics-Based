@@ -1,7 +1,5 @@
 package Model;
 
-import java.awt.Color;
-
 /**
  * This class contains each BoardPiece which represents each players set of 24 tokens. Each boardPiece, has a name and color where the name is the
  * letter of the token, and color is either green or yellow. It also contains a north, east, south and west which are all
@@ -16,7 +14,7 @@ public class BoardPiece implements Token {
 	private int east;
 	private int south;
 	private int west;
-	int moveX, moveY;
+	private int moveX, moveY;
 	private boolean needToAnimate = false;
 	private int destX, destY;
 	private int xLoc, yLoc;
@@ -187,10 +185,4 @@ public class BoardPiece implements Token {
 	public void setDestX(int destX) {
 		this.destX = destX;
 	}
-
-
-
-
-
-
 }
