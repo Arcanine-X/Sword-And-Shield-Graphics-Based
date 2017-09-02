@@ -90,11 +90,11 @@ public class BoardPanel extends JPanel {
 	 */
 	public Pair findPair(BoardPiece one, BoardPiece two, Player player) {
 		for (Pair p : game.getBoard().getReactions()) {
-			if (player != null) {
+			if (player != null) { // Player v Sword reactions
 				if (p.getOne().equals(one) && p.getPlayer().getName().equals(player.getName())) {
 					return p;
 				}
-			} else if (two != null) {
+			} else if (two != null) { // Non player reactions
 				if (p.getOne().equals(one) && p.getTwo().equals(two)) {
 					return p;
 				}
@@ -127,16 +127,16 @@ public class BoardPanel extends JPanel {
 	 */
 	public void checkForMoreReactions() {
 		if (game.getBoard().checkForReaction()) {
-			run.setBoardReactionsTrue();
+			run.setBoardReactionsTrue(); // reactions so disable button
 			run.getButtonPanel().getPass().setEnabled(false);
 		} else {
-			run.setBoardReactionsFalse();
+			run.setBoardReactionsFalse(); // no reactions to enable buttons
 			run.getButtonPanel().getPass().setEnabled(true);
 		}
 	}
 
 	public void doReaction(Pair p) {
-		if (p.getDir().equals("hori") || p.getDir().equals("vert")) {
+		if (p.getDir().equals("hori") || p.getDir().equals("vert")) { //sanity check
 			reactionPair = p;
 			tryReactionAnimation(p);
 		}
@@ -159,6 +159,7 @@ public class BoardPanel extends JPanel {
 		if (howManyToAnimate == 0 || howManyToAnimate == -1 || howManyToAnimate == -2) {
 			game.verticalReaction(run.getCurrentPlayer(), p);
 		} else {
+			//Set all destination values to move to
 			for (int i = howManyToAnimate; i >= 0; i--) {
 				int row = getRow(p.getTwo().getyLoc() - (i * HEIGHT));
 				int col = getCol(p.getTwo().getxLoc());
@@ -169,10 +170,12 @@ public class BoardPanel extends JPanel {
 				if (bp.equals(p.getTwo())) {
 					continue;
 				}
+				//Check all the out of bounds areas - easiest to hard code it in
 				if ((row != 0) && !(col == 0 && row == 2) && !(col == 1 && row == 2)) {
 					bp.setNeedToAnimate(true);
 					aList.add(bp);
 				} else {
+					//If its going out of bounds make it disappear
 					reactionDisappear = bp;
 					playDisappearSound();
 				}
@@ -190,17 +193,18 @@ public class BoardPanel extends JPanel {
 	 */
 	public void vertReactionSVE(Pair p) {
 		vertnumber = game.findTokenToAnimateVert(run.getCurrentPlayer(), p);
+		//Sword v nothing / nothing v Sword / Sword v Sword
 		if (vertnumber == -10 || vertnumber == -11 || vertnumber == -12) {
 			playSwordFightSound();
 			reactionPair = p;
 			SWEDisappear = true;
-		} else if (vertnumber == -13) {
+		} else if (vertnumber == -13) { //Sword v Player
 			playVictorySound();
 			game.verticalReaction(run.getCurrentPlayer(), p);
-		} else if (vertnumber == -14) {
+		} else if (vertnumber == -14) { // Sword v Player
 			playVictorySound();
 			game.verticalReaction(run.getCurrentPlayer(), p);
-		} else if (vertnumber == -15) {
+		} else if (vertnumber == -15) { // Shouldn't ever get in here
 			game.verticalReaction(run.getCurrentPlayer(), p);
 		}
 	}
@@ -215,6 +219,7 @@ public class BoardPanel extends JPanel {
 	 *            --- the amount of board pieces needing to be animated
 	 */
 	public void downReactionAnimation(Pair p, int howManyToAnimate) {
+		//Set all destination values to move to
 		if (howManyToAnimate == 0 || howManyToAnimate == -1 || howManyToAnimate == -2) {
 			game.verticalReaction(run.getCurrentPlayer(), p);
 		} else {
@@ -228,10 +233,12 @@ public class BoardPanel extends JPanel {
 				if (bp.equals(p.getOne())) {
 					continue;
 				}
+				//Check all the out of bounds areas - easiest to hard code it in
 				if ((row != 9) && !(col == 8 && row == 7) && !(col == 9 && row == 7)) {
 					bp.setNeedToAnimate(true);
 					aList.add(bp);
 				} else {
+					//If its going out of bounds make it disappear
 					reactionDisappear = bp;
 					playDisappearSound();
 				}
@@ -253,6 +260,7 @@ public class BoardPanel extends JPanel {
 		if (howManyToAnimate == 0 || howManyToAnimate == -1 || howManyToAnimate == -2) {
 			game.horizontalReaction(run.getCurrentPlayer(), p);
 		} else {
+			//Set all destination values to move to
 			for (int i = 0; i <= howManyToAnimate; i++) {
 				int row = getRow(p.getOne().getyLoc());
 				int col = getCol(p.getOne().getxLoc() + (i * WIDTH));
@@ -264,10 +272,12 @@ public class BoardPanel extends JPanel {
 				if (bp.equals(p.getOne())) {
 					continue;
 				}
+				//Check all the out of bounds areas - easiest to hard code it in
 				if ((col != 9) && !(col == 7 && row == 8) && !(col == 7 && row == 9)) {
 					bp.setNeedToAnimate(true);
 					aList.add(bp);
 				} else {
+					//If its going out of bounds make it disappear
 					reactionDisappear = bp;
 					playDisappearSound();
 				}
@@ -289,6 +299,7 @@ public class BoardPanel extends JPanel {
 		if (howManyToAnimate == 0 || howManyToAnimate == -1 || howManyToAnimate == -2) {
 			game.horizontalReaction(run.getCurrentPlayer(), p);
 		} else {
+			//Set all destination values to move to
 			for (int i = howManyToAnimate; i >= 0; i--) {
 				int row = getRow(p.getTwo().getyLoc());
 				int col = getCol(p.getTwo().getxLoc() - (i * WIDTH));
@@ -300,10 +311,12 @@ public class BoardPanel extends JPanel {
 				if (bp.equals(p.getTwo())) {
 					continue;
 				}
+				//Check all the out of bounds areas - easiest to hard code it in
 				if ((col != 0) && !(col == 2 && row == 0) && !(col == 2 && row == 1)) {
 					bp.setNeedToAnimate(true);
 					aList.add(bp);
 				} else {
+					//If its going out of bounds make it disappear
 					reactionDisappear = bp;
 					playDisappearSound();
 				}
@@ -321,17 +334,18 @@ public class BoardPanel extends JPanel {
 	 */
 	public void horiReactionSVE(Pair p) {
 		horiNumber = game.findTokenToAnimateHori(run.getCurrentPlayer(), p);
+		//Sword v nothing / nothing v Sword / Sword v Sword
 		if (horiNumber == -20 || horiNumber == -21 || horiNumber == -22) {
 			playSwordFightSound();
 			reactionPair = p;
 			SWEDisappear = true;
-		} else if (horiNumber == -23) {
+		} else if (horiNumber == -23) { // Sword v player
 			playVictorySound();
 			game.horizontalReaction(run.getCurrentPlayer(), p);
-		} else if (horiNumber == -24) {
+		} else if (horiNumber == -24) { // Sword v player
 			playVictorySound();
 			game.horizontalReaction(run.getCurrentPlayer(), p);
-		} else if (horiNumber == -25) {
+		} else if (horiNumber == -25) { // Shouldn't ever get in here
 			game.horizontalReaction(run.getCurrentPlayer(), p);
 		}
 	}
@@ -443,12 +457,14 @@ public class BoardPanel extends JPanel {
 			}
 
 		}
+		//After animations are done set everything to false/reset it
 		if (activateAnimation == false) {
 			for (BoardPiece bp : toAnimate) {
 				bp.setNeedToAnimate(false);
 			}
 			reactions = false;
 			skip = false;
+			//Once animation is done actually to the reaction
 			if (animationDir.equals("up") || animationDir.equals("down")) {
 				game.verticalReaction(run.getCurrentPlayer(), reactionPair);
 
@@ -560,9 +576,6 @@ public class BoardPanel extends JPanel {
 		}
 	}
 
-
-
-
 	/**
 	 * Highlights the chosen token.
 	 *
@@ -577,18 +590,6 @@ public class BoardPanel extends JPanel {
 			Rectangle boundingBox = new Rectangle(WIDTH / 4, HEIGHT / 4, WIDTH / 2, HEIGHT / 2);
 			g.setColor(Color.PINK);
 			g.drawRect(moveX + WIDTH / 4, moveY + HEIGHT / 4, WIDTH / 2, HEIGHT / 2);
-			// g.drawRect(chosenX - STROKE, chosenY - STROKE, WIDTH + STROKE + 3, HEIGHT +
-			// STROKE + 3);
-			// Draws bounding boxes
-			// g.setColor(Color.CYAN);
-			// g.drawRect(chosenX, chosenY, WIDTH / 4, HEIGHT);
-			// g.setColor(Color.PINK);
-			// g.drawRect(chosenX, chosenY, WIDTH, HEIGHT / 4);
-			// g.setColor(Color.ORANGE);
-			// g.drawRect(chosenX + (WIDTH / 4) * 3, chosenY, WIDTH / 4, HEIGHT);
-			// g.setColor(Color.magenta);
-			// g.drawRect(chosenX, chosenY + (HEIGHT / 4) * 3, WIDTH, HEIGHT / 4);
-			// g.setStroke(new BasicStroke(0));
 		}
 	}
 
@@ -605,6 +606,7 @@ public class BoardPanel extends JPanel {
 					if ((mouseX >= col * WIDTH) && (mouseX <= col * WIDTH + WIDTH) && (mouseY >= row * HEIGHT)
 							&& (mouseY <= row * HEIGHT + WIDTH)) {
 						BoardPiece temp = (BoardPiece) board[row][col];
+						//Increase mouse clicks to make player click on token twice to move it
 						if (chosenToken != null && temp.getName().equals(chosenToken.getName())) {
 							mouseClicks++;
 						} else {
@@ -613,16 +615,19 @@ public class BoardPanel extends JPanel {
 						chosenToken = (BoardPiece) board[row][col];
 						chosenX = moveX = col * WIDTH;
 						chosenY = moveY = row * HEIGHT;
+						//If the tokens been moved dont let the player select it
 						if (run.getCurrentPlayer().getEveryMovement().contains(chosenToken)
 								|| run.getCurrentPlayer().getMovesSoFar().contains(chosenToken.getName())) {
 							chosenToken = null;
 							continue;
 						}
+						// Don't let yellow player touch greens tokens
 						if (run.getCurrentPlayer().getName().equals("yellow")
 								&& chosenToken.getCol().equals("yellow")) {
 							mouseClicks++;
 							return;
 						}
+						// Don't let green player touch yellows tokens
 						if (run.getCurrentPlayer().getName().equals("green") && chosenToken.getCol().equals("green")) {
 							mouseClicks++;
 							return;
@@ -659,28 +664,28 @@ public class BoardPanel extends JPanel {
 		if (game.getBoard().getUndoStack().size() == 1) {
 			chosenToken = null;
 		}
-		if (reactions) {
+		if (reactions) { // displays reactions
 			drawReactions(_g);
 		}
-		if (SWEDisappear) {
+		if (SWEDisappear) { // displays sword v sword/nothing disappear animation
 			reactionDisappearSVE(_g);
 		}
-		if (reactionDisappear != null) {
+		if (reactionDisappear != null) { // displays push of the board reaction disappear animation
 			reactionDisappear(_g);
-		} else if (activateAnimation) {
+		} else if (activateAnimation) { // displays moving reaction animation
 			displayReactionAnimation(_g, aList);
 		}
-		if (disappearAnimation) {
+		if (disappearAnimation) { // displays moving token off the board disappear animation
 			applyDisappearAnimation(_g);
-		} else if (moveAnimation) {
+		} else if (moveAnimation) { // displays moving animation
 			applyMoveAnimation(_g);
-		} else if (rotationAnimation) {
+		} else if (rotationAnimation) { // displays rotation animation (big token)
 			applyRotationAnimation(_g);
 		} else {
 			if (!reactions) {
 				drawBoard(_g);
 			}
-			highlightSelectedToken(_g);
+			highlightSelectedToken(_g); // shows selected token
 		}
 	}
 
@@ -691,12 +696,14 @@ public class BoardPanel extends JPanel {
 	 */
 	public void reactionDisappear(Graphics2D g) {
 		if (reactionDisappear != null) {
+			//Set color to the color of the board
 			if ((getCol(reactionDisappear.getxLoc()) + getRow(reactionDisappear.getyLoc())) % 2 != 1) {
 				g.setColor(new Color(255, 255, 255, alpha)); // white
 			} else {
-				g.setColor(new Color(0, 0, 0, alpha));
+				g.setColor(new Color(0, 0, 0, alpha)); // black
 			}
 			g.fillRect(reactionDisappear.getxLoc(), reactionDisappear.getyLoc(), WIDTH, HEIGHT);
+			//Keep increasing alpha value to create 'disappearing' effect
 			if (alpha < 250) {
 				alpha += 5;
 			} else {
@@ -705,7 +712,11 @@ public class BoardPanel extends JPanel {
 			}
 		}
 	}
-
+	/**
+	 * Returns the color of board under the board piece one of a reaction
+	 * @param p --- pair of reactions
+	 * @return
+	 */
 	public Color getCorrectColorPairOne(Pair p) {
 		if ((getCol(reactionPair.getOne().getxLoc()) + getRow(reactionPair.getOne().getyLoc())) % 2 != 1) {
 			return (new Color(255, 255, 255, alpha)); // white
@@ -713,7 +724,11 @@ public class BoardPanel extends JPanel {
 			return (new Color(0, 0, 0, alpha)); // black
 		}
 	}
-
+	/**
+	 * Returns the color of board under the board piece two of a reaction
+	 * @param p --- pair of reactions
+	 * @return
+	 */
 	public Color getCorrectColorPairTwo(Pair p) {
 		if ((getCol(reactionPair.getTwo().getxLoc()) + getRow(reactionPair.getTwo().getyLoc())) % 2 != 1) {
 			return (new Color(255, 255, 255, alpha)); // white
@@ -745,7 +760,7 @@ public class BoardPanel extends JPanel {
 	 * @param g
 	 */
 	public void reactionDisappearSVE(Graphics2D g) {
-		if (vertnumber == -10) { // both die
+		if (vertnumber == -10) { // Sword v Sword reaction
 			g.setColor(getCorrectColorPairOne(reactionPair));
 			g.fillRect(reactionPair.getOne().getxLoc(), reactionPair.getOne().getyLoc(), WIDTH, HEIGHT);
 			g.setColor(getCorrectColorPairTwo(reactionPair));
@@ -756,7 +771,7 @@ public class BoardPanel extends JPanel {
 				game.verticalReaction(run.getCurrentPlayer(), reactionPair);
 				doneDisappearAnimation();
 			}
-		} else if (vertnumber == -11) {
+		} else if (vertnumber == -11) { // Sword v Nothing reaction
 			g.setColor(getCorrectColorPairTwo(reactionPair));
 			g.fillRect(reactionPair.getTwo().getxLoc(), reactionPair.getTwo().getyLoc(), WIDTH, HEIGHT);
 			if (alpha < 250) {
@@ -765,7 +780,7 @@ public class BoardPanel extends JPanel {
 				game.verticalReaction(run.getCurrentPlayer(), reactionPair);
 				doneDisappearAnimation();
 			}
-		} else if (vertnumber == -12) {
+		} else if (vertnumber == -12) { // Nothing v Sword reaction
 			g.setColor(getCorrectColorPairOne(reactionPair));
 			g.fillRect(reactionPair.getOne().getxLoc(), reactionPair.getOne().getyLoc(), WIDTH, HEIGHT);
 			if (alpha < 250) {
@@ -774,7 +789,7 @@ public class BoardPanel extends JPanel {
 				game.verticalReaction(run.getCurrentPlayer(), reactionPair);
 				doneDisappearAnimation();
 			}
-		} else if (horiNumber == -20) {
+		} else if (horiNumber == -20) { // Sword v Sword reaction
 			g.setColor(getCorrectColorPairOne(reactionPair));
 			g.fillRect(reactionPair.getOne().getxLoc(), reactionPair.getOne().getyLoc(), WIDTH, HEIGHT);
 			g.setColor(getCorrectColorPairTwo(reactionPair));
@@ -785,7 +800,7 @@ public class BoardPanel extends JPanel {
 				game.horizontalReaction(run.getCurrentPlayer(), reactionPair);
 				doneDisappearAnimation();
 			}
-		} else if (horiNumber == -21) {
+		} else if (horiNumber == -21) { // Sword v Nothing Reaction
 			g.setColor(getCorrectColorPairTwo(reactionPair));
 			g.fillRect(reactionPair.getTwo().getxLoc(), reactionPair.getTwo().getyLoc(), WIDTH, HEIGHT);
 			if (alpha < 250) {
@@ -794,7 +809,7 @@ public class BoardPanel extends JPanel {
 				game.horizontalReaction(run.getCurrentPlayer(), reactionPair);
 				doneDisappearAnimation();
 			}
-		} else if (horiNumber == -22) {
+		} else if (horiNumber == -22) { // Nothing v Sword Reaction
 			g.setColor(getCorrectColorPairOne(reactionPair));
 			g.fillRect(reactionPair.getOne().getxLoc(), reactionPair.getOne().getyLoc(), WIDTH, HEIGHT);
 			if (alpha < 250) {
@@ -819,8 +834,7 @@ public class BoardPanel extends JPanel {
 			run.getButtonPanel().getPass().setEnabled(false);
 		}
 		for (Pair p : reactions) {
-			if (p.getOne() instanceof BoardPiece && p.getTwo() instanceof BoardPiece) { // Check for boardpiece
-																						// reactions
+			if (p.getOne() instanceof BoardPiece && p.getTwo() instanceof BoardPiece) {	//BoardPiece v BoardPiece Reaction
 				if (p.getDir().equals("vert")) {
 					g.setColor(new Color(108, 50, 180, 250));
 					Rectangle rect = new Rectangle(p.getOne().getxLoc() + WIDTH / 6,
@@ -846,7 +860,7 @@ public class BoardPanel extends JPanel {
 					g.fill(rect);
 				}
 			} else if (p.getOne() instanceof BoardPiece && p.getPlayer() != null
-					&& p.getPlayer().getName().equals("yellow")) { // reaction with player
+					&& p.getPlayer().getName().equals("yellow")) { // Sword v Player Reaction --- yellow player
 				if (p.getDir().equals("vert")) {
 					g.setColor(new Color(108, 50, 180, 250));
 					Rectangle rect = new Rectangle(p.getOne().getxLoc() + WIDTH / 6,
@@ -872,7 +886,7 @@ public class BoardPanel extends JPanel {
 					g.fill(rect);
 				}
 			} else if (p.getOne() instanceof BoardPiece && p.getPlayer() != null
-					&& p.getPlayer().getName().equals("green")) {
+					&& p.getPlayer().getName().equals("green")) { // Sword v Player reaction --- green player
 				if (p.getDir().equals("vert")) {
 					g.setColor(new Color(108, 50, 180, 250));
 					Rectangle rect = new Rectangle(p.getOne().getxLoc() + WIDTH / 6, p.getOne().getyLoc() - HEIGHT / 6,
@@ -1001,7 +1015,7 @@ public class BoardPanel extends JPanel {
 					singleMove = true;
 				} else {
 					disappearCol = getCol(chosenX);
-					if (moveDir.equals("up")) {
+					if (moveDir.equals("up")) { //if direction is up or down, set the row accordingly
 						disapppearRow = getRow(chosenY - (piecesToAnimate * HEIGHT));
 					} else {
 						disapppearRow = getRow(chosenY + (piecesToAnimate * HEIGHT));
@@ -1023,7 +1037,7 @@ public class BoardPanel extends JPanel {
 					disapppearRow = getRow(chosenY);
 					singleMove = true;
 				} else {
-					if (moveDir.equals("right")) {
+					if (moveDir.equals("right")) { //if direction is right or left, set the col accordingly
 						disappearCol = getCol(chosenX + (piecesToAnimate * WIDTH));
 					} else {
 						disappearCol = getCol(chosenX - (piecesToAnimate * WIDTH));
@@ -1058,9 +1072,9 @@ public class BoardPanel extends JPanel {
 				g.setColor(new Color(0, 0, 0, alpha));
 			}
 			g.fillRect(disappearCol * WIDTH, disapppearRow * HEIGHT, WIDTH, HEIGHT);
-			if (alpha < 250) {
+			if (alpha < 250) { // keep increasing alpha until it looks like that piece has disappeared
 				alpha += 5;
-			} else {
+			} else { // reset all booleans and actually move the token
 				alpha = 0;
 				disappearAnimation = false;
 				disappearSkip = false;
@@ -1108,7 +1122,7 @@ public class BoardPanel extends JPanel {
 		if (skip == false) {
 			everyBpToAnimate.clear();
 			piecesToAnimate = run.getCurrentPlayer().upCounter(chosenToken, game.getBoard());
-			if (piecesToAnimate == -1) {
+			if (piecesToAnimate == -1) { // piece is going out of bounds so make it disappear
 				negativeOne();
 				return;
 			}
@@ -1116,7 +1130,7 @@ public class BoardPanel extends JPanel {
 			chosenToken.setMoveY(moveY);
 			chosenToken.setDestY(chosenY - HEIGHT);
 			everyBpToAnimate.add(chosenToken);
-			for (int i = piecesToAnimate; i > 0; i--) {
+			for (int i = piecesToAnimate; i > 0; i--) { // work from bottom up decreasing their destination values
 				int row = getRow(chosenY - (i * HEIGHT));
 				int col = getCol(chosenX);
 				BoardPiece bp = ((BoardPiece) game.getBoard().getBoard()[row][col]);
@@ -1124,7 +1138,7 @@ public class BoardPanel extends JPanel {
 				bp.setMoveY(chosenY - (i * HEIGHT));
 				bp.setDestY(chosenY - ((i + 1) * HEIGHT));
 				everyBpToAnimate.add(bp);
-
+				//check boundaries (around the players)
 				if (((row - 1) == 1 && col == 0) || ((row - 1) == 1 && col == 1)) {
 					everyBpToAnimate.remove(bp);
 					disappearPiece = bp;
@@ -1132,10 +1146,10 @@ public class BoardPanel extends JPanel {
 					return;
 				}
 			}
-			if (piecesToAnimate == 0) {
+			if (piecesToAnimate == 0) { //moving single token
 				int row = getRow(chosenY);
 				int col = getCol(chosenX);
-				if (((row - 1) == 1 && col == 0) || ((row - 1) == 1 && col == 1)) {
+				if (((row - 1) == 1 && col == 0) || ((row - 1) == 1 && col == 1)) { // if its going out of bounds make it disappear
 					disappearPiece = chosenToken;
 					disappearAnimation = true;
 					return;
@@ -1152,7 +1166,7 @@ public class BoardPanel extends JPanel {
 					return;
 				}
 			}
-		} else {
+		} else { // keep animating until its done
 			animateUp(g, everyBpToAnimate);
 		}
 	}
@@ -1170,7 +1184,7 @@ public class BoardPanel extends JPanel {
 		if (skip == false) {
 			everyBpToAnimate.clear();
 			piecesToAnimate = run.getCurrentPlayer().downCounter(chosenToken, game.getBoard());
-			if (piecesToAnimate == -1) {
+			if (piecesToAnimate == -1) { // piece is moving of the board so make it disappear
 				negativeOne();
 				return;
 			}
@@ -1178,7 +1192,7 @@ public class BoardPanel extends JPanel {
 			chosenToken.setMoveY(moveY);
 			chosenToken.setDestY(chosenY + HEIGHT);
 			everyBpToAnimate.add(chosenToken);
-			for (int i = piecesToAnimate; i > 0; i--) {
+			for (int i = piecesToAnimate; i > 0; i--) { // set destination values for all the pieces moving
 				int row = getRow(chosenY + (i * HEIGHT));
 				int col = getCol(chosenX);
 				BoardPiece bp = ((BoardPiece) game.getBoard().getBoard()[row][col]);
@@ -1186,6 +1200,7 @@ public class BoardPanel extends JPanel {
 				bp.setMoveY(chosenY + (i * HEIGHT));
 				bp.setDestY(chosenY + ((i + 1) * HEIGHT));
 				everyBpToAnimate.add(bp);
+				//check boundaries
 				if (((row + 1) == 8 && col == 8) || ((row + 1) == 8 && col == 9)) {
 					everyBpToAnimate.remove(bp);
 					disappearPiece = bp;
@@ -1193,10 +1208,10 @@ public class BoardPanel extends JPanel {
 					return;
 				}
 			}
-			if (piecesToAnimate == 0) {
+			if (piecesToAnimate == 0) { //moving single token
 				int row = getRow(chosenY);
 				int col = getCol(chosenX);
-				if (((row + 1) == 8 && col == 8) || ((row + 1) == 8 && col == 9)) {
+				if (((row + 1) == 8 && col == 8) || ((row + 1) == 8 && col == 9)) { // if its moving out of bounds make it disappear
 					disappearPiece = chosenToken;
 					disappearAnimation = true;
 					moveAnimation = false;
@@ -1214,7 +1229,7 @@ public class BoardPanel extends JPanel {
 					return;
 				}
 			}
-		} else {
+		} else { // keep animating until its done
 			animateDown(g, everyBpToAnimate);
 		}
 	}
@@ -1232,7 +1247,7 @@ public class BoardPanel extends JPanel {
 		if (skip == false) {
 			everyBpToAnimate.clear();
 			piecesToAnimate = run.getCurrentPlayer().leftCounter(chosenToken, game.getBoard());
-			if (piecesToAnimate == -1) {
+			if (piecesToAnimate == -1) { // piece is moving of the board so make it disappear
 				negativeOne();
 				return;
 			}
@@ -1240,7 +1255,7 @@ public class BoardPanel extends JPanel {
 			chosenToken.setMoveY(moveY);
 			chosenToken.setDestX(chosenX - WIDTH);
 			everyBpToAnimate.add(chosenToken);
-			for (int i = piecesToAnimate; i > 0; i--) {
+			for (int i = piecesToAnimate; i > 0; i--) { // set destination values for all the moving pieces
 				int row = getRow(chosenY);
 				int col = getCol(chosenX - (i * WIDTH));
 				BoardPiece bp = ((BoardPiece) game.getBoard().getBoard()[row][col]);
@@ -1248,6 +1263,7 @@ public class BoardPanel extends JPanel {
 				bp.setMoveY(chosenY);
 				bp.setDestX(chosenX - ((i + 1) * WIDTH));
 				everyBpToAnimate.add(bp);
+				//check boundaries
 				if ((row == 0 && (col - 1) == 1) || (row == 1 && (col - 1) == 1)) {
 					everyBpToAnimate.remove(bp);
 					disappearPiece = bp;
@@ -1255,9 +1271,10 @@ public class BoardPanel extends JPanel {
 					return;
 				}
 			}
-			if (piecesToAnimate == 0) {
+			if (piecesToAnimate == 0) { // only one piece is moving
 				int row = getRow(chosenY);
 				int col = getCol(chosenX);
+				//check if its moving out of bounds if yes then make it disappear
 				if ((row == 0 && (col - 1) == 1) || (row == 1 && (col - 1) == 1)) {
 					disappearPiece = chosenToken;
 					disappearAnimation = true;
@@ -1267,7 +1284,7 @@ public class BoardPanel extends JPanel {
 			}
 			skip = true;
 			BoardPiece temp;
-			if (piecesToAnimate > 0) {
+			if (piecesToAnimate > 0) {  //reset everything
 				temp = everyBpToAnimate.get(1);
 				if (temp.getDestX() < 0) {
 					disappearPiece = temp;
@@ -1276,7 +1293,7 @@ public class BoardPanel extends JPanel {
 					return;
 				}
 			}
-		} else {
+		} else { // keep animating until its done
 			animateLeft(g, everyBpToAnimate);
 		}
 	}
@@ -1294,7 +1311,7 @@ public class BoardPanel extends JPanel {
 		if (skip == false) {
 			everyBpToAnimate.clear();
 			piecesToAnimate = run.getCurrentPlayer().rightCounter(chosenToken, game.getBoard());
-			if (piecesToAnimate == -1) {
+			if (piecesToAnimate == -1) { // piece is moving out of bounds so make it disappear
 				negativeOne();
 				return;
 			}
@@ -1302,7 +1319,7 @@ public class BoardPanel extends JPanel {
 			chosenToken.setMoveY(moveY);
 			chosenToken.setDestX(chosenX + WIDTH);
 			everyBpToAnimate.add(chosenToken);
-			for (int i = piecesToAnimate; i > 0; i--) {
+			for (int i = piecesToAnimate; i > 0; i--) { // set destination values for all the moving pieces
 				int row = getRow(chosenY);
 				int col = getCol(chosenX + (i * WIDTH));
 				BoardPiece bp = ((BoardPiece) game.getBoard().getBoard()[row][col]);
@@ -1310,6 +1327,7 @@ public class BoardPanel extends JPanel {
 				bp.setMoveY(chosenY);
 				bp.setDestX(chosenX + ((i + 1) * WIDTH));
 				everyBpToAnimate.add(bp);
+				//check out of bound areas
 				if ((row == 8 && (col + 1) == 8) || (row == 9 && (col + 1) == 8)) {
 					everyBpToAnimate.remove(bp);
 					disappearPiece = bp;
@@ -1317,10 +1335,10 @@ public class BoardPanel extends JPanel {
 					return;
 				}
 			}
-			if (piecesToAnimate == 0) {
+			if (piecesToAnimate == 0) { // only one piece is moving
 				int row = getRow(chosenY);
 				int col = getCol(chosenX);
-				if ((row == 8 && (col + 1) == 8) || (row == 9 && (col + 1) == 8)) {
+				if ((row == 8 && (col + 1) == 8) || (row == 9 && (col + 1) == 8)) { // check if its moving out of bounds, if yes make it disappear
 					disappearPiece = chosenToken;
 					disappearAnimation = true;
 					moveAnimation = false;
@@ -1329,7 +1347,7 @@ public class BoardPanel extends JPanel {
 			}
 			skip = true;
 			BoardPiece temp;
-			if (piecesToAnimate > 0) {
+			if (piecesToAnimate > 0) { // reset everything
 				temp = everyBpToAnimate.get(1);
 				if (temp.getDestX() > (9 * WIDTH)) {
 					disappearPiece = temp;
@@ -1338,7 +1356,7 @@ public class BoardPanel extends JPanel {
 					return;
 				}
 			}
-		} else {
+		} else { // keep animating until its done
 			animateRight(g, everyBpToAnimate);
 		}
 
@@ -1397,14 +1415,14 @@ public class BoardPanel extends JPanel {
 				continue;
 			}
 			animateMove(g, bp);
-			if (bp.getMoveX() > bp.getDestX()) {
+			if (bp.getMoveX() > bp.getDestX()) { //decrease moveX to give the effect of animating it left
 				bp.setMoveX(bp.getMoveX() - 2);
 			} else {
 				moveAnimation = false;
 				skip = false;
 				if (chosenToken != null) {
 					letter = chosenToken.getName();
-					game.moveToken(run.getCurrentPlayer(), "move " + letter + " left");
+					game.moveToken(run.getCurrentPlayer(), "move " + letter + " left"); // actually move the token
 					checkForMoreReactions();
 				}
 				chosenToken = null;
@@ -1429,14 +1447,14 @@ public class BoardPanel extends JPanel {
 				continue;
 			}
 			animateMove(g, bp);
-			if (bp.getMoveX() < bp.getDestX()) {
+			if (bp.getMoveX() < bp.getDestX()) { // increase moveX to give the effect of animating right
 				bp.setMoveX(bp.getMoveX() + 2);
 			} else {
 				moveAnimation = false;
 				skip = false;
 				if (chosenToken != null) {
 					letter = chosenToken.getName();
-					game.moveToken(run.getCurrentPlayer(), "move " + letter + " right");
+					game.moveToken(run.getCurrentPlayer(), "move " + letter + " right"); // actually move the token
 					checkForMoreReactions();
 				}
 				chosenToken = null;
@@ -1462,13 +1480,13 @@ public class BoardPanel extends JPanel {
 			}
 			animateMove(g, bp);
 			if (bp.getMoveY() < bp.getDestY()) {
-				bp.setMoveY(bp.getMoveY() + 2);
+				bp.setMoveY(bp.getMoveY() + 2); // increase moveY to give the effect of animating down
 			} else {
 				moveAnimation = false;
 				skip = false;
 				if (chosenToken != null) {
 					letter = chosenToken.getName();
-					game.moveToken(run.getCurrentPlayer(), "move " + letter + " down");
+					game.moveToken(run.getCurrentPlayer(), "move " + letter + " down"); // actually move the token
 					checkForMoreReactions();
 				}
 				chosenToken = null;
@@ -1493,14 +1511,14 @@ public class BoardPanel extends JPanel {
 				continue;
 			}
 			animateMove(g, bp);
-			if (bp.getMoveY() > bp.getDestY()) {
+			if (bp.getMoveY() > bp.getDestY()) { // decrease moveY to give the effect of animating up
 				bp.setMoveY(bp.getMoveY() - 2);
 			} else {
 				moveAnimation = false;
 				skip = false;
 				if (chosenToken != null) {
 					letter = chosenToken.getName();
-					game.moveToken(run.getCurrentPlayer(), "move " + letter + " up");
+					game.moveToken(run.getCurrentPlayer(), "move " + letter + " up"); // actually move the token
 					checkForMoreReactions();
 				}
 				chosenToken = null;
@@ -1530,8 +1548,8 @@ public class BoardPanel extends JPanel {
 				if (board[row][col] instanceof InvalidSquare) {
 					g.setColor(Color.GRAY);
 					g.fillRect(col * WIDTH, row * HEIGHT, WIDTH, HEIGHT);
-				} else if (row == 2 && col == 2) {
-					if (board[row][col] instanceof BoardPiece) {
+				} else if (row == 2 && col == 2) { // draw green creation grid
+					if (board[row][col] instanceof BoardPiece) { // check if theres a token there
 						if ((((BoardPiece) board[row][col]).equals(chosenToken) && moveAnimation)) {
 							g.setColor(GREEN_CREATION);
 							g.fillRect(col * WIDTH, row * HEIGHT, WIDTH, HEIGHT);
@@ -1549,7 +1567,6 @@ public class BoardPanel extends JPanel {
 							g.setColor(Color.YELLOW);
 						} else {
 							g.setColor(Color.GREEN);
-							;
 						}
 						g.fillOval(col * WIDTH, row * HEIGHT, WIDTH, HEIGHT);
 						g.setColor(Color.red);
@@ -1564,15 +1581,14 @@ public class BoardPanel extends JPanel {
 						g.setColor(GREEN_CREATION);
 						g.fillRect(col * WIDTH, row * HEIGHT, WIDTH, HEIGHT);
 					}
-				} else if (row == 7 && col == 7) {
-					if (board[row][col] instanceof BoardPiece) {
+				} else if (row == 7 && col == 7) { // draw yellow creation grid
+					if (board[row][col] instanceof BoardPiece) { // check if theres a token there
 						if ((((BoardPiece) board[row][col]).equals(chosenToken) && moveAnimation)) {
 							g.setColor(new Color(255, 250, 205));
 							g.fillRect(col * WIDTH, row * HEIGHT, WIDTH, HEIGHT);
 							continue;
 						}
 						BoardPiece temp = (BoardPiece) board[row][col];
-
 						if (temp.isNeedToAnimate()) {
 							g.setColor(new Color(255, 250, 205));
 							g.fillRect(col * WIDTH, row * HEIGHT, WIDTH, HEIGHT);
@@ -1599,7 +1615,7 @@ public class BoardPanel extends JPanel {
 						g.setColor(YELLOW_CREATION);
 						g.fillRect(col * WIDTH, row * HEIGHT, WIDTH, HEIGHT);
 					}
-				} else if (board[row][col] instanceof BoardPiece) {
+				} else if (board[row][col] instanceof BoardPiece) { // draw board piece
 					g.setColor(TOKEN_SQUARE);
 					g.fillRect(col * WIDTH, row * HEIGHT, WIDTH, WIDTH);
 					BoardPiece temp = (BoardPiece) board[row][col];
@@ -1626,7 +1642,7 @@ public class BoardPanel extends JPanel {
 					drawToken(g, (BoardPiece) board[row][col], col * WIDTH, row * HEIGHT);
 					g.setStroke(new BasicStroke(0));
 					drawLetter(g, temp, row, col);
-				} else if (board[row][col] == null && row == 8 && col == 8) {
+				} else if (board[row][col] == null && row == 8 && col == 8) { // draw cross when yellow dies
 					g.setColor(Color.BLACK);
 					g.setStroke(new BasicStroke(6));
 					g.drawLine(col * WIDTH + STROKE, row * HEIGHT + STROKE, (col + 1) * WIDTH - STROKE,
@@ -1634,7 +1650,7 @@ public class BoardPanel extends JPanel {
 					g.drawLine(col * WIDTH - STROKE, (row + 1) * HEIGHT + STROKE, (col + 1) * WIDTH - STROKE,
 							(row) * HEIGHT + STROKE);
 					g.setStroke(new BasicStroke(0));
-				} else if (board[row][col] == null && row == 1 && col == 1) {
+				} else if (board[row][col] == null && row == 1 && col == 1) { // draw cross when green dies
 					g.setColor(Color.BLACK);
 					g.setStroke(new BasicStroke(6));
 					g.drawLine(col * WIDTH + STROKE, row * HEIGHT + STROKE, (col + 1) * WIDTH - STROKE,
@@ -1643,20 +1659,20 @@ public class BoardPanel extends JPanel {
 							(row) * HEIGHT + STROKE);
 					g.setStroke(new BasicStroke(0));
 
-				} else if (board[row][col] instanceof Player) {
+				} else if (board[row][col] instanceof Player) { // draw player
 					Player p = (Player) board[row][col];
 					if (p.getName().equals("yellow")) {
 						g.setColor(Color.YELLOW);
 					} else {
 						g.setColor(Color.GREEN);
 					}
-					g.fillOval(col * WIDTH, row * HEIGHT, WIDTH, HEIGHT);
+					g.fillOval(col * WIDTH, row * HEIGHT, WIDTH, HEIGHT); // the face
 					g.setColor(Color.black);
-					g.drawOval(col * WIDTH, row * HEIGHT, WIDTH, HEIGHT);
+					g.drawOval(col * WIDTH, row * HEIGHT, WIDTH, HEIGHT); // face outline
 					g.setColor(Color.BLACK);
-					g.fillOval(col * WIDTH + WIDTH / 3, row * HEIGHT + HEIGHT / 3, WIDTH / 10, HEIGHT / 10);
-					g.fillOval(col * WIDTH - WIDTH / 3 + WIDTH - 5, row * HEIGHT + HEIGHT / 3, WIDTH / 10, WIDTH / 10);
-					g.drawArc(col * WIDTH + WIDTH / 3, row * HEIGHT + HEIGHT / 3, WIDTH / 3, HEIGHT / 3, 180, 180);
+					g.fillOval(col * WIDTH + WIDTH / 3, row * HEIGHT + HEIGHT / 3, WIDTH / 10, HEIGHT / 10); // eyes
+					g.fillOval(col * WIDTH - WIDTH / 3 + WIDTH - 5, row * HEIGHT + HEIGHT / 3, WIDTH / 10, WIDTH / 10); // eyes
+					g.drawArc(col * WIDTH + WIDTH / 3, row * HEIGHT + HEIGHT / 3, WIDTH / 3, HEIGHT / 3, 180, 180); // mouth
 				} else {
 					if ((row + col) % 2 != 1) {
 						g.setColor(Color.WHITE);
