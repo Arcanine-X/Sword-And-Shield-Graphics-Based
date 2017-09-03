@@ -294,9 +294,6 @@ public class SwordAndShieldGame {
 			firstCreation = true;
 		}
 		if (!player.getMovesSoFar().isEmpty()) {
-			for(String s : player.getMovesSoFar()) {
-				System.out.println("bloop ::: " + s.toString());
-			}
 			player.getMovesSoFar().remove(player.getMovesSoFar().size() - 1);
 		}
 		if (!player.getEveryMovement().isEmpty()) {
@@ -323,7 +320,6 @@ public class SwordAndShieldGame {
 			return;
 		}
 		board.redraw();
-		System.out.println(p.toString());
 		board.getReactions().remove(p);
 		board.createRecord();
 		yellow.createRecord();
@@ -871,7 +867,6 @@ public class SwordAndShieldGame {
 			}
 		}else { //do the player vs board piece reactions
 			if(one.getEast() == 1 && play!=null && play.getName().equals("yellow")) { // sword - yellow player
-				System.out.println("returned -23");
 				return -23;
 			}else if(one.getWest() == 1 && play!=null && play.getName().equals("green")){ // sword - green player
 				return -24;

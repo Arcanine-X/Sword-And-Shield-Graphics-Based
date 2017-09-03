@@ -144,7 +144,6 @@ public class GameFrame extends JFrame implements Observer {
 	@Override
 	public void paintComponents(Graphics g) {
 		super.paintComponents(g);
-		System.out.println("hello");
 		Graphics2D _g = (Graphics2D) g;
 	}
 
