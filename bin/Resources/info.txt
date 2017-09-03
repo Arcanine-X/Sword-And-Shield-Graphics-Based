@@ -11,6 +11,7 @@
 		    <li>The objective is to get a sword to the opponents face!</li>
 		</ul>
 		<h2 style="color: #2e6c80;">Understanding Reactions</h2>
+		<p>A reaction is indicated by a <b><u>purple square</b></u> over the border of pair of reactions</p>
 		<p>A reaction can occur when a sword is touching another token and in a case of a reaction many things can happen:</p>
 		<p>In the case of :</p>
 		<ul>
@@ -37,6 +38,10 @@
 		    <li>Click on the big token to rotate it 90 degrees.</li>
 		    <li>One you have your chosen rotation click outside the big token</li>
 		</ul>
-		<p><h3><strong><b><u>Note: Dont pass when an animation is happening :)</u></b></strong></h3></p>
+		<p>
+		<b><u>Note that you can only move after a token has finished its animation</u>
+		<br>Also please dont pass when an animation is happening :)</b>
+		<br>Created by : Chin Patel
+		</p>
 	</body>
 </html>

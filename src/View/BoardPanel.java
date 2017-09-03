@@ -1540,6 +1540,10 @@ public class BoardPanel extends JPanel {
 		}
 	}
 
+	/**
+	 * Draws the main board but checking what instance board[row][col] is.
+	 * @param g
+	 */
 	public void drawBoard(Graphics2D g) {
 		WIDTH = Math.min(getWidth(), getHeight()) / 10 - Math.min(getWidth(), getHeight()) / 60;
 		HEIGHT = Math.min(getWidth(), getHeight()) / 10 - Math.min(getWidth(), getHeight()) / 60;
@@ -1619,7 +1623,7 @@ public class BoardPanel extends JPanel {
 					g.setColor(TOKEN_SQUARE);
 					g.fillRect(col * WIDTH, row * HEIGHT, WIDTH, WIDTH);
 					BoardPiece temp = (BoardPiece) board[row][col];
-	
+
 					if (temp.isNeedToAnimate() && reactionDisappear==null) {
 						g.setColor(getColor(row, col));
 						g.fillRect(col * WIDTH, row * HEIGHT, WIDTH, HEIGHT);
