@@ -40,14 +40,10 @@ public class GraveyardPanel extends JPanel {
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		g.fillRect(50, 50, 50, 200);
-		GradientPaint blackToGray = new GradientPaint(0, 30, new Color(255, 255, 204),
-				(float) run.getPreferredSize().getWidth(), 30, new Color(204, 255, 204));
-		//GradientPaint blackToGray = new GradientPaint(0, 0, new Color(179, 218, 255), 0, this.getHeight(), Color.BLACK);
+		GradientPaint blackToGray = new GradientPaint(0, 30, new Color(255, 255, 204),(float) run.getPreferredSize().getWidth(), 30, new Color(204, 255, 204));
 		Graphics2D _g = (Graphics2D) g;
 		_g.setPaint(blackToGray);
 		_g.fillRect(0, 0, this.getWidth(), this.getHeight());
-		
 		drawGrave(_g);
 	}
 
@@ -57,7 +53,7 @@ public class GraveyardPanel extends JPanel {
 	 * @param g
 	 */
 	public void drawGrave(Graphics2D g) {
-		WIDTH = Math.min(getWidth(), getHeight()) / 7 - Math.min(getWidth(), getHeight()) / 60;
+		WIDTH = Math.min(getWidth(), getHeight()) / 5 - Math.min(getWidth(), getHeight()) / 60;
 		HEIGHT = Math.min(getWidth(), getHeight()) / 5 - Math.min(getWidth(), getHeight()) / 60;
 		BoardPiece[][] graveYard = player.getGraveYard();
 		for (int row = 0; row < graveYard.length; row++) {
