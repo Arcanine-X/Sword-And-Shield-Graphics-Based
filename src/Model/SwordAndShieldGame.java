@@ -55,80 +55,12 @@ public class SwordAndShieldGame {
 		board.addPlayers(green, yellow);
 		board.addInvalidSquares();
 		board.redraw();
-		//For reactions
-		/*BoardPiece one = yellow.find("s");
-		board.getBoard()[0][3] = one;
-		BoardPiece two = yellow.find("g");
-		board.getBoard()[6][7] = two;
-		BoardPiece three = yellow.find("c");
-		board.getBoard()[7][6] = three;
-		BoardPiece four = yellow.find("k");
-		board.getBoard()[9][7] = four;*/
-
-		//For pushing and disappearing
-		/*BoardPiece one = yellow.find("s");
-		board.getBoard()[0][9] = one;
-		BoardPiece two = yellow.find("e");
-		board.getBoard()[0][8] = two;
-		BoardPiece three = yellow.find("c");
-		board.getBoard()[0][7] = three;*/
-
-
-		//For player reactions
-		/*BoardPiece one = yellow.find("g");
-		board.getBoard()[7][8] = one;*/
-
-		//For off the board reactions
-		/*BoardPiece one = yellow.find("g");
-		board.getBoard()[7][9] = one;
-		BoardPiece three = yellow.find("c");
-		board.getBoard()[7][8] = three;*/
-
-		//For move reaction
-		//BoardPiece one = yellow.find("g");
-		//board.getBoard()[4][4] = one;
-		//BoardPiece three = yellow.find("c");
-		//board.getBoard()[5][4] = three;
-
-		//For move and disappear
-
-		/*BoardPiece one = yellow.find("g");
+		BoardPiece one = yellow.find("g");
 		board.getBoard()[1][4] = one;
 		BoardPiece three = yellow.find("c");
 		board.getBoard()[2][4] = three;
 		BoardPiece two = yellow.find("e");
-		board.getBoard()[0][4] = two;*/
-
-
-		//reaction disappear test
-		/*BoardPiece one = yellow.find("s");
-		board.getBoard()[0][7] = one;
-		BoardPiece two = yellow.find("a");
-		board.getBoard()[1][7] = two;
-		BoardPiece three = yellow.find("c");
-		board.getBoard()[2][7] = three;*/
-
-		//reaction tests for invalid zones
-		/*BoardPiece one = yellow.find("s");
-		board.getBoard()[0][2] = one;
-		BoardPiece two = yellow.find("g");
-		board.getBoard()[1][2] = two;
-		BoardPiece three = yellow.find("c");
-		board.getBoard()[2][2] = three;*/
-
-		//BoardPiece one = green.find("C");
-		//board.getBoard()[7][6] = one;
-
-		//Wrong animation test
-		//BoardPiece one = yellow.find("c");
-		//board.getBoard()[8][6] = one;
-		//BoardPiece two = green.find("X");
-		//board.getBoard()[9][6] = two;
-
-
-
-
-
+		board.getBoard()[0][4] = two;
 	}
 
 	/**

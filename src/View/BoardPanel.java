@@ -1619,7 +1619,8 @@ public class BoardPanel extends JPanel {
 					g.setColor(TOKEN_SQUARE);
 					g.fillRect(col * WIDTH, row * HEIGHT, WIDTH, WIDTH);
 					BoardPiece temp = (BoardPiece) board[row][col];
-					if (temp.isNeedToAnimate()) {
+	
+					if (temp.isNeedToAnimate() && reactionDisappear==null) {
 						g.setColor(getColor(row, col));
 						g.fillRect(col * WIDTH, row * HEIGHT, WIDTH, HEIGHT);
 						continue;
