@@ -7,16 +7,12 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
-import java.io.File;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.swing.JPanel;
-
 import Controller.BoardController;
 import Model.BoardPiece;
 import Model.InvalidSquare;
@@ -86,11 +82,11 @@ public class BoardPanel extends JPanel {
 	 *            --- board piece two involved in a reaction
 	 * @param player
 	 *            --- player involved in reaction
-	 * @return --- a pair of reaction that conntains the parameters
+	 * @return --- a pair of reaction that contains the parameters
 	 */
 	public Pair findPair(BoardPiece one, BoardPiece two, Player player) {
 		for (Pair p : game.getBoard().getReactions()) {
-			if (player != null) { // Player v Sword reactions
+			if (player != null && p.getPlayer()!=null) { // Player v Sword reactions
 				if (p.getOne().equals(one) && p.getPlayer().getName().equals(player.getName())) {
 					return p;
 				}
@@ -537,8 +533,7 @@ public class BoardPanel extends JPanel {
 	public void playDisappearSound() {
 		try {
 			Clip clip = AudioSystem.getClip();
-			AudioInputStream inputStream = AudioSystem
-					.getAudioInputStream(getClass().getResource("/Resources/falling.wav"));
+			AudioInputStream inputStream = AudioSystem.getAudioInputStream(getClass().getResource("/Resources/falling.wav"));
 			clip = AudioSystem.getClip();
 			clip.open(inputStream);
 			clip.start();
@@ -567,8 +562,7 @@ public class BoardPanel extends JPanel {
 	public void playVictorySound() {
 		try {
 			Clip clip = AudioSystem.getClip();
-			AudioInputStream inputStream = AudioSystem
-					.getAudioInputStream(getClass().getResource("/Resources/victory.wav"));
+			AudioInputStream inputStream = AudioSystem.getAudioInputStream(getClass().getResource("/Resources/victory.wav"));
 			clip = AudioSystem.getClip();
 			clip.open(inputStream);
 			clip.start();
@@ -1554,7 +1548,7 @@ public class BoardPanel extends JPanel {
 					g.fillRect(col * WIDTH, row * HEIGHT, WIDTH, HEIGHT);
 				} else if (row == 2 && col == 2) { // draw green creation grid
 					if (board[row][col] instanceof BoardPiece) { // check if theres a token there
-						if ((((BoardPiece) board[row][col]).equals(chosenToken) && moveAnimation)) {
+						if ((((BoardPiece) board[row][col]).equals(chosenToken) && moveAnimation && !disappearAnimation)) {
 							g.setColor(GREEN_CREATION);
 							g.fillRect(col * WIDTH, row * HEIGHT, WIDTH, HEIGHT);
 							continue;
@@ -1587,7 +1581,7 @@ public class BoardPanel extends JPanel {
 					}
 				} else if (row == 7 && col == 7) { // draw yellow creation grid
 					if (board[row][col] instanceof BoardPiece) { // check if theres a token there
-						if ((((BoardPiece) board[row][col]).equals(chosenToken) && moveAnimation)) {
+						if ((((BoardPiece) board[row][col]).equals(chosenToken) && moveAnimation && !disappearAnimation)) {
 							g.setColor(new Color(255, 250, 205));
 							g.fillRect(col * WIDTH, row * HEIGHT, WIDTH, HEIGHT);
 							continue;
